@@ -1,0 +1,22 @@
+{
+    "shared.Exit": "Выход",
+    "shared.ExitMessage": "Вы действительно хотите выйти?",
+    "shared.Settings": "Настройки",
+    "shared.Open": "Открыть",
+    "shared.Ok": "Ок",
+    "shared.No": "Нет",
+    "shared.Yes": "Да",
+    "shared.Cancel": "Отмена",
+    "shared.Error": "Ошибка",
+    "shared.Language": "Язык",
+    "shared.Theme": "Тема",
+    "shared.Plugins": "Плагины",
+    "shared.Version": "Версия",
+    "shared.Author": "Автор",
+    "shared.FileNotFound": "Файл не найден",
+    "shared.Menu": "Меню",
+    "shared.PopularAudioFormats": "Все аудио-форматы",
+    "shared.PopularVideoFormats": "Все видео-форматы",
+    "shared.ffmpegPath": "Путь до ffmpeg",
+    "shared.BaseErrorTitle": "Ошибка"
+}

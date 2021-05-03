@@ -1,0 +1,51 @@
+import sys
+
+from PyQt5 import QtCore
+from PyQt5 import QtWidgets
+
+from app.ui import Main
+from toolkit.managers.system import System
+from toolkit.utils.themes import getTheme
+from toolkit.utils.themes import getPalette
+from toolkit.utils.requirements import check_qt
+
+
+def get_qt_app(*args, **kwargs):
+    """Create a new qt5 app or return an existing one."""
+    app = QtWidgets.QApplication.instance()
+    if app is None:
+        if not args:
+            args = ([''],)
+        app = QtWidgets.QApplication(*args, **kwargs)
+    return app
+
+
+def prepare_system():
+    System.set_system_root(__file__)
+    System.add_objects(
+        'toolkit.managers.assets.AssetsManager',
+    )
+    System.init()
+
+
+def launch():
+    check_qt()
+    prepare_system()
+
+    app = get_qt_app()
+
+    translator = QtCore.QTranslator()
+    translator.load(f'locales/')
+
+    # Give app needed parameters
+    app.installTranslator(translator)
+    theme = System.config.get('ui.theme', default_key='ui.default_theme')
+    if theme:
+        app.setStyleSheet(getTheme(theme))
+        app.setPalette(getPalette(theme))
+
+    # widget = ui.IPythonConsoleWidget()
+    widget = Main()
+    widget.show()
+
+    sys.exit(app.exec_())

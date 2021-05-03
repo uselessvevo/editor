@@ -1,0 +1,27 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <value>
+          <list size="3">
+            <item index="0" class="java.lang.String" itemvalue="pyxlsql" />
+            <item index="1" class="java.lang.String" itemvalue="yamata.xlsql" />
+            <item index="2" class="java.lang.String" itemvalue="django-bulk-update-or-create" />
+          </list>
+        </value>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="list.__getitem__" />
+          <option value="core.xlsql.serializers.XLSQLSerializer.excel_headers_map" />
+          <option value="core.xlsql.serializers.XLSQLSerializer.date_parser_ignored_fields" />
+          <option value="core.xlsql.serializers.XLSQLSerializer.excel_headers_ignored_fields" />
+          <option value="core.xlsql.serializers.XLSQLSerializer.fk_fields" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>

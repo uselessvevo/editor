@@ -1,0 +1,86 @@
+from PyQt5.Qt import Qt
+from PyQt5 import QtGui
+from PyQt5 import QtCore
+from PyQt5 import QtWidgets
+
+from components.console.api import QIPythonWidget
+
+from toolkit.managers import getFile, System
+
+
+class Console(QtWidgets.QWidget):
+    """
+    Main GUI Window including a button and IPython Console widget inside vertical layout
+    """
+
+    def __init__(self, parent=None):
+        super(Console, self).__init__(parent)
+        self.setWindowTitle('Editor Console')
+
+        self.initMain()
+        self.initToolbar()
+        self.initConsole()
+        self.initGrid()
+
+        self.setGeometry(300, 300, 800, 550)
+
+    def initGrid(self):
+        self.grid.addWidget(self.toolBar, 0, 0)
+        self.grid.addWidget(self.console, 1, 0)
+
+    def initMain(self):
+        self.setWindowIcon(QtGui.QIcon(getFile('shared/icons/flag.svg')))
+        self.grid = QtWidgets.QGridLayout(self)
+        self.centralWidget = QtWidgets.QWidget()
+        self.grid.addWidget(self.centralWidget)
+
+    def initToolbar(self) -> None:
+        # Init toolbar
+        self.toolBar = QtWidgets.QToolBar('&File')
+        self.toolBar.setMovable(False)
+        self.toolBar.setContextMenuPolicy(Qt.PreventContextMenu)
+
+        # Actions
+        runProccess = QtWidgets.QToolButton()
+        runProccess.setToolTip(self.tr('Shared.RunProcess'))
+        runProccess.setIcon(QtGui.QIcon(getFile('shared/icons/start.svg')))
+        runProccess.setToolButtonStyle(Qt.ToolButtonIconOnly)
+        runProccess.setIconSize(QtCore.QSize(25, 25))
+
+        stopProccess = QtWidgets.QToolButton(self)
+        stopProccess.setToolTip(self.tr('Shared.StopProcess'))
+        stopProccess.setIcon(QtGui.QIcon(getFile('shared/icons/stop.svg')))
+        stopProccess.setToolButtonStyle(Qt.ToolButtonIconOnly)
+        stopProccess.setIconSize(QtCore.QSize(25, 25))
+
+        restoreGrid = QtWidgets.QToolButton(self)
+        restoreGrid.setToolTip(self.tr('Console.RestoreGrid'))
+        restoreGrid.setIcon(QtGui.QIcon(getFile('shared/icons/grid.svg')))
+        restoreGrid.setToolButtonStyle(Qt.ToolButtonIconOnly)
+        restoreGrid.setIconSize(QtCore.QSize(12, 12))
+
+        exitAct = QtWidgets.QToolButton(self)
+        exitAct.setToolTip(self.tr('Shared.Exit'))
+        exitAct.setIcon(QtGui.QIcon(getFile('shared/icons/delete.svg')))
+        exitAct.setToolButtonStyle(Qt.ToolButtonIconOnly)
+        exitAct.setIconSize(QtCore.QSize(25, 25))
+
+        printOutput = QtWidgets.QToolButton(self)
+        printOutput.setToolTip(self.tr('Shared.Print'))
+        printOutput.setIcon(QtGui.QIcon(getFile('shared/icons/printer.svg')))
+        printOutput.setToolButtonStyle(Qt.ToolButtonIconOnly)
+        printOutput.setIconSize(QtCore.QSize(25, 25))
+
+        # Pack all default actions
+        self.toolBar.addWidget(runProccess)
+        self.toolBar.addWidget(stopProccess)
+        self.toolBar.addWidget(restoreGrid)
+        self.toolBar.addWidget(exitAct)
+        self.toolBar.addWidget(printOutput)
+
+    def initConsole(self):
+        self.console = QIPythonWidget(f'Editor console ({System.version})\n\n')
+        self.console.registerMethod({'proc_id': get_process_id})
+        self.console.registerMethod({'rainbow': rainbow})
+        self.console.registerMethod({'image': self.console.insertImage})
+        self.console.registerMethod({'print_output': self.console.printOutput})
