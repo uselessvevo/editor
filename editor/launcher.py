@@ -10,6 +10,10 @@ from toolkit.utils.themes import getPalette
 from toolkit.utils.requirements import check_qt
 
 
+def except_hook(cls, exception, traceback):
+    sys.__excepthook__(cls, exception, traceback)
+
+
 def get_qt_app(*args, **kwargs):
     """Create a new qt5 app or return an existing one."""
     app = QtWidgets.QApplication.instance()
@@ -31,6 +35,7 @@ def prepare_system():
 def launch():
     check_qt()
     prepare_system()
+    sys.excepthook = except_hook
 
     app = get_qt_app()
 

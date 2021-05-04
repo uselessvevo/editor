@@ -8,9 +8,9 @@ from toolkit.managers import System
 from toolkit.managers import getFile
 from ui.windows.window import BaseWindow
 
-from components.editor.ui import TextArea
+from components.editor.ui import Editor
 from components.console.ui import Console
-from components.toolbar.ui import Toolbar
+from components.toolbar.ui import ToolBar
 
 
 class Main(BaseWindow, QtWidgets.QMainWindow):
@@ -26,13 +26,11 @@ class Main(BaseWindow, QtWidgets.QMainWindow):
         self.moveToCenter()
 
         self.initMain()
+        # self.initMenu()
         self.initToolbar()
         self.initTextEditor()
-        self.initGrid()
-
-    def initGrid(self):
-        self.grid.addWidget(self.toolBar, 0, 0)
-        self.grid.addWidget(self.textArea, 1, 0)
+        self.initLayout()
+        self.initStatusBar()
 
     def initMain(self):
         self.setWindowTitle(f'Redaktor - {os.getcwd()}')
@@ -42,11 +40,28 @@ class Main(BaseWindow, QtWidgets.QMainWindow):
         self.setCentralWidget(self.centralWidget)
         self.grid = QtWidgets.QGridLayout(self.centralWidget)
 
+    def initLayout(self):
+        layout = QtWidgets.QVBoxLayout()
+        layout.addWidget(self.editor)
+
+        container = QtWidgets.QWidget()
+        container.setLayout(layout)
+
+        self.setCentralWidget(container)
+
+    def initMenu(self):
+        self.fileMenu = self.menuBar().addMenu('&File')
+
     def initToolbar(self) -> None:
-        self.toolBar = Toolbar()
+        self.toolBar = ToolBar(self)
+        self.addToolBar(self.toolBar)
 
     def initTextEditor(self) -> None:
-        self.textArea = TextArea()
+        self.editor = Editor(self)
+
+    def initStatusBar(self):
+        self.status = QtWidgets.QStatusBar()
+        self.setStatusBar(self.status)
 
     def openFiles(self) -> None:
         fileDialog = QtWidgets.QFileDialog(self)

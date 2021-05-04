@@ -6,7 +6,7 @@ from PyQt5 import QtWidgets
 from toolkit.managers import getFile
 
 
-class Toolbar(QtWidgets.QToolBar):
+class ToolBar(QtWidgets.QToolBar):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -15,6 +15,8 @@ class Toolbar(QtWidgets.QToolBar):
         self.setLayout(hbox)
         self.setMovable(False)
         self.setContextMenuPolicy(Qt.PreventContextMenu)
+        self.setOrientation(Qt.Vertical)
+        self.setSizePolicy(QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Maximum))
 
         openFolder = QtWidgets.QToolButton()
         openFolder.setToolTip(self.tr('Shared.OpenFolder'))
