@@ -1,7 +1,7 @@
 * {
     color: @mainFontColor;
     font-family: url(@mainFontFamily);
-    background-color: @mainBackgroundColor;
+    background-color: @mainBackground;
 }
 
 /* Font settings */
@@ -36,7 +36,7 @@ QListWidgetItem, QListWidget
 
 QListWidget {
     outline: none;
-    background: @mainBackgroundColor;
+    background: @mainBackground;
 }
 
 QListWidget::item {
@@ -52,11 +52,33 @@ QListWidget::item:selected
 }
 
 /*
+================= QStatusBar
+*/
+
+QStatusBar {
+    color: @statusBarFontColor;
+    background: @statusBarBackground;
+}
+
+/*
+================= QMenuBar
+*/
+
+QMenuBar,
+QMenuBar:hover,
+QMenuBar::item,
+QMenuBar::item:hover {
+    background: @menuBarBackground;
+    padding: 0.2em;
+	border: transparent;
+}
+
+/*
 = = = = = = = = = QToolBar
 */
 
 QToolBar, #spacer {
-    background: @toolBarBackgroundColor;
+    background: @toolBarBackground;
 	padding: 0.5em;
 	border: transparent;
 }
@@ -70,7 +92,8 @@ QToolBar, #spacer {
 }
 
 QToolButton {
-   margin: @toolButtonMargin;
+   margin-top: @toolButtonMarginTop;
+   margin-bottom: @toolButtonMarginBottom;
    padding: @toolBarButtonsPadding;
 
    min-height: @toolButtonMinHeight;
@@ -157,7 +180,7 @@ ControlButton {
 
 QMenu, #ControlButton {
    background: rgb(48, 48, 48);
-   border: 1px solid @controlBackgroundColor;
+   border: 1px solid @controlBackground;
    border-radius: @controlBorderRadius;
 }
 
@@ -290,26 +313,26 @@ QComboBox {
    color: @mainFontColor;
 
    border-radius: @controlBorderRadius;
-   border: 1px solid @controlBackgroundColor;
-   background: @controlBackgroundColor;
+   border: 1px solid @controlBackground;
+   background: @controlBackground;
 }
 
 QComboBox QAbstractItemView {
   outline: none;
   border: 1px solid #32414B;
   border-radius: 0;
-  background-color: @controlBackgroundColor;
+  background-color: @controlBackground;
   selection-background-color: @controlBorderHoveredColor;
 }
 
 QComboBox QAbstractItemView:hover {
   color: @mainFontColor;
-  background-color: @controlBackgroundColor;
+  background-color: @controlBackground;
 }
 
 QComboBox QAbstractItemView:selected {
   color: @mainFontColor;
-  background: @controlBackgroundColor;
+  background: @controlBackground;
 }
 
 QComboBox QAbstractItemView:alternate {
@@ -391,30 +414,30 @@ QLineEdit {
   padding-right: 4px;
 
   color: @mainFontColor;
-  border: 1px solid @controlBackgroundColor;
+  border: 1px solid @controlBackground;
 
   border-radius: @controlBorderRadius;
-  background-color: @controlBackgroundColor;
+  background-color: @controlBackground;
 }
 
 QLineEdit:disabled {
     border: 1px solid @controlBorderHoveredColor;
-    background-color: @controlBackgroundColor;
+    background-color: @controlBackground;
 }
 
 QLineEdit:hover {
     border: 1px solid @controlBorderHoveredColor;
-    background-color: @controlBackgroundColor;
+    background-color: @controlBackground;
 }
 
 QLineEdit:focus {
     border: 1px solid @controlBorderHoveredColor;
-    background-color: @controlBackgroundColor;
+    background-color: @controlBackground;
 }
 
 QLineEdit:selected {
     border: 1px solid @controlBorderHoveredColor;
-    background-color: @controlBackgroundColor;
+    background-color: @controlBackground;
 }
 
 
@@ -508,13 +531,13 @@ QTabWidget::pane:selected {
   border: 1px solid @tabHoveredBackgroundColor;
 }
 
-QTextEdit {
-    border: 1px solid @mainSeparatorColor;
-    background-color: @mainBackgroundColor;
+QPlainTextEdit, QTextEdit {
+    border: 0px solid @mainSeparatorColor;
+    background-color: @textEditorBackground;
 }
 
 QFrame {
-    background-color: @mainBackgroundColor;
+    background-color: @mainBackground;
 }
 
 /*
