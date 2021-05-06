@@ -15,7 +15,6 @@ from components.workbench.ui import Workbench
 
 
 class Main(BaseWindow, QtWidgets.QMainWindow):
-
     defaultMinSize = (1020, 670)
     defaultPosition = (150, 150)
 
@@ -37,19 +36,21 @@ class Main(BaseWindow, QtWidgets.QMainWindow):
 
     def initLayout(self):
         self.mainHBox = QtWidgets.QHBoxLayout()
-        # self.toolBarHBox = QtWidgets.QHBoxLayout()
+        self.toolBarHBox = QtWidgets.QHBoxLayout()
         self.workbenchVBox = QtWidgets.QVBoxLayout()
         self.treeViewVBox = QtWidgets.QVBoxLayout()
         self.editorHBox = QtWidgets.QHBoxLayout()
 
         self.mainHBox.addLayout(self.workbenchVBox)
         self.mainHBox.addLayout(self.treeViewVBox)
-        # self.mainHBox.addLayout(self.toolBarHBox)
         self.mainHBox.addLayout(self.editorHBox)
-
         self.setLayout(self.mainHBox)
 
+        self.mainHBox.setContentsMargins(0, 0, 0, 0)
+        self.mainHBox.setSpacing(20)
+
         widget = QtWidgets.QWidget()
+        widget.setStyleSheet("QWidget {background: 'red';}")
         widget.setLayout(self.mainHBox)
         self.setCentralWidget(widget)
 
@@ -66,7 +67,11 @@ class Main(BaseWindow, QtWidgets.QMainWindow):
 
     def initTextEditor(self) -> None:
         self.editor = Editor('python', 'monokai')
-        self.editorHBox.addWidget(self.editor)
+        self.editor.setSizePolicy(
+            QtWidgets.QSizePolicy.Expanding,
+            QtWidgets.QSizePolicy.Expanding
+        )
+        self.mainHBox.addWidget(self.editor)
 
     def initStatusBar(self):
         self.statusBar = QtWidgets.QStatusBar()
