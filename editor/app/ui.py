@@ -55,14 +55,17 @@ class Main(BaseWindow, QtWidgets.QMainWindow):
 
     def initMenu(self):
         self.fileMenu = self.menuBar().addMenu('&File')
-        # self.fileMenu.addAction()
+        self.editMenu = self.menuBar().addMenu('&Edit')
+        self.viewMenu = self.menuBar().addMenu('&View')
+        self.runMenu = self.menuBar().addMenu('&Run')
+        self.helpMenu = self.menuBar().addMenu('&Help')
 
     def initWorkbench(self):
         self.workbench = Workbench()
         self.addToolBar(Qt.LeftToolBarArea, self.workbench)
 
     def initTextEditor(self) -> None:
-        self.editor = Editor()
+        self.editor = Editor('python', 'monokai')
         self.editorHBox.addWidget(self.editor)
 
     def initStatusBar(self):
