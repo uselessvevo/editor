@@ -48,9 +48,7 @@ class ViewLexer(QsciLexerCustom):
         # Lexer + Style
         self.pyg_style = styles.get_style_by_name(style_name)
         self.pyg_lexer = lexers.get_lexer_by_name(lexer_name, stripnl=False)
-        self.cache = {
-            0: ('root',)
-        }
+        self.cache = {0: ('root',)}
         self.extra_style = EXTRA_STYLES[style_name]
 
         # Generate QScintilla styles
@@ -59,8 +57,10 @@ class ViewLexer(QsciLexerCustom):
         index = 0
         for k, v in self.pyg_style:
             self.token_styles[k] = index
+
             if v.get('color', None):
                 self.setColor(QColor(f"#{v['color']}"), index)
+
             if v.get('bgcolor', None):
                 self.setPaper(QColor(f"#{v['bgcolor']}"), index)
 
@@ -81,38 +81,46 @@ class ViewLexer(QsciLexerCustom):
         """
         lexer = self.pyg_lexer
         pos = 0
-        tokendefs = lexer._tokens
-        statestack = list(stack)
-        statetokens = tokendefs[statestack[-1]]
+
+        token_defs = lexer._tokens
+        state_stack = list(stack)
+        state_tokens = token_defs[state_stack[-1]]
+
         while 1:
-            for rexmatch, action, new_state in statetokens:
-                m = rexmatch(text, pos)
+            for rex_match, action, new_state in state_tokens:
+                m = rex_match(text, pos)
                 if m:
                     if action is not None:
                         if type(action) is _TokenType:
                             yield pos, action, m.group()
+
                         else:
                             for item in action(lexer, m):
                                 yield item
+
                     pos = m.end()
                     if new_state is not None:
                         # state transition
                         if isinstance(new_state, tuple):
                             for state in new_state:
                                 if state == '#pop':
-                                    statestack.pop()
+                                    state_stack.pop()
+
                                 elif state == '#push':
-                                    statestack.append(statestack[-1])
+                                    state_stack.append(state_stack[-1])
+
                                 else:
-                                    statestack.append(state)
+                                    state_stack.append(state)
                         elif isinstance(new_state, int):
                             # pop
-                            del statestack[new_state:]
+                            del state_stack[new_state:]
+
                         elif new_state == '#push':
-                            statestack.append(statestack[-1])
+                            state_stack.append(state_stack[-1])
+
                         else:
                             assert False, 'wrong state def: %r' % new_state
-                        statetokens = tokendefs[statestack[-1]]
+                        state_tokens = token_defs[state_stack[-1]]
                     break
             else:
                 # We are here only if all state tokens have been considered
@@ -120,8 +128,8 @@ class ViewLexer(QsciLexerCustom):
                 try:
                     if text[pos] == '\n':
                         # at EOL, reset state to 'root'
-                        statestack = ['root']
-                        statetokens = tokendefs['root']
+                        state_stack = ['root']
+                        state_tokens = token_defs['root']
                         yield pos, Text, u'\n'
                         pos += 1
                         continue
@@ -134,10 +142,10 @@ class ViewLexer(QsciLexerCustom):
         style = self.pyg_style
         view = self.editor()
         code = view.text()[start:end]
-        tokensource = self.getTokensUnprocessed(code)
+        token_source = self.getTokensUnprocessed(code)
 
         self.startStyling(start)
-        for _, ttype, value in tokensource:
+        for _, ttype, value in token_source:
             self.setStyling(len(value), self.token_styles[ttype])
 
     def styleText(self, start, end):

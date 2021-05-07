@@ -22,14 +22,14 @@ class Editor(Qsci.QsciScintilla):
 
         fontMetrics = QFontMetrics(font)
         self.setMarginsFont(font)
-        self.setMarginWidth(0, fontMetrics.width("00000") + 6)
+        self.setMarginWidth(0, fontMetrics.width('00000') + 6)
         self.setMarginLineNumbers(0, True)
-        self.setMarginsBackgroundColor(QColor("cccccc"))
+        self.setMarginsBackgroundColor(QColor('cccccc'))
 
         self.setMarginSensitivity(1, True)
         self.marginClicked.connect(self.onMarginClicked)
         self.markerDefine(Qsci.QsciScintilla.RightArrow, self.ARROW_MARKER_NUM)
-        self.setMarkerBackgroundColor(QColor("#ee1111"), self.ARROW_MARKER_NUM)
+        self.setMarkerBackgroundColor(QColor('#ee1111'), self.ARROW_MARKER_NUM)
 
         # -------- Lexer --------
         self.setEolMode(Qsci.QsciScintilla.EolUnix)
@@ -59,35 +59,39 @@ class Editor(Qsci.QsciScintilla):
         m = self.eolMode()
         if m == Qsci.QsciScintilla.EolWindows:
             eol = '\r\n'
+
         elif m == Qsci.QsciScintilla.EolUnix:
             eol = '\n'
+
         elif m == Qsci.QsciScintilla.EolMac:
             eol = '\r'
+
         else:
             eol = ''
+
         return eol
 
     def setExtraSettings(self, settings):
         self.setIndentationGuidesBackgroundColor(QColor(0, 0, 255, 0))
         self.setIndentationGuidesForegroundColor(QColor(0, 255, 0, 0))
 
-        if "caret" in settings:
-            self.setCaretForegroundColor(QColor(settings["caret"]))
+        if 'caret' in settings:
+            self.setCaretForegroundColor(QColor(settings['caret']))
 
-        if "line_highlight" in settings:
-            self.setCaretLineBackgroundColor(QColor(settings["line_highlight"]))
+        if 'line_highlight' in settings:
+            self.setCaretLineBackgroundColor(QColor(settings['line_highlight']))
 
-        if "brackets_background" in settings:
-            self.setMatchedBraceBackgroundColor(QColor(settings["brackets_background"]))
+        if 'brackets_background' in settings:
+            self.setMatchedBraceBackgroundColor(QColor(settings['brackets_background']))
 
-        if "brackets_foreground" in settings:
-            self.setMatchedBraceForegroundColor(QColor(settings["brackets_foreground"]))
+        if 'brackets_foreground' in settings:
+            self.setMatchedBraceForegroundColor(QColor(settings['brackets_foreground']))
 
-        if "selection" in settings:
-            self.setSelectionBackgroundColor(QColor(settings["selection"]))
+        if 'selection' in settings:
+            self.setSelectionBackgroundColor(QColor(settings['selection']))
 
-        if "background" in settings:
-            color = QColor(settings["background"])
+        if 'background' in settings:
+            color = QColor(settings['background'])
             self.resetFoldMarginColors()
             self.setFoldMarginColors(color, color)
 
@@ -98,6 +102,7 @@ class Editor(Qsci.QsciScintilla):
     def reduceTextSize(self):
         if self.text_size == 1:
             return
+
         self.text_size //= 2
         self.genText()
 

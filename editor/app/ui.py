@@ -50,7 +50,6 @@ class Main(BaseWindow, QtWidgets.QMainWindow):
         self.mainHBox.setSpacing(20)
 
         widget = QtWidgets.QWidget()
-        widget.setStyleSheet("QWidget {background: 'red';}")
         widget.setLayout(self.mainHBox)
         self.setCentralWidget(widget)
 
@@ -114,13 +113,10 @@ class Main(BaseWindow, QtWidgets.QMainWindow):
         return result + ';;'.join(formats)
 
     def onCloseEventAccept(self) -> None:
-        pass
+        System.config.save('apps.editor.files')
 
     def onCloseEventIgnore(self) -> None:
         pass
 
     def onCloseEventDefault(self) -> None:
-        pass
-
-    def closeEvent(self, event) -> None:
         pass

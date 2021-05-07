@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 
 
-def read_json(file, hang_on_error=True, default=None):
+def read_json(file, hang_on_error=True, default=None, create=False):
     """
     Read json file
 
@@ -19,6 +19,8 @@ def read_json(file, hang_on_error=True, default=None):
         decoded data
     """
     try:
+        if create and not os.path.exists(file):
+            write_json(file, {})
         with open(file, encoding='utf-8') as output:
             return json.load(output)
 
@@ -29,7 +31,7 @@ def read_json(file, hang_on_error=True, default=None):
             raise err
 
 
-def read_json_files(files, skip_error=True):
+def read_json_files(files, skip_error=True, create=False):
     """
     Args:
         files (List[str]): list of files
@@ -43,6 +45,9 @@ def read_json_files(files, skip_error=True):
         # Get file without path and extension
         key = os.path.basename(file)
         key = os.path.splitext(key)[0]
+
+        if create and not os.path.exists(file):
+            write_json(file, {})
 
         try:
             with open(file, encoding='utf-8') as output:
@@ -73,40 +78,33 @@ def write_json(file, data, mode='w'):
         raise err
 
 
-def update_json(file, data):
-    copy = read_json(file)
+def update_json(file, data, create=False):
+    copy = read_json(file, create=create)
     copy.update(data)
     write_json(file, copy)
 
 
 # Managers
 
-def write_folder_info(folder: str) -> (float, float):
-    """
-    Get current folder size
-    Args:
-        folder (str) - folder name
-    Returns:
-        current folder size and written in file folder size
-    """
+def write_folder_size(folder: str) -> bool:
     written_folder_size = current_folder_size = 0
-    folder_info_file = Path(folder, 'size.json')
-
-    # Create folder size entry
-    for file in Path(folder).rglob('*.*'):
-        if file.is_file():
-            current_folder_size += file.stat().st_size
+    info_file = Path(folder, 'info.json')
 
     # Update file if exists
-    if folder_info_file.exists():
-        written_folder_size = int(folder_info_file.read_text())
+    if info_file.exists():
+        written_folder_size = read_json(info_file).get('size')
     else:
-        folder_info_file.write_text(str(current_folder_size))
+        # Create folder size entry
+        for file in Path(folder).rglob('*.*'):
+            if file.is_file():
+                current_folder_size += file.stat().st_size
 
-    return current_folder_size, written_folder_size
+        update_json(info_file, {'size': current_folder_size}, create=True)
+
+    return current_folder_size > written_folder_size
 
 
-def make_assets_manifest(prefix, root, folder, file_formats=None, path_slice=-2):
+def write_assets_file(prefix, root, folder, file_formats=None, path_slice=-2):
     """
     Collect files from folder and restore manifest.json files
 
