@@ -3,8 +3,9 @@ import sys
 from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 
-from app.ui import Main
+from app.ui import MainUI
 from toolkit.managers.system import System
+from toolkit.managers.system import prepare_plugins
 from toolkit.utils.themes import getTheme
 from toolkit.utils.themes import getPalette
 from toolkit.utils.requirements import check_qt
@@ -29,7 +30,8 @@ def prepare_system():
     System.add_objects(
         'toolkit.managers.assets.AssetsManager',
     )
-    System.init()
+    prepare_plugins()
+    System.init_objects()
 
 
 def launch():
@@ -44,13 +46,13 @@ def launch():
 
     # Give app needed parameters
     app.installTranslator(translator)
-    theme = System.config.get('ui.theme', default_key='ui.default_theme')
+    theme = System.config.get('configs.ui.theme', default_key='ui.default_theme')
     if theme:
         app.setStyleSheet(getTheme(theme))
         app.setPalette(getPalette(theme))
 
     # widget = ui.IPythonConsoleWidget()
-    widget = Main()
+    widget = MainUI()
     widget.show()
 
     sys.exit(app.exec_())

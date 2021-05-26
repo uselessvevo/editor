@@ -37,7 +37,7 @@ class QIPythonWidget(RichJupyterWidget):
         self.kernel = self.kernel_manager.kernel.shell
 
         self.exit_requested.connect(self.stop)
-        self.style_sheet = getTheme(System.config.get('ui.theme', default_key='ui.default_theme'))
+        self.style_sheet = getTheme(System.config.get('configs.ui.theme', default_key='ui.default_theme'))
 
     def stop(self):
         self.kernel_client.stop_channels()

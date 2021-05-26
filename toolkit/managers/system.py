@@ -1,14 +1,14 @@
 #   Copyright @ Crab Dudes Developers
 #   Licensed under the terms of the MIT license
 #   File system.py - 07.03.2021, 16:40
-import json
 import os
+import glob
 from typing import List
 from dotty_dict import Dotty
 
+from toolkit.utils.files import read_configs
 from toolkit.utils.files import read_json
 from toolkit.utils.files import update_json
-from toolkit.utils.files import write_json
 from toolkit.utils.objects import import_string
 
 
@@ -37,6 +37,10 @@ class SystemConfig(Dotty):
         Returns:
             None
         """
+        file = self.get(f'{key}.__file__')
+        if not file:
+            raise FileNotFoundError(f'File or section "{key}.__file__" does not exist')
+
         update_json(key, self[key])
 
     def from_json_file(self, file, **kwargs):
@@ -58,42 +62,8 @@ class SystemManager:
     def __init__(self):
         self._root = None
         self._objects = {}
-        files = self.custom_read_json_files([f'config/{i}' for i in os.listdir('config')])
-        self._config = self.config_class(defaults=files)
+        self._config = self.config_class(defaults=read_configs(glob.glob('configs/*.json')))
         print(f'* * * * Starting system {self.version}')
-
-    def custom_read_json_files(self, files, skip_error=True, create=False):
-        """
-        Args:
-            files (List[str]): list of files
-            skip_error (bool): set True if you need to skip error
-        """
-        # Clear duplicates
-        files = set(files)
-        collect = {}
-
-        for file in files:
-            # Get file without path and extension
-            key = os.path.basename(file)
-            key = os.path.splitext(key)[0]
-
-            if create and not os.path.exists(file):
-                write_json(file, {})
-
-            try:
-                with open(file, encoding='utf-8') as output:
-                    collect[key] = json.load(output)
-
-            except (OSError, FileNotFoundError, json.decoder.JSONDecodeError) as err:
-                if skip_error:
-                    collect[key] = {}
-                else:
-                    raise err
-
-            if isinstance(collect[key], dict):
-                collect[key].update({'__file__': file})
-
-        return collect
 
     def set_system_root(self, root):
         """
@@ -110,7 +80,7 @@ class SystemManager:
             print(f'* * * * Root set to {root}')
             self._root = os.path.split(root)[0]
 
-    def init(self):
+    def init_objects(self):
         for key, instance in self._objects.items():
             print(f'* * * * Init object {instance}')
             self._objects[key] = instance()
@@ -179,3 +149,13 @@ class SystemManager:
 
 
 System = SystemManager()
+
+
+def prepare_plugins(plugin_folder: str = 'plugins'):
+    config_files = [glob.glob(f'{plugin_folder}/{i}/{i}/configs/*.json') for i in os.listdir(plugin_folder)]
+    config_files = read_configs(*config_files)
+    System.config.update(config_files)
+
+    manifest_data = read_json(f'{plugin_folder}/manifest.json')
+    plugins = [f"plugins.{i.get('exec')}" for i in manifest_data.get('plugins')]
+    System.add_objects(*plugins)

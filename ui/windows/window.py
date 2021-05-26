@@ -43,7 +43,7 @@ class BaseWindow(AbstractWindow):
         """ After window was closed """
 
     def closeEvent(self, event) -> None:
-        notification = System.config.get('ui.show_close_dialog', True)
+        notification = System.config.get('configs.ui.show_close_dialog', True)
         if notification:
             message = MessageBox(self)
             if message.clickedButton() == message.yesButton:

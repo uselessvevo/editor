@@ -20,7 +20,7 @@ class AssetsManager(BaseManager):
         self._theme = None
         self._theme_folder = None
 
-        self._theme = System.config.get('ui.theme', default_key='ui.default_theme')
+        self._theme = System.config.get('configs.ui.theme', default_key='configs.ui.default_theme')
         self._theme_folder = Path(System.root, 'assets', 'themes', self._theme)
 
         assets_file = self._theme_folder.joinpath('assets.json')
@@ -31,7 +31,7 @@ class AssetsManager(BaseManager):
                 prefix='shared',
                 root=System.root,
                 folder=self._theme_folder,
-                file_formats=System.config.get('managers.assets.file_formats'),
+                file_formats=System.config.get('configs.managers.assets.file_formats'),
                 path_slice=-2
             )
             write_json(assets_file, data)

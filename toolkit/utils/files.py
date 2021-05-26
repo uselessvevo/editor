@@ -31,11 +31,12 @@ def read_json(file, hang_on_error=True, default=None, create=False):
             raise err
 
 
-def read_json_files(files, skip_error=True, create=False):
+def read_configs(files, skip_error=True, create=False):
     """
     Args:
         files (List[str]): list of files
         skip_error (bool): set True if you need to skip error
+        create (bool): set True if you need to create file
     """
     # Clear duplicates
     files = set(files)
@@ -45,19 +46,23 @@ def read_json_files(files, skip_error=True, create=False):
         # Get file without path and extension
         key = os.path.basename(file)
         key = os.path.splitext(key)[0]
+        section_key = file.split(os.sep)[0]
 
         if create and not os.path.exists(file):
             write_json(file, {})
 
         try:
             with open(file, encoding='utf-8') as output:
-                collect[key] = json.load(output)
+                collect[section_key] = {key: json.load(output)}
 
         except (OSError, FileNotFoundError, json.decoder.JSONDecodeError) as err:
             if skip_error:
-                collect[key] = {}
+                collect[section_key] = {key: {}}
             else:
                 raise err
+
+        if isinstance(collect[section_key][key], dict):
+            collect[section_key][key].update({'__file__': file})
 
     return collect
 
@@ -143,4 +148,4 @@ def write_assets_file(prefix, root, folder, file_formats=None, path_slice=-2):
 
 
 readJson = read_json
-readJsonFiles = read_json_files
+readConfigs = read_configs

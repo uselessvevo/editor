@@ -14,7 +14,7 @@ from components.console.ui import Console
 from components.workbench.ui import Workbench
 
 
-class Main(BaseWindow, QtWidgets.QMainWindow):
+class MainUI(BaseWindow, QtWidgets.QMainWindow):
     defaultMinSize = (1020, 670)
     defaultPosition = (150, 150)
 
@@ -84,7 +84,7 @@ class Main(BaseWindow, QtWidgets.QMainWindow):
         result, folder = fileDialog.getOpenFileNames(
             parent=self,
             caption=self.tr('Editor.OpenFiles'),
-            directory=System.config.get('files.last_opened_folder', os.path.expanduser('~')),
+            directory=System.config.get('configs.files.last_opened_folder', os.path.expanduser('~')),
             filter=self.getFileFormats()
         )
         System.config.set('files.last_opened_folder', folder)
@@ -97,7 +97,7 @@ class Main(BaseWindow, QtWidgets.QMainWindow):
         folder = QtWidgets.QFileDialog.getExistingDirectory(
             parent=self,
             caption=self.tr('Editor.OpenFolder'),
-            directory=System.config.get('files.last_opened_folder', os.path.expanduser('~'))
+            directory=System.config.get('configs.files.last_opened_folder', os.path.expanduser('~'))
         )
         System.config.set('files.last_opened_folder', folder)
         if folder:
@@ -105,7 +105,7 @@ class Main(BaseWindow, QtWidgets.QMainWindow):
 
     @lru_cache(None)
     def getFileFormats(self) -> str:
-        formats = System.config.get('formats')
+        formats = System.config.get('configs.formats')
         result = ';;'.join(
             '{}{}'.format(self.tr(key), val) for (key, val)
             in formats.items() if key != 'formats'
@@ -113,7 +113,8 @@ class Main(BaseWindow, QtWidgets.QMainWindow):
         return result + ';;'.join(formats)
 
     def onCloseEventAccept(self) -> None:
-        System.config.save('apps.editor.files')
+        # System.config.save('apps.editor.files')
+        pass
 
     def onCloseEventIgnore(self) -> None:
         pass
