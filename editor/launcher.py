@@ -46,7 +46,7 @@ def launch():
 
     # Give app needed parameters
     app.installTranslator(translator)
-    theme = System.config.get('configs.ui.theme', default_key='ui.default_theme')
+    theme = System.config.get('configs.ui.theme', default_key='configs.ui.default_theme')
     if theme:
         app.setStyleSheet(getTheme(theme))
         app.setPalette(getPalette(theme))

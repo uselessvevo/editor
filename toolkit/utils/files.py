@@ -53,7 +53,9 @@ def read_configs(files, skip_error=True, create=False):
 
         try:
             with open(file, encoding='utf-8') as output:
-                collect[section_key] = {key: json.load(output)}
+                if not collect.get(section_key):
+                    collect[section_key] = {}
+                collect[section_key].update({key: json.load(output)})
 
         except (OSError, FileNotFoundError, json.decoder.JSONDecodeError) as err:
             if skip_error:
