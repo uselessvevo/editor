@@ -5,9 +5,6 @@
 # Standard libraries
 import sys
 
-# CloudyKit
-from cloudykit.managers import tr
-
 # Qt
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QErrorMessage
@@ -29,7 +26,7 @@ def ErrorWindow(message):
     window.resize(450, 300)
 
     # window.setWindowFlags(~Qt.WindowContextHelpButtonHint)
-    window.setWindowTitle(tr('shared.BaseErrorTitle'))
+    window.setWindowTitle('Error')
 
     window.findChild(QLabel, '').setVisible(False)
     window.findChild(QCheckBox, '').setVisible(False)

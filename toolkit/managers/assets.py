@@ -21,7 +21,7 @@ class AssetsManager(BaseManager):
         self._theme_folder = None
 
         self._theme = System.config.get('configs.ui.theme', default_key='configs.ui.default_theme')
-        self._theme_folder = Path(System.root, 'assets', 'themes', self._theme)
+        self._theme_folder = Path('assets', 'themes', self._theme)
 
         assets_file = self._theme_folder.joinpath('assets.json')
         is_updated = write_folder_size(self._theme_folder)
@@ -41,3 +41,11 @@ class AssetsManager(BaseManager):
 
     def get(self, key, default=''):
         return self._dictionary.get(key, default)
+
+    @property
+    def theme(self):
+        return self._theme
+
+    @property
+    def theme_folder(self):
+        return self._theme_folder

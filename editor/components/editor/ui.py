@@ -3,14 +3,15 @@ from pathlib import Path
 from PyQt5 import Qsci
 from PyQt5.Qt import *
 
-from components.editor.lexer import ViewLexer, EXTRA_STYLES
+from components.editor.lexer import ViewLexer
+from toolkit.managers import System
 
 
 class Editor(Qsci.QsciScintilla):
 
     ARROW_MARKER_NUM = 8
 
-    def __init__(self, lexer_name, style_name, parent=None):
+    def __init__(self, parent=None):
         super(Editor, self).__init__(parent=parent)
 
         font = QFont()
@@ -33,7 +34,7 @@ class Editor(Qsci.QsciScintilla):
 
         # -------- Lexer --------
         self.setEolMode(Qsci.QsciScintilla.EolUnix)
-        self.lexer = ViewLexer(lexer_name, style_name)
+        self.lexer = ViewLexer()
         self.setLexer(self.lexer)
 
         # -------- Shortcuts --------
@@ -53,7 +54,7 @@ class Editor(Qsci.QsciScintilla):
         self.SendScintilla(self.SCI_SETTABWIDTH, 4)
 
         # -------- Extra settings --------
-        self.setExtraSettings(EXTRA_STYLES[style_name])
+        self.setExtraSettings(System.get_object('AssetsManager').theme)
 
     def getLineSeparator(self):
         m = self.eolMode()

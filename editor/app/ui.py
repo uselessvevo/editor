@@ -65,7 +65,7 @@ class MainUI(BaseWindow, QtWidgets.QMainWindow):
         self.addToolBar(Qt.LeftToolBarArea, self.workbench)
 
     def initTextEditor(self) -> None:
-        self.editor = Editor('python', 'monokai')
+        self.editor = Editor()
         self.editor.setSizePolicy(
             QtWidgets.QSizePolicy.Expanding,
             QtWidgets.QSizePolicy.Expanding

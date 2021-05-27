@@ -1,5 +1,7 @@
 import math
 import time
+import importlib
+import importlib.util
 
 from PyQt5.Qsci import QsciLexerCustom
 from PyQt5.Qt import *
@@ -7,27 +9,8 @@ from PyQt5.Qt import *
 from pygments import lexers, styles
 from pygments.lexer import Error, Text, _TokenType
 
-
-EXTRA_STYLES = {
-    'monokai': {
-        'background': '#272822',
-        'caret': '#F8F8F0',
-        'foreground': '#F8F8F2',
-        'invisibles': '#F8F8F259',
-        'lineHighlight': '#3E3D32',
-        'selection': '#49483E',
-        'findHighlight': '#FFE792',
-        'findHighlightForeground': '#000000',
-        'selectionBorder': '#222218',
-        'activeGuide': '#9D550FB0',
-        'misspelling': '#F92672',
-        'bracketsForeground': '#F8F8F2A5',
-        'bracketsOptions': 'underline',
-        'bracketContentsForeground': '#F8F8F2A5',
-        'bracketContentsOptions': 'underline',
-        'tagsOptions': 'stippled_underline',
-    }
-}
+from toolkit.managers import System
+from toolkit.utils.files import read_json
 
 
 def convert_size(size_bytes):
@@ -40,16 +23,25 @@ def convert_size(size_bytes):
     return f'{s} {size_name[i]}'
 
 
+class LexerNotFound(Exception):
+    pass
+
+
 class ViewLexer(QsciLexerCustom):
 
-    def __init__(self, lexer_name, style_name):
+    def __init__(self):
         super().__init__()
 
         # Lexer + Style
-        self.pyg_style = styles.get_style_by_name(style_name)
-        self.pyg_lexer = lexers.get_lexer_by_name(lexer_name, stripnl=False)
+        assets = System.get_object('AssetsManager')
+        lexer = System.config.get('configs.editor.current_lexer')
+        if not lexer:
+            raise LexerNotFound()
+
         self.cache = {0: ('root',)}
-        self.extra_style = EXTRA_STYLES[style_name]
+        self.pyg_style = self.getEditorStyle(assets.theme_folder)
+        self.pyg_lexer = lexers.get_lexer_by_name(lexer, stripnl=False)
+        self.extra_style = read_json(assets.theme_folder / 'editor/style.json').get('extra')
 
         # Generate QScintilla styles
         self.font = QFont('Iosevka', 12, weight=QFont.Bold)
@@ -66,6 +58,22 @@ class ViewLexer(QsciLexerCustom):
 
             self.setFont(self.font, index)
             index += 1
+
+    def getEditorStyle(self, theme_folder):
+        spec = importlib.util.spec_from_file_location(
+            name='style',
+            location=theme_folder / 'editor/style.py'
+        )
+        style = read_json(theme_folder / 'editor/style.json').get('style')
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        module = getattr(module, 'EditorStyle')
+        for k, v in module.styles.items():
+            val = style.get(str(k))
+            module.styles[k] = val
+
+        return module
 
     def defaultPaper(self, style):
         return QColor(self.extra_style['background'])

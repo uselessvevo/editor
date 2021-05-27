@@ -1,6 +1,6 @@
 {
-   "theme":null,
-   "default_theme":"dark theme",
+   "theme":"light theme",
+   "default_theme":"light theme",
    "protected":[
       "default_theme"
    ]
