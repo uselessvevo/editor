@@ -39,12 +39,15 @@ class ViewLexer(QsciLexerCustom):
             raise LexerNotFound()
 
         self.cache = {0: ('root',)}
+        self.style_config = read_json(assets.theme_folder / 'editor/style.json')
+
         self.pyg_style = self.getEditorStyle(assets.theme_folder)
+        # self.pyg_style = styles.get_style_by_name('monokai')
         self.pyg_lexer = lexers.get_lexer_by_name(lexer, stripnl=False)
-        self.extra_style = read_json(assets.theme_folder / 'editor/style.json').get('extra')
+        self.extra_style = self.style_config.get('extra', {})
 
         # Generate QScintilla styles
-        self.font = QFont('Iosevka', 12, weight=QFont.Bold)
+        self.font = QFont(*self.style_config['main'].get('font', ['Arial', 12]), weight=QFont.Bold)
         self.token_styles = {}
         index = 0
         for k, v in self.pyg_style:
@@ -64,7 +67,7 @@ class ViewLexer(QsciLexerCustom):
             name='style',
             location=theme_folder / 'editor/style.py'
         )
-        style = read_json(theme_folder / 'editor/style.json').get('style')
+        style = self.style_config.get('style', {})
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
 
@@ -147,7 +150,6 @@ class ViewLexer(QsciLexerCustom):
                     break
 
     def highlightSlow(self, start, end):
-        style = self.pyg_style
         view = self.editor()
         code = view.text()[start:end]
         token_source = self.getTokensUnprocessed(code)

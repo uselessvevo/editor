@@ -1,6 +1,10 @@
 {
+  "main": {
+    "font": ["Iosevka", 12]
+  },
   "extra": {
     "background": "#272822",
+    "comment": "#ff22ff",
     "caret": "#F8F8F0",
     "foreground": "#F8F8F2",
     "invisibles": "#F8F8F259",
@@ -22,7 +26,7 @@
     "Token.Whitespace": "",
     "Token.Error": "#960050 bg:#1e0010",
     "Token.Other": "",
-    "Token.Comment": "#75715e",
+    "Token.Comment": "#ff22ff",
     "Token.Comment.Multiline": "",
     "Token.Comment.Preproc": "",
     "Token.Comment.Single": "",
