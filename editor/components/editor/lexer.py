@@ -1,13 +1,15 @@
 import math
-import time
 import importlib
 import importlib.util
 
-from PyQt5.Qsci import QsciLexerCustom
 from PyQt5.Qt import *
+from PyQt5.Qsci import QsciLexerCustom
 
-from pygments import lexers, styles
-from pygments.lexer import Error, Text, _TokenType
+from pygments import lexers
+from pygments import styles
+from pygments.lexer import Text
+from pygments.lexer import Error
+from pygments.lexer import _TokenType
 
 from toolkit.managers import System
 from toolkit.utils.files import read_json
@@ -40,6 +42,7 @@ class ViewLexer(QsciLexerCustom):
 
         self.cache = {0: ('root',)}
         self.pyg_style = self.getEditorStyle(assets.theme_folder)
+        # self.pyg_style = styles.get_style_by_name('monokai')
         self.pyg_lexer = lexers.get_lexer_by_name(lexer, stripnl=False)
         self.extra_style = read_json(assets.theme_folder / 'editor/style.json').get('extra')
 
@@ -147,7 +150,6 @@ class ViewLexer(QsciLexerCustom):
                     break
 
     def highlightSlow(self, start, end):
-        style = self.pyg_style
         view = self.editor()
         code = view.text()[start:end]
         token_source = self.getTokensUnprocessed(code)
@@ -157,13 +159,7 @@ class ViewLexer(QsciLexerCustom):
             self.setStyling(len(value), self.token_styles[ttype])
 
     def styleText(self, start, end):
-        view = self.editor()
-        t_start = time.time()
         self.highlightSlow(start, end)
-        t_elapsed = time.time() - t_start
-        len_text = len(view.text())
-        text_size = convert_size(len_text)
-        view.setWindowTitle(f'Text size: {len_text} - {text_size} Elapsed: {t_elapsed}s')
 
     def description(self, style_nr):
         return str(style_nr)
