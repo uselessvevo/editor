@@ -1,117 +1,119 @@
+"""
+    pygments.styles.material
+    ~~~~~~~~~~~~~~~~~~~~~~~~
+
+    Mimic the Material theme color scheme.
+
+    https://github.com/material-theme/vsc-material-theme
+
+    :copyright: Copyright 2006-2021 by the Pygments team, see AUTHORS.
+    :license: BSD, see LICENSE for details.
+"""
+
 from pygments.style import Style
-from pygments.token import Keyword
-from pygments.token import Literal
-from pygments.token import Name
-from pygments.token import Comment
-from pygments.token import Other
-from pygments.token import Punctuation
-from pygments.token import String
-from pygments.token import Error
-from pygments.token import Number
-from pygments.token import Operator
-from pygments.token import Generic
-from pygments.token import Text
-from pygments.token import Whitespace
+from pygments.token import Keyword, Name, Comment, String, Escape, \
+    Error, Text, Number, Operator, Generic, Punctuation, Literal
 
 
 class EditorStyle(Style):
-    #: overall background color (``None`` means transparent)
-    background_color = '#ffffff'
+    """
+    This style mimics the Material Theme color scheme.
+    """
+    dark_teal = '#263238'
+    white = '#FFFFFF'
+    black = '#000000'
+    red = '#FF5370'
+    orange = '#F78C6C'
+    yellow = '#FFCB6B'
+    green = '#C3E88D'
+    cyan = '#89DDFF'
+    blue = '#82AAFF'
+    paleblue = '#B2CCD6'
+    purple = '#C792EA'
+    brown = '#C17E70'
+    pink = '#F07178'
+    violet = '#BB80B3'
+    foreground = '#EEFFFF'
+    faded = '#546E7A'
 
-    #: highlight background color
-    highlight_color = '#ffffcc'
-
-    #: line number font color
-    line_number_color = 'inherit'
-
-    #: line number background color
-    line_number_background_color = 'transparent'
-
-    #: special line number font color
-    line_number_special_color = '#000000'
-
-    #: special line number background color
-    line_number_special_background_color = '#ffffc0'
+    default_style = ""
+    background_color = dark_teal
+    highlight_color = '#2C3B41'
+    line_number_color = '#37474F'
+    line_number_background_color = dark_teal
+    line_number_special_color = '#607A86'
+    line_number_special_background_color = dark_teal
 
     styles = {
-        # No corresponding class for the following:
-        Text:                      "#f8f8f2", # class:  ''
-        Whitespace:                "",        # class: 'w'
-        Error:                     "#960050 bg:#1e0010", # class: 'err'
-        Other:                     "",        # class 'x'
+        Text: foreground,
+        Escape: cyan,
+        Error: red,
 
-        Comment:                   "#75715e", # class: 'c'
-        Comment.Multiline:         "",        # class: 'cm'
-        Comment.Preproc:           "",        # class: 'cp'
-        Comment.Single:            "",        # class: 'c1'
-        Comment.Special:           "",        # class: 'cs'
+        Keyword: violet,
+        Keyword.Constant: cyan,
+        Keyword.Declaration: violet,
+        Keyword.Namespace: 'italic ' + cyan,
+        Keyword.Pseudo: cyan,
+        Keyword.Type: violet,
 
-        Keyword:                   "#66d9ef", # class: 'k'
-        Keyword.Constant:          "",        # class: 'kc'
-        Keyword.Declaration:       "",        # class: 'kd'
-        Keyword.Namespace:         "#f92672", # class: 'kn'
-        Keyword.Pseudo:            "",        # class: 'kp'
-        Keyword.Reserved:          "",        # class: 'kr'
-        Keyword.Type:              "",        # class: 'kt'
+        Name: foreground,
+        Name.Attribute: violet,
+        Name.Builtin: blue,
+        Name.Builtin.Pseudo: cyan,
+        Name.Class: yellow,
+        Name.Constant: foreground,
+        Name.Decorator: blue,
+        Name.Entity: cyan,
+        Name.Exception: yellow,
+        Name.Function: blue,
+        Name.Function.Magic: blue,
+        Name.Label: blue,
+        Name.Property: yellow,
+        Name.Namespace: yellow,
+        Name.Other: foreground,
+        Name.Tag: red,
+        Name.Variable: cyan,
+        Name.Variable.Class: cyan,
+        Name.Variable.Global: cyan,
+        Name.Variable.Instance: cyan,
+        Name.Variable.Magic: blue,
 
-        Operator:                  "#f92672", # class: 'o'
-        Operator.Word:             "",        # class: 'ow' - like keywords
+        Literal: green,
+        Literal.Date: green,
 
-        Punctuation:               "#f8f8f2", # class: 'p'
+        String: green,
+        String.Affix: violet,
+        String.Backtick: green,
+        String.Char: green,
+        String.Delimiter: foreground,
+        String.Doc: 'italic ' + faded,
+        String.Double: green,
+        String.Escape: foreground,
+        String.Heredoc: green,
+        String.Interpol: cyan,
+        String.Other: green,
+        String.Regex: cyan,
+        String.Single: green,
+        String.Symbol: cyan,
 
-        Name:                      "#f8f8f2", # class: 'n'
-        Name.Attribute:            "#a6e22e", # class: 'na' - to be revised
-        Name.Builtin:              "",        # class: 'nb'
-        Name.Builtin.Pseudo:       "",        # class: 'bp'
-        Name.Class:                "#a6e22e", # class: 'nc' - to be revised
-        Name.Constant:             "#66d9ef", # class: 'no' - to be revised
-        Name.Decorator:            "#a6e22e", # class: 'nd' - to be revised
-        Name.Entity:               "",        # class: 'ni'
-        Name.Exception:            "#a6e22e", # class: 'ne'
-        Name.Function:             "#a6e22e", # class: 'nf'
-        Name.Property:             "",        # class: 'py'
-        Name.Label:                "",        # class: 'nl'
-        Name.Namespace:            "",        # class: 'nn' - to be revised
-        Name.Other:                "#a6e22e", # class: 'nx'
-        Name.Tag:                  "#f92672", # class: 'nt' - like a keyword
-        Name.Variable:             "",        # class: 'nv' - to be revised
-        Name.Variable.Class:       "",        # class: 'vc' - to be revised
-        Name.Variable.Global:      "",        # class: 'vg' - to be revised
-        Name.Variable.Instance:    "",        # class: 'vi' - to be revised
+        Number: orange,
 
-        Number:                    "#ae81ff", # class: 'm'
-        Number.Float:              "",        # class: 'mf'
-        Number.Hex:                "",        # class: 'mh'
-        Number.Integer:            "",        # class: 'mi'
-        Number.Integer.Long:       "",        # class: 'il'
-        Number.Oct:                "",        # class: 'mo'
+        Operator: cyan,
+        Operator.Word: 'italic ' + cyan,
 
-        Literal:                   "#ae81ff", # class: 'l'
-        Literal.Date:              "#e6db74", # class: 'ld'
+        Punctuation: cyan,
 
-        String:                    "#e6db74", # class: 's'
-        String.Backtick:           "",        # class: 'sb'
-        String.Char:               "",        # class: 'sc'
-        String.Doc:                "",        # class: 'sd' - like a comment
-        String.Double:             "",        # class: 's2'
-        String.Escape:             "#ae81ff", # class: 'se'
-        String.Heredoc:            "",        # class: 'sh'
-        String.Interpol:           "",        # class: 'si'
-        String.Other:              "",        # class: 'sx'
-        String.Regex:              "",        # class: 'sr'
-        String.Single:             "",        # class: 's1'
-        String.Symbol:             "",        # class: 'ss'
+        Comment: 'italic ' + faded,
 
-
-        Generic:                   "",        # class: 'g'
-        Generic.Deleted:           "#f92672", # class: 'gd',
-        Generic.Emph:              "italic",  # class: 'ge'
-        Generic.Error:             "",        # class: 'gr'
-        Generic.Heading:           "",        # class: 'gh'
-        Generic.Inserted:          "#a6e22e", # class: 'gi'
-        Generic.Output:            "#66d9ef", # class: 'go'
-        Generic.Prompt:            "bold #f92672", # class: 'gp'
-        Generic.Strong:            "bold",    # class: 'gs'
-        Generic.Subheading:        "#75715e", # class: 'gu'
-        Generic.Traceback:         "",        # class: 'gt'
+        Generic: foreground,
+        Generic.Deleted: red,
+        Generic.Emph: cyan,
+        Generic.Error: red,
+        Generic.Heading: green,
+        Generic.Inserted: green,
+        Generic.Output: faded,
+        Generic.Prompt: yellow,
+        Generic.Strong: red,
+        Generic.Subheading: cyan,
+        Generic.Traceback: red,
     }

@@ -47,9 +47,15 @@ class Workbench(QtWidgets.QToolBar):
             QtWidgets.QSizePolicy.Expanding
         )
 
+        self.runConsole = QtWidgets.QToolButton()
+        self.runConsole.setToolTip(self.tr('Shared.runConsole'))
+        self.runConsole.setIcon(QtGui.QIcon(getFile('shared/icons/bug.svg')))
+        self.runConsole.setToolButtonStyle(Qt.ToolButtonIconOnly)
+
         # Pack all default actions
         self.addWidget(openFolder)
         self.addWidget(search)
         self.addWidget(runProcess)
         self.addWidget(spacer)
+        self.addWidget(self.runConsole)
         self.addWidget(settings)

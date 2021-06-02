@@ -4,6 +4,8 @@ from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 
 from components.console.api import QIPythonWidget
+from components.console.methods import get_process_id
+from components.console.methods import rainbow
 
 from toolkit.managers import getFile, System
 

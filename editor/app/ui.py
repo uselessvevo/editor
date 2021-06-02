@@ -41,6 +41,9 @@ class MainUI(BaseWindow, QtWidgets.QMainWindow):
         self.treeViewVBox = QtWidgets.QVBoxLayout()
         self.editorHBox = QtWidgets.QHBoxLayout()
 
+        self.dock = QtWidgets.QDockWidget('Dockable', self)
+        # self.dock.setFloating(True)
+
         self.mainHBox.addLayout(self.workbenchVBox)
         self.mainHBox.addLayout(self.treeViewVBox)
         self.mainHBox.addLayout(self.editorHBox)
@@ -62,6 +65,7 @@ class MainUI(BaseWindow, QtWidgets.QMainWindow):
 
     def initWorkbench(self):
         self.workbench = Workbench()
+        self.workbench.runConsole.clicked.connect(self.initConsole)
         self.addToolBar(Qt.LeftToolBarArea, self.workbench)
 
     def initTextEditor(self) -> None:
@@ -76,6 +80,14 @@ class MainUI(BaseWindow, QtWidgets.QMainWindow):
         self.statusBar = QtWidgets.QStatusBar()
         self.statusBar.insertPermanentWidget(0, QtWidgets.QWidget())
         self.setStatusBar(self.statusBar)
+
+    def initConsole(self):
+        if not self.mainHBox.findChild(QtWidgets.QDockWidget, 'dock'):
+            self.dock = QtWidgets.QDockWidget('Dockable', self)
+
+        self.addDockWidget(Qt.BottomDockWidgetArea, self.dock)
+        self.console = Console()
+        self.dock.setWidget(self.console)
 
     def openFiles(self) -> None:
         fileDialog = QtWidgets.QFileDialog(self)

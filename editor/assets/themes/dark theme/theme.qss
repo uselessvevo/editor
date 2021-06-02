@@ -1,7 +1,7 @@
 * {
-    color: @mainFontColor;
-    font-family: url(@mainFontFamily);
-    background-color: @mainBackground;
+    color: #f2f2f2;
+    font-family: url(assets/themes/dark theme/fonts/GoogleSans.ttf);
+    background-color: #21252B;
 }
 
 /* Font settings */
@@ -13,21 +13,21 @@ QMainWindow::separator {
    width: 6px;
    height: 5px;
    padding: 2px;
-   background: @mainSeparatorColor;
+   background: #484C54;
 }
 
 QMainWindow::separator:horizontal {
   width: 5px;
   margin-top: 2px;
   margin-bottom: 2px;
-  image: url("@shared/Icons/Controls/ToolbarSeparatorV.png");
+  image: url("assets/themes/dark theme/Icons/Controls/ToolbarSeparatorV.png");
 }
 
 QMainWindow::separator:vertical {
   height: 5px;
   margin-left: 2px;
   margin-right: 2px;
-  image: url("@shared/Icons/Controls/ToolbarSeparatorH.png");
+  image: url("assets/themes/dark theme/Icons/Controls/ToolbarSeparatorH.png");
 }
 
 /*
@@ -36,7 +36,7 @@ QListWidgetItem, QListWidget
 
 QListWidget {
     outline: none;
-    background: @mainBackground;
+    background: #21252B;
 }
 
 QListWidget::item {
@@ -56,8 +56,8 @@ QListWidget::item:selected
 */
 
 QStatusBar {
-    color: @statusBarFontColor;
-    background: @statusBarBackground;
+    color: #f7f7f7;
+    background: #3179c6;
 }
 
 /*
@@ -68,7 +68,7 @@ QMenuBar,
 QMenuBar:hover,
 QMenuBar::item,
 QMenuBar::item:hover {
-    background: @menuBarBackground;
+    background: #363b42;
     padding: 0.2em;
 	border: transparent;
 }
@@ -78,7 +78,7 @@ QMenuBar::item:hover {
 */
 
 QToolBar, #spacer {
-    background: @toolBarBackground;
+    background: #2B2F35;
 	padding: 0.5em;
 	border: transparent;
 }
@@ -88,17 +88,17 @@ QToolBar, #spacer {
 */
 
 #mainWindowToolButton {
-	font-size: @toolButtonFontSize;
+	font-size: 12px;
 }
 
 QToolButton {
-   margin-top: @toolButtonMarginTop;
-   margin-bottom: @toolButtonMarginBottom;
-   padding: @toolBarButtonsPadding;
+   margin-top: 30x;
+   margin-bottom: 20px;
+   padding: 2px 3px 1px 3px;
 
-   min-height: @toolButtonMinHeight;
-   min-width: @toolButtonMinWidth;
-   border-radius: @toolButtonBorderRadius;
+   min-height: 25px;
+   min-width: 30px;
+   border-radius: 4px;
    background-color: transparent;
 }
 
@@ -116,7 +116,7 @@ QToolButton::menu-button {
 QToolButton::menu-button:hover,
 QToolButton::menu-button:pressed
 {
-    background: @toolButtonBackground;
+    background: #3A3E43;
 }
 
 QToolButton::focus {
@@ -124,7 +124,7 @@ QToolButton::focus {
 
 QToolButton::hover {
    color: rgb(242, 242, 242);
-   background-color: @toolBarHoveredButtonBackground;
+   background-color: #3A3E43;
 }
 
 QToolButton::pressed {
@@ -143,13 +143,13 @@ QPushButton {
    min-width: 80px;
    outline: none;
 
-   border-radius: @buttonBorderRadius;
-   background-color: @buttonBackground;
+   border-radius: 4px;
+   background-color: #568AF2;
 }
 
 QPushButton::hover,
 QPushButton::focus {
-    background: @buttonHoveredBackground;
+    background: #70A4FF;
 }
 
 #CommonFocusButton {
@@ -166,12 +166,12 @@ ControlButton {
     min-width: 20px;
 	border: 1px;
 	border-radius: 10px;
-	background-color: @buttonBackground;
+	background-color: #568AF2;
 }
 
 #helpButton:hover,
 #helpButton:active {
-	background: @buttonHoveredBackground;
+	background: #70A4FF;
 }
 
 /*
@@ -180,8 +180,8 @@ ControlButton {
 
 QMenu, #ControlButton {
    background: rgb(48, 48, 48);
-   border: 1px solid @controlBackground;
-   border-radius: @controlBorderRadius;
+   border: 1px solid #292e36;
+   border-radius: 4px;
 }
 
 QMenu::item,
@@ -210,7 +210,7 @@ QMenu::icon:checked,
 #ControlButton {
    background-color: rgb(69, 69, 69);
    border: 1px solid palette(highlight);
-   border-radius: @controlBorderRadius;
+   border-radius: 4px;
 }
 
 QMenu::separator,
@@ -248,7 +248,7 @@ QCheckBox:focus {
 }
 
 QCheckBox QWidget:disabled {
-  background-color: @controlHoveredBackgroundColor;
+  background-color: #21252B;
   color: #787878;
 }
 
@@ -259,47 +259,47 @@ QCheckBox::indicator {
 }
 
 QCheckBox::indicator:unchecked {
-  image: url("@shared/Icons/CheckBox.Blank.svg");
+  image: url("assets/themes/dark theme/Icons/CheckBox.Blank.svg");
 }
 
 QCheckBox::indicator:unchecked:hover,
 QCheckBox::indicator:unchecked:focus,
 QCheckBox::indicator:unchecked:pressed {
   border: none;
-  image: url("@shared/Icons/CheckBox.Blank.svg");
+  image: url("assets/themes/dark theme/Icons/CheckBox.Blank.svg");
 }
 
 QCheckBox::indicator:unchecked:disabled {
-  image: url("@shared/Icons/CheckBox.Blank.svg");
+  image: url("assets/themes/dark theme/Icons/CheckBox.Blank.svg");
 }
 
 QCheckBox::indicator:checked {
-  image: url("@shared/Icons/CheckBox.Checked.svg");
+  image: url("assets/themes/dark theme/Icons/CheckBox.Checked.svg");
 }
 
 QCheckBox::indicator:checked:hover,
 QCheckBox::indicator:checked:focus,
 QCheckBox::indicator:checked:pressed {
   border: none;
-  image: url("@shared/Icons/CheckBox.Checked.svg");
+  image: url("assets/themes/dark theme/Icons/CheckBox.Checked.svg");
 }
 
 QCheckBox::indicator:checked:disabled {
-  image: url("@shared/Icons/CheckBox.Checked.svg");
+  image: url("assets/themes/dark theme/Icons/CheckBox.Checked.svg");
 }
 
 QCheckBox::indicator:indeterminate {
-  image: url("@shared/Icons/CheckBox.Indeterminate.svg");
+  image: url("assets/themes/dark theme/Icons/CheckBox.Indeterminate.svg");
 }
 
 QCheckBox::indicator:indeterminate:disabled {
-  image: url("@shared/Icons/CheckBox.Indeterminate.svg");
+  image: url("assets/themes/dark theme/Icons/CheckBox.Indeterminate.svg");
 }
 
 QCheckBox::indicator:indeterminate:focus,
 QCheckBox::indicator:indeterminate:hover,
 QCheckBox::indicator:indeterminate:pressed {
-  image: url("@shared/Icons/CheckBox.Checked.svg");
+  image: url("assets/themes/dark theme/Icons/CheckBox.Checked.svg");
 }
 
 /*
@@ -310,89 +310,89 @@ QComboBox {
    min-height: 20px;
    padding: 1px 18px 1px 3px;
 
-   color: @mainFontColor;
+   color: #f2f2f2;
 
-   border-radius: @controlBorderRadius;
-   border: 1px solid @controlBackground;
-   background: @controlBackground;
+   border-radius: 4px;
+   border: 1px solid #292e36;
+   background: #292e36;
 }
 
 QComboBox QAbstractItemView {
   outline: none;
   border: 1px solid #32414B;
   border-radius: 0;
-  background-color: @controlBackground;
-  selection-background-color: @controlBorderHoveredColor;
+  background-color: #292e36;
+  selection-background-color: #21252B;
 }
 
 QComboBox QAbstractItemView:hover {
-  color: @mainFontColor;
-  background-color: @controlBackground;
+  color: #f2f2f2;
+  background-color: #292e36;
 }
 
 QComboBox QAbstractItemView:selected {
-  color: @mainFontColor;
-  background: @controlBackground;
+  color: #f2f2f2;
+  background: #292e36;
 }
 
 QComboBox QAbstractItemView:alternate {
-  background: @controlBorderHoveredColor;
+  background: #21252B;
 }
 
 QComboBox:disabled {
-  background-color: @controlHoveredBackgroundColor;
+  background-color: #21252B;
   color: #787878;
 }
 
 QComboBox:hover {
-  border: 1px solid @controlBorderHoveredColor;
+  border: 1px solid #21252B;
 }
 
 QComboBox:focus {
-  border: 1px solid @controlBorderHoveredColor;
+  border: 1px solid #21252B;
 }
 
 QComboBox:on {
-  selection-background-color: @controlBorderHoveredColor;
+  selection-background-color: #21252B;
 }
 
 QComboBox::indicator {
   selection-background-color: transparent;
   color: transparent;
-  border: 1px solid @controlBorderHoveredColor;
+  border: 1px solid #21252B;
   border-radius: 0;
   selection-color: transparent;
   background-color: transparent;
 }
 
 QComboBox::indicator:alternate {
-  background: @controlBorderHoveredColor;
+  background: #21252B;
 }
 
 QComboBox::item:alternate {
-  background: @controlBorderHoveredColor;
+  background: #21252B;
 }
 
 QComboBox::item:checked {
   font-weight: bold;
-  background: @controlBorderHoveredColor;
+  background: #21252B;
 }
 
 QComboBox::item:selected {
   border: 0px solid transparent;
-  background: @controlBorderHoveredColor;
+  background: #21252B;
 }
 
 QComboBox::drop-down {
   subcontrol-origin: padding;
   subcontrol-position: top right;
   width: 12px;
-  border-left: 1px solid @controlBorderHoveredColor;
-  background: @controlBorderHoveredColor;
+  border-left: 1px solid #21252B;
+  background: #21252B;
 }
 
 QComboBox::down-arrow {
-  image: url("@shared/Icons/Arrow.Down.svg");
+  image: url("assets/themes/dark theme/Icons/Arrow.Down.svg");
   height: 8px;
   width: 8px;
 }
@@ -400,7 +400,7 @@ QComboBox::down-arrow {
 QComboBox::down-arrow:on,
 QComboBox::down-arrow:hover,
 QComboBox::down-arrow:focus {
-  image: url("@shared/Icons/Arrow.Down.svg");
+  image: url("assets/themes/dark theme/Icons/Arrow.Down.svg");
 }
 
 /*
@@ -413,31 +413,31 @@ QLineEdit {
   padding-left: 4px;
   padding-right: 4px;
 
-  color: @mainFontColor;
-  border: 1px solid @controlBackground;
+  color: #f2f2f2;
+  border: 1px solid #292e36;
 
-  border-radius: @controlBorderRadius;
-  background-color: @controlBackground;
+  border-radius: 4px;
+  background-color: #292e36;
 }
 
 QLineEdit:disabled {
-    border: 1px solid @controlBorderHoveredColor;
-    background-color: @controlBackground;
+    border: 1px solid #21252B;
+    background-color: #292e36;
 }
 
 QLineEdit:hover {
-    border: 1px solid @controlBorderHoveredColor;
-    background-color: @controlBackground;
+    border: 1px solid #21252B;
+    background-color: #292e36;
 }
 
 QLineEdit:focus {
-    border: 1px solid @controlBorderHoveredColor;
-    background-color: @controlBackground;
+    border: 1px solid #21252B;
+    background-color: #292e36;
 }
 
 QLineEdit:selected {
-    border: 1px solid @controlBorderHoveredColor;
-    background-color: @controlBackground;
+    border: 1px solid #21252B;
+    background-color: #292e36;
 }
 
 
@@ -451,31 +451,31 @@ QTabBar {
    min-height: 20px;
    min-width: 80px;
 
-   color: @mainFontColor;
-   background-color: @tabBackgroundColor;
+   color: #f2f2f2;
+   background-color: #21252B;
 }
 
 QTabBar::tab {
    padding: 4px 6px;
    border-radius: 5px;
-   background-color: @tabBackgroundColor;
-   border-color: @tabHoveredBorderColor;
+   background-color: #21252B;
+   border-color: #292e36;
 }
 
 QTabBar::tab:selected {
-   background-color: @tabBackgroundColor;
-   border-color: @tabHoveredBorderColor;
+   background-color: #21252B;
+   border-color: #292e36;
 }
 
 QTabBar::tab:!selected {
-   color: @mainFontColor;
-   background-color: @tabBackgroundColor;
-   border-color: @tabBorderColor;
+   color: #f2f2f2;
+   background-color: #21252B;
+   border-color: #292e36;
 }
 
 QTabBar::tab:hover:!pressed,
 QTabBar::tab:hover:pressed {
-    background-color: @tabHoveredBorderColor;
+    background-color: #292e36;
 }
 
 QTabBar::tab:hover {
@@ -485,7 +485,7 @@ QTabBar::tab:hover {
 
 QTabBar {
   qproperty-drawBase: 0;
-  border-radius: @controlBorderRadius;
+  border-radius: 4px;
   margin: 0px;
   padding: 2px;
   border: 0;
@@ -495,15 +495,15 @@ QTabBar::close-button {
   border: 0;
   margin: 2px;
   padding: 2px;
-  image: url("@shared/Icons/Close.svg");
+  image: url("assets/themes/dark theme/Icons/Close.svg");
 }
 
 QTabBar::close-button:hover {
-  image: url("@shared/Icons/Close.Focused.svg");
+  image: url("assets/themes/dark theme/Icons/Close.Focused.svg");
 }
 
 QTabBar::close-button:pressed {
-  image: url("@shared/Icons/Close.Pressed.svg");
+  image: url("assets/themes/dark theme/Icons/Close.Pressed.svg");
 }
 
 /*
@@ -512,32 +512,32 @@ QTabBar::close-button:pressed {
 
 QTabWidget {
   padding: 2px;
-  selection-background-color: @tabBackgroundColor;
+  selection-background-color: #21252B;
 }
 
 QTabWidget QWidget {
-  border-radius: @controlBorderRadius;
+  border-radius: 4px;
 }
 
 QTabWidget::pane {
   border: 1px solid #32414B;
-  border-radius: @controlBorderRadius;
+  border-radius: 4px;
   margin: 0px;
   padding: 0px;
 }
 
 QTabWidget::pane:selected {
-  background-color: @tabHoveredBackgroundColor;
-  border: 1px solid @tabHoveredBackgroundColor;
+  background-color: #292e36;
+  border: 1px solid #292e36;
 }
 
 QPlainTextEdit, QTextEdit {
-    border: 0px solid @mainSeparatorColor;
-    background-color: @textEditorBackground;
+    border: 0px solid #484C54;
+    background-color: #1e1e1e;
 }
 
 QFrame {
-    background-color: @mainBackground;
+    background-color: #21252B;
 }
 
 

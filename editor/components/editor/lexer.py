@@ -6,10 +6,10 @@ from PyQt5.Qt import *
 from PyQt5.Qsci import QsciLexerCustom
 
 from pygments import lexers
-from pygments import styles
 from pygments.lexer import Text
 from pygments.lexer import Error
 from pygments.lexer import _TokenType
+from pygments.lexers import get_lexer_for_filename
 
 from toolkit.managers import System
 from toolkit.utils.files import read_json
@@ -37,6 +37,8 @@ class ViewLexer(QsciLexerCustom):
         # Lexer + Style
         assets = System.get_object('AssetsManager')
         lexer = System.config.get('configs.editor.current_lexer')
+        # lexer = get_lexer_for_filename()
+
         if not lexer:
             raise LexerNotFound()
 
@@ -69,15 +71,15 @@ class ViewLexer(QsciLexerCustom):
             name='style',
             location=theme_folder / 'editor/style.py'
         )
-        style = self.style_config.get('style', {})
+        # style = self.style_config.get('style', {})
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
 
         module = getattr(module, 'EditorStyle')
-        for k, v in module.styles.items():
-            val = style.get(str(k))
-            module.styles[k] = val
-
+        # for k, v in module.styles.items():
+        #     val = style.get(str(k))
+        #     module.styles[k] = val
+        #
         return module
 
     def defaultPaper(self, style):

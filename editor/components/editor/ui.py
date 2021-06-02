@@ -4,7 +4,9 @@ from PyQt5 import Qsci
 from PyQt5.Qt import *
 
 from components.editor.lexer import ViewLexer
+
 from toolkit.managers import System
+from toolkit.utils.files import read_json
 
 
 class Editor(Qsci.QsciScintilla):
@@ -54,7 +56,8 @@ class Editor(Qsci.QsciScintilla):
         self.SendScintilla(self.SCI_SETTABWIDTH, 4)
 
         # -------- Extra settings --------
-        self.setExtraSettings(System.get_object('AssetsManager').theme)
+        extra_style = read_json(System.get_object('AssetsManager').theme_folder / 'editor/style.json').get('extra')
+        self.setExtraSettings(extra_style)
 
     def getLineSeparator(self):
         m = self.eolMode()
