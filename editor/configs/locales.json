@@ -1,0 +1,5 @@
+{
+    "locale": "ru_RU",
+    "default_locale": "en_US",
+    "locales": ["ru_RU", "en_US"]
+}

@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import QVBoxLayout
 from PyQt5.QtWidgets import QHBoxLayout
 
 # Managers
-from cloudykit.managers import tr
+from toolkit.system.manager import System
 
 
 class DialogLayout(QHBoxLayout):
@@ -16,16 +16,18 @@ class DialogLayout(QHBoxLayout):
     def __init__(self, parent=None, props=None):
         super(DialogLayout, self).__init__(parent)
 
+        self.trans = System.objects.get('TranslationsManager')
+
         self.helpButton = QPushButton(parent)
         self.helpButton.setText('?')
         self.helpButton.setObjectName('helpButton')
 
         self.okButton = QPushButton(parent)
         self.okButton.setFocus()
-        self.okButton.setText(tr('shared.Ok'))
+        self.okButton.setText(self.trans('Shared.Ok'))
 
         self.cancelButton = QPushButton(parent)
-        self.cancelButton.setText(tr('shared.Cancel'))
+        self.cancelButton.setText(self.trans('Shared.Cancel'))
 
         # Add horizontal and vertical layouts
         vlButtons = QVBoxLayout()
@@ -49,4 +51,4 @@ class DialogLayout(QHBoxLayout):
         Args:
             hid (any) - help id
         """
-        raise NotImplementedError('Method "setHelp" is not specified')
+        raise NotImplementedError('method "setHelp" must be implemented')

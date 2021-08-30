@@ -1,24 +1,30 @@
 {
    "assets":{
-      "folder":"assets",
+      "required": true,
+      "folder": "assets",
       "file_formats": [
          "jpg", "jpeg", "png", "svg"
       ],
-      "protected":[
+      "protected": [
          "shared"
       ]
    },
-   "configuration":{
+   "configuration": {
+      "required": true,
       "folder":"config",
-      "protected":[
+      "protected": [
          "shared"
       ]
    },
    "locales":{
-      "folder":"locales",
-      "default_locale":"eng",
-      "protected":[
+      "required": true,
+      "protected": [
          "shared"
       ]
-   }
+   },
+   "managers_order": [
+      "toolkit.managers.assets.AssetsManager",
+      "toolkit.managers.apps.AppConfigManager",
+      "toolkit.managers.translation.TranslationsManager"
+   ]
 }

@@ -1,4 +1,5 @@
 {
+  "formats": ["py", "pyw", "txt", "json"],
   "current_lexer": "python",
   "lexers": [
     "python"

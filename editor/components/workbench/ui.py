@@ -8,8 +8,8 @@ from toolkit.managers import getFile
 
 class Workbench(QtWidgets.QToolBar):
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
         self.setMovable(False)
         self.setIconSize(QtCore.QSize(30, 30))

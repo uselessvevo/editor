@@ -7,7 +7,8 @@ from components.console.api import QIPythonWidget
 from components.console.methods import get_process_id
 from components.console.methods import rainbow
 
-from toolkit.managers import getFile, System
+from toolkit.managers import getFile
+from toolkit.system.manager import System
 
 
 class Console(QtWidgets.QWidget):
@@ -40,38 +41,41 @@ class Console(QtWidgets.QWidget):
         # Init toolbar
         self.toolBar = QtWidgets.QToolBar('&File')
         self.toolBar.setMovable(False)
+        self.toolBar.setIconSize(QtCore.QSize(15, 15))
+        self.toolBar.setFixedHeight(36)
+
         self.toolBar.setContextMenuPolicy(Qt.PreventContextMenu)
+        self.toolBar.setOrientation(Qt.Horizontal)
+        self.toolBar.setSizePolicy(QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Minimum,
+            QtWidgets.QSizePolicy.Maximum
+        ))
 
         # Actions
         runProccess = QtWidgets.QToolButton()
         runProccess.setToolTip(self.tr('Shared.RunProcess'))
         runProccess.setIcon(QtGui.QIcon(getFile('shared/icons/start.svg')))
         runProccess.setToolButtonStyle(Qt.ToolButtonIconOnly)
-        runProccess.setIconSize(QtCore.QSize(25, 25))
 
         stopProccess = QtWidgets.QToolButton(self)
         stopProccess.setToolTip(self.tr('Shared.StopProcess'))
         stopProccess.setIcon(QtGui.QIcon(getFile('shared/icons/stop.svg')))
         stopProccess.setToolButtonStyle(Qt.ToolButtonIconOnly)
-        stopProccess.setIconSize(QtCore.QSize(25, 25))
 
         restoreGrid = QtWidgets.QToolButton(self)
         restoreGrid.setToolTip(self.tr('Console.RestoreGrid'))
         restoreGrid.setIcon(QtGui.QIcon(getFile('shared/icons/grid.svg')))
         restoreGrid.setToolButtonStyle(Qt.ToolButtonIconOnly)
-        restoreGrid.setIconSize(QtCore.QSize(12, 12))
 
         exitAct = QtWidgets.QToolButton(self)
         exitAct.setToolTip(self.tr('Shared.Exit'))
         exitAct.setIcon(QtGui.QIcon(getFile('shared/icons/delete.svg')))
         exitAct.setToolButtonStyle(Qt.ToolButtonIconOnly)
-        exitAct.setIconSize(QtCore.QSize(25, 25))
 
         printOutput = QtWidgets.QToolButton(self)
         printOutput.setToolTip(self.tr('Shared.Print'))
         printOutput.setIcon(QtGui.QIcon(getFile('shared/icons/printer.svg')))
         printOutput.setToolButtonStyle(Qt.ToolButtonIconOnly)
-        printOutput.setIconSize(QtCore.QSize(25, 25))
 
         # Pack all default actions
         self.toolBar.addWidget(runProccess)

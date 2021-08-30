@@ -1,18 +1,35 @@
 import sys
+import traceback
 
-from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 
 from app.ui import MainUI
-from toolkit.managers.system import System
-from toolkit.managers.system import prepare_plugins
+
+from toolkit.system.manager import System
+from toolkit.utils.objects import is_import_string
+from toolkit.utils.objects import prepare_dependencies
+from toolkit.utils.system import get_managers
 from toolkit.utils.themes import getTheme
 from toolkit.utils.themes import getPalette
-from toolkit.utils.requirements import check_qt
+from ui.windows.errorwindow import SystemErrorWindow
 
 
-def except_hook(cls, exception, traceback):
-    sys.__excepthook__(cls, exception, traceback)
+def except_hook(exc_type, exc_value, exc_traceback):
+    # Do not print exception when user cancels the program
+    if issubclass(exc_type, KeyboardInterrupt):
+        sys.__excepthook__(exc_type, exc_value, exc_traceback)
+        return
+
+    traceback_collect = []
+    if exc_traceback:
+        format_exception = traceback.format_tb(exc_traceback)
+        for line in format_exception:
+            traceback_collect.append(repr(line).replace('\\n', ''))
+
+    SystemErrorWindow(exc_type, exc_value, traceback_collect)
+
+
+sys.excepthook = except_hook
 
 
 def get_qt_app(*args, **kwargs):
@@ -27,26 +44,20 @@ def get_qt_app(*args, **kwargs):
 
 def prepare_system():
     System.set_system_root(__file__)
-    System.add_objects(
-        'toolkit.managers.assets.AssetsManager',
-    )
-    prepare_plugins()
+    System.add_objects(*get_managers())
     System.init_objects()
 
 
 def launch():
-    check_qt()
+    prepare_dependencies()
     prepare_system()
-    sys.excepthook = except_hook
 
     app = get_qt_app()
 
-    translator = QtCore.QTranslator()
-    translator.load(f'locales/')
-
-    # Give app needed parameters
-    app.installTranslator(translator)
-    theme = System.config.get('configs.ui.theme', default_key='configs.ui.default_theme')
+    theme = System.config.get(
+        key='configs.ui.theme',
+        default_key='configs.ui.default_theme'
+    )
     if theme:
         app.setStyleSheet(getTheme(theme))
         app.setPalette(getPalette(theme))

@@ -5,7 +5,7 @@ from PyQt5.Qt import *
 
 from components.editor.lexer import ViewLexer
 
-from toolkit.managers import System
+from toolkit.system.manager import System
 from toolkit.utils.files import read_json
 
 

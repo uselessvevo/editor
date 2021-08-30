@@ -3,7 +3,7 @@ from typing import Tuple
 from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 
-from toolkit.managers import System
+from toolkit.system.manager import System
 from toolkit.utils.os import getScreenInfo
 from ui.abstracts.window import AbstractWindow
 from ui.windows.messagebox import MessageBox

@@ -5,17 +5,15 @@ from toolkit.utils.files import write_json
 from toolkit.utils.files import write_assets_file
 from toolkit.utils.files import write_folder_size
 
-from toolkit.managers import System
+from toolkit.system.manager import System
 from toolkit.managers.base import BaseManager
 
 
 class AssetsManager(BaseManager):
+    system_section = 'assets'
 
-    _dictionary = {}
-    _system_section = 'assets'
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
         self._theme = None
         self._theme_folder = None
@@ -39,7 +37,7 @@ class AssetsManager(BaseManager):
         else:
             self._dictionary.update(**read_json(assets_file))
 
-    def get(self, key, default=''):
+    def get(self, key: str, default: str = ''):
         return self._dictionary.get(key, default)
 
     @property

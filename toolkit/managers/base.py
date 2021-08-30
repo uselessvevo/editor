@@ -1,32 +1,41 @@
-from dotty_dict import dotty
 from functools import lru_cache
-
 from toolkit import exceptions
-from toolkit.managers import System
+
+from toolkit.system.manager import System
+from toolkit.system.objects import SystemObject
+from toolkit.system.objects import SystemObjectTypes
 
 
-class BaseManager:
+class BaseManager(SystemObject):
+    type = SystemObjectTypes.MANAGER
+    system_section: str = None
 
-    _dictionary = dotty({})
-    _system_section = None
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
-    def __init__(self, *args, **kwargs):
-        if not self._system_section:
-            raise NotImplementedError
+        if not self.system_section:
+            raise AttributeError('attribute `system_section` is not set')
+
+        self._dictionary = {}
 
     @lru_cache(maxsize=None)
     def get(self, key, default=None):
-        return self._dictionary._data.get(key, default)
+        return self._dictionary.get(key, default)
 
     @lru_cache(maxsize=None)
     def set(self, key, value):
-        if key not in System.config.get(f'configs.{key}.{self._system_section}.protected'):
-            raise exceptions.ProtectedSystemSectionKey()
+        key = f'configs.{key}.{self.system_section}.protected'
+
+        if key not in System.config.get(key):
+            raise exceptions.ProtectedSystemSectionKey(key)
 
         if key not in self._dictionary:
-            raise KeyError
+            raise KeyError(f'key "{key}" not found')
 
         self._dictionary[key] = value
+
+    def save(self, file: str, data: dict):
+        raise NotImplementedError('save method must be implemented')
 
     def __repr__(self):
         return f'({self.__class__.__name__}) <hash: {self.__hash__()}, files count: {len(self._dictionary)}>'

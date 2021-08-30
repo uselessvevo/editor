@@ -11,7 +11,7 @@ from pygments.lexer import Error
 from pygments.lexer import _TokenType
 from pygments.lexers import get_lexer_for_filename
 
-from toolkit.managers import System
+from toolkit.system.manager import System
 from toolkit.utils.files import read_json
 
 

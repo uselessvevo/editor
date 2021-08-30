@@ -3,89 +3,40 @@
 #   File objects.py - 15.02.2021, 12:00
 
 import re
-import os
 import sys
-import inspect
 import importlib
-from pathlib import Path
+from toolkit.utils.files import read_json
+from toolkit.utils.os import check_connection
+from ui.windows.errorwindow import SystemErrorWindow
 
 
-def get_object_name(instance):
-    """
-    Get object (class) name or OBJECT_NAME (cloudykit/base/settings)
-
-    Args:
-        instance (object)
-    """
-    if not isinstance(instance, object):
-        raise AttributeError(f'Instance is {type(instance)}')
-
-    name = getattr(instance, 'name')
-
-    return instance.__class__.__name__ if name else None
-
-
-def get_object_path(instance, file=True):
-    """
-    Get object path
-
-    Args:
-        instance (object)
-        file (bool): set false to return path without file
-
-    Returns:
-        relative path to object folder (str)
-    """
-    if not isinstance(instance, object):
-        raise AttributeError(f'Instance is {type(instance)}')
-
-    result = Path(inspect.getfile(instance.__class__))
-    return result if file else result.parts[:-1]
-    # return result if file else os.sep.join(result.split(os.sep)[:-1])
-
-
-def get_object_folder_name(instance):
-    """
-    Get instance folder name
-
-    Args:
-        instance (object)
-
-    Returns:
-        relative path to object folder (str)
-    """
-    if not isinstance(instance, object):
-        raise AttributeError(f'Instance is {type(instance)}')
-
-    return os.path.split(os.path.relpath(inspect.getfile(instance.__class__)))[0]
-
-
-def prepare_dependencies(debug=False):
-    # Standard libraries
+def prepare_dependencies(file: str = 'requirements.json', dev: bool = False):
     import subprocess
     import pkg_resources
 
-    from cloudykit.utils.files import read_json
+    requirements = read_json(file)
+    requirements = requirements.get('dev') if dev else requirements.get('prod')
 
-    if debug:
-        requirements = read_json('settings/requirements.dev.json')
-    else:
-        requirements = read_json('settings/requirements.release.json')
-
-    to_install = set(k.lower() for k in requirements.get('toInstall'))
-    to_delete = set(k.lower() for k in requirements.get('toDelete'))
+    to_install = set(f'{k.lower()}=={v}' for (k, v) in requirements.get('install').items())
+    to_delete = set(f'{k.lower()}=={v}' for (k, v) in requirements.get('delete').items())
 
     installed = set(str(v).replace(' ', '==').lower() for v in pkg_resources.working_set.by_key.values())
     missing = to_install - installed
-
     run_subprocess = None
 
     if missing:
+        if not check_connection():
+            SystemErrorWindow(
+                err_type='ConnectionError',
+                err_value='Can\'t connect to the internet',
+                err_traceback='Can\'t install libraries - can\'t establish internet connection'
+            )
+
         subprocess.call((sys.executable, '-m', 'pip', 'install', '--upgrade', 'pip'))
         run_subprocess = subprocess.check_call((sys.executable, '-m', 'pip', 'install', *missing))
 
         if run_subprocess != 0:
-            raise subprocess.SubprocessError('Can\'t install requirements Aborting ')
+            raise subprocess.SubprocessError('can\'t install requirements')
         return run_subprocess
 
     if to_delete:
@@ -93,21 +44,21 @@ def prepare_dependencies(debug=False):
         run_subprocess = subprocess.check_call((sys.executable, '-m', 'pip', 'uninstall', *to_delete))
 
         if run_subprocess != 0:
-            raise subprocess.SubprocessError('Can\'t remove libraries Aborting ')
+            raise subprocess.SubprocessError('can\'t remove libraries ')
         return run_subprocess
 
     return run_subprocess
 
 
-def is_import_string(string):
+def is_import_string(string: str):
     return True if re.match(r'^([a-zA-Z.]+)$', string) else False
 
 
-def is_file_path_string(string):
+def is_file_path_string(string: str):
     return True if re.match(r'(\w+:|/[a-zA-Z./]*[\s]?)', string) else False
 
 
-def import_string(string, both=True):
+def import_string(string: str, both: bool = True):
     """
     Import module by string:
 
@@ -118,6 +69,9 @@ def import_string(string, both=True):
     Returns:
         object
     """
+    if not is_import_string(string):
+        raise TypeError('string is not a valid "import string"')
+
     string = string.split('.')
     path, name = '.'.join(string[:-1]), string[-1]
 

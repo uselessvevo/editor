@@ -3,7 +3,7 @@ from IPython.display import Image
 from qtconsole.inprocess import QtInProcessKernelManager
 from qtconsole.rich_jupyter_widget import RichJupyterWidget
 
-from toolkit.managers import System
+from toolkit.system.manager import System
 from toolkit.utils.themes import getTheme
 
 

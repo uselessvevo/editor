@@ -28,7 +28,7 @@ def json_to_mo(file):
     for k, v in data.items():
         template += f'msgid "{k}"\rmsgstr "{v}"\n\n'
 
-    with open('cloudyff/locales/eng/shared.po', 'w') as file:
+    with open('cloudyff/locales/en_US/Shared.po', 'w') as file:
         file.write(template)
 
 

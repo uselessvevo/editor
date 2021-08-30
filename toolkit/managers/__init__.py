@@ -1,7 +1,7 @@
 #   Copyright @ Crab Dudes Developers
 #   Licensed under the terms of the MIT license
 #   File __init__.py - 02.03.2021, 15:33
-from toolkit.managers.system import System
+from toolkit.system.manager import System
 
 
 def tr(key, **kwargs):
@@ -32,7 +32,7 @@ def get_file(key, default=''):
         >>> get_file('AppIcon', 'DefaultValue')
     """
     # TODO: add file format support/check
-    return System.objects.get('AssetsManager').get(key, default)
+    return System.get_object('AssetsManager').get(key, default)
 
 
 def get_font(key, default='Arial'):

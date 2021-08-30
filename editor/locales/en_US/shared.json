@@ -1,0 +1,22 @@
+{
+    "Shared.Exit": "Exit",
+    "Shared.ExitMessage": "Are you sure you want to exit?",
+    "Shared.Settings": "Settings",
+    "Shared.Open": "Open",
+    "Shared.Ok": "Ok",
+    "Shared.No": "No",
+    "Shared.Yes": "Yes",
+    "Shared.Cancel": "Cancel",
+    "Shared.Error": "Error",
+    "Shared.Language": "Language",
+    "Shared.Theme": "Theme",
+    "Shared.Plugins": "Plugins",
+    "Shared.Version": "Version",
+    "Shared.Author": "Author",
+    "Shared.FileNotFound": "File not found",
+    "Shared.Menu": "Menu",
+    "Shared.PopularAudioFormats": "All audio formats",
+    "Shared.PopularVideoFormats": "All video formats",
+    "Shared.ffmpegPath": "Path to ffmpeg",
+    "Shared.BaseErrorTitle": "Error"
+}

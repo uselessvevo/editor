@@ -5,7 +5,7 @@ from PyQt5 import QtGui, Qt
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
 
-from toolkit.managers import System
+from toolkit.system.manager import System
 from toolkit.managers import getFile
 from ui.windows.window import BaseWindow
 
@@ -18,8 +18,10 @@ class MainUI(BaseWindow, QtWidgets.QMainWindow):
     defaultMinSize = (1020, 670)
     defaultPosition = (150, 150)
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        self.trans = System.get_object('TranslationsManager')
 
         self.initMain()
         self.initLayout()
@@ -29,7 +31,7 @@ class MainUI(BaseWindow, QtWidgets.QMainWindow):
         self.initStatusBar()
 
     def initMain(self):
-        self.setWindowTitle(f'Redaktor - {os.getcwd()}')
+        self.setWindowTitle(f'Editor - {os.getcwd()}')
         self.setWindowIcon(QtGui.QIcon(getFile('shared/icons/magic.svg')))
         self.setMinSize()
         self.moveToCenter()
@@ -41,7 +43,7 @@ class MainUI(BaseWindow, QtWidgets.QMainWindow):
         self.treeViewVBox = QtWidgets.QVBoxLayout()
         self.editorHBox = QtWidgets.QHBoxLayout()
 
-        self.dock = QtWidgets.QDockWidget('Dockable', self)
+        self.dock = QtWidgets.QDockWidget('Console', self)
         # self.dock.setFloating(True)
 
         self.mainHBox.addLayout(self.workbenchVBox)
@@ -57,11 +59,11 @@ class MainUI(BaseWindow, QtWidgets.QMainWindow):
         self.setCentralWidget(widget)
 
     def initMenu(self):
-        self.fileMenu = self.menuBar().addMenu('&File')
-        self.editMenu = self.menuBar().addMenu('&Edit')
-        self.viewMenu = self.menuBar().addMenu('&View')
-        self.runMenu = self.menuBar().addMenu('&Run')
-        self.helpMenu = self.menuBar().addMenu('&Help')
+        self.fileMenu = self.menuBar().addMenu(self.trans('Shared.File'))
+        self.editMenu = self.menuBar().addMenu(self.trans('Shared.Edit'))
+        self.viewMenu = self.menuBar().addMenu(self.trans('Shared.View'))
+        self.runMenu = self.menuBar().addMenu(self.trans('Shared.Run'))
+        self.helpMenu = self.menuBar().addMenu(self.trans('Shared.Help'))
 
     def initWorkbench(self):
         self.workbench = Workbench()
@@ -117,11 +119,9 @@ class MainUI(BaseWindow, QtWidgets.QMainWindow):
 
     @lru_cache(None)
     def getFileFormats(self) -> str:
-        formats = System.config.get('configs.formats')
-        result = ';;'.join(
-            '{}{}'.format(self.tr(key), val) for (key, val)
-            in formats.items() if key != 'formats'
-        )
+        formats = System.config.get('editor.formats')
+        result = ';;'.join('{}{}'.format(
+            self.translation.get(k), v) for (k, v) in formats.items())
         return result + ';;'.join(formats)
 
     def onCloseEventAccept(self) -> None:
