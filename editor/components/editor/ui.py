@@ -1,7 +1,6 @@
-from pathlib import Path
-
 from PyQt5 import Qsci
 from PyQt5.Qt import *
+from IPython.core.debugger import set_trace
 
 from components.editor.lexer import ViewLexer
 
@@ -10,7 +9,6 @@ from toolkit.utils.files import read_json
 
 
 class Editor(Qsci.QsciScintilla):
-
     ARROW_MARKER_NUM = 8
 
     def __init__(self, parent=None):
@@ -41,8 +39,8 @@ class Editor(Qsci.QsciScintilla):
 
         # -------- Shortcuts --------
         self.text_size = 1
-        self.s1 = QShortcut('ctrl+1', self, self.reduceTextSize)
-        self.s2 = QShortcut('ctrl+2', self, self.increaseTextSize)
+        self.reduceTextSizeShortcut = QShortcut('Ctrl+-', self, self.reduceTextSize)
+        self.increaseTextSizeShortcut = QShortcut('Ctrl+=', self, self.increaseTextSize)
 
         self.setMarginSensitivity(1, True)
         self.marginClicked.connect(self.onMarginClicked)
@@ -101,20 +99,12 @@ class Editor(Qsci.QsciScintilla):
 
     def increaseTextSize(self):
         self.text_size *= 2
-        self.genText()
 
     def reduceTextSize(self):
         if self.text_size == 1:
             return
 
         self.text_size //= 2
-        self.genText()
-
-    def genText(self):
-        content = Path(__file__).read_text()
-        while len(content) < self.text_size:
-            content *= 2
-        self.setText(content[:self.text_size])
 
     def onMarginClicked(self, nmargin, nline, modifiers):
         # Toggle marker for the line the margin was clicked on

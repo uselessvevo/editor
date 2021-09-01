@@ -37,5 +37,5 @@ class BaseManager(SystemObject):
     def save(self, file: str, data: dict):
         raise NotImplementedError('save method must be implemented')
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'({self.__class__.__name__}) <hash: {self.__hash__()}, files count: {len(self._dictionary)}>'

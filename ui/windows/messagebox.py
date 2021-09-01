@@ -9,10 +9,10 @@ from toolkit.system.manager import System
 
 class MessageBox(QMessageBox):
 
-    def __init__(self, parent=None):
-        super(MessageBox, self).__init__(parent)
+    def __init__(self, parent=None) -> None:
+        super().__init__(parent)
 
-        self.trans = System.objects.get('TranslationsManager')
+        self.trans = System.get_object('TranslationManager')
 
         self.setStyleSheet('QLabel{min-width: 300px; min-height: 50}')
         self.setWindowTitle(self.trans('Shared.Exit'))  # Exit

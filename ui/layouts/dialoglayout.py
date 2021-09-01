@@ -16,7 +16,7 @@ class DialogLayout(QHBoxLayout):
     def __init__(self, parent=None, props=None):
         super(DialogLayout, self).__init__(parent)
 
-        self.trans = System.objects.get('TranslationsManager')
+        self.trans = System.get_object('TranslationManager')
 
         self.helpButton = QPushButton(parent)
         self.helpButton.setText('?')

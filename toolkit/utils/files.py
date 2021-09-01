@@ -31,7 +31,7 @@ def read_json(file, hang_on_error=True, default=None, create=False):
             raise err
 
 
-def read_configs(files, skip_error=True, create=False):
+def read_json_files(files, skip_error=True, create=False):
     """
     Args:
         files (List[str]): list of files
@@ -150,4 +150,4 @@ def write_assets_file(prefix, root, folder, file_formats=None, path_slice=-2):
 
 
 readJson = read_json
-readConfigs = read_configs
+readConfigs = read_json_files

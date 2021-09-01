@@ -5,23 +5,24 @@ from PyQt5 import QtGui, Qt
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
 
-from toolkit.system.manager import System
 from toolkit.managers import getFile
-from ui.windows.window import BaseWindow
+from toolkit.system.manager import System
+
+from ui.windows.window import BaseWindowMixin
 
 from components.editor.ui import Editor
 from components.console.ui import Console
 from components.workbench.ui import Workbench
 
 
-class MainUI(BaseWindow, QtWidgets.QMainWindow):
+class MainUI(BaseWindowMixin, QtWidgets.QMainWindow):
     defaultMinSize = (1020, 670)
     defaultPosition = (150, 150)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.trans = System.get_object('TranslationsManager')
+        self.trans = System.get_object('TranslationManager')
 
         self.initMain()
         self.initLayout()
@@ -97,7 +98,7 @@ class MainUI(BaseWindow, QtWidgets.QMainWindow):
 
         result, folder = fileDialog.getOpenFileNames(
             parent=self,
-            caption=self.tr('Editor.OpenFiles'),
+            caption=self.trans('Editor.OpenFiles'),
             directory=System.config.get('configs.files.last_opened_folder', os.path.expanduser('~')),
             filter=self.getFileFormats()
         )
@@ -110,7 +111,7 @@ class MainUI(BaseWindow, QtWidgets.QMainWindow):
     def openFolder(self) -> None:
         folder = QtWidgets.QFileDialog.getExistingDirectory(
             parent=self,
-            caption=self.tr('Editor.OpenFolder'),
+            caption=self.trans('Editor.OpenFolder'),
             directory=System.config.get('configs.files.last_opened_folder', os.path.expanduser('~'))
         )
         System.config.set('files.last_opened_folder', folder)

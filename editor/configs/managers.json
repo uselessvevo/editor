@@ -25,6 +25,6 @@
    "managers_order": [
       "toolkit.managers.assets.AssetsManager",
       "toolkit.managers.apps.AppConfigManager",
-      "toolkit.managers.translation.TranslationsManager"
+      "toolkit.managers.translation.TranslationManager"
    ]
 }

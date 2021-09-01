@@ -7,7 +7,7 @@ from toolkit.managers.base import BaseManager
 from toolkit.utils.os import get_locale
 
 
-class TranslationsManager(BaseManager):
+class TranslationManager(BaseManager):
     system_section = 'translations'
 
     def __init__(self, **kwargs):

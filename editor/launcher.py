@@ -6,7 +6,6 @@ from PyQt5 import QtWidgets
 from app.ui import MainUI
 
 from toolkit.system.manager import System
-from toolkit.utils.objects import is_import_string
 from toolkit.utils.objects import prepare_dependencies
 from toolkit.utils.system import get_managers
 from toolkit.utils.themes import getTheme
@@ -15,11 +14,6 @@ from ui.windows.errorwindow import SystemErrorWindow
 
 
 def except_hook(exc_type, exc_value, exc_traceback):
-    # Do not print exception when user cancels the program
-    if issubclass(exc_type, KeyboardInterrupt):
-        sys.__excepthook__(exc_type, exc_value, exc_traceback)
-        return
-
     traceback_collect = []
     if exc_traceback:
         format_exception = traceback.format_tb(exc_traceback)

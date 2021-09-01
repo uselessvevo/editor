@@ -18,14 +18,15 @@ class Console(QtWidgets.QWidget):
 
     def __init__(self, parent=None):
         super(Console, self).__init__(parent)
+        self.trans = System.get_object('TranslationManager')
+
         self.setWindowTitle('Editor Console')
+        self.setGeometry(300, 300, 800, 550)
 
         self.initMain()
         self.initToolbar()
         self.initConsole()
         self.initGrid()
-
-        self.setGeometry(300, 300, 800, 550)
 
     def initGrid(self):
         self.grid.addWidget(self.toolBar, 0, 0)
@@ -53,27 +54,27 @@ class Console(QtWidgets.QWidget):
 
         # Actions
         runProccess = QtWidgets.QToolButton()
-        runProccess.setToolTip(self.tr('Shared.RunProcess'))
+        runProccess.setToolTip(self.trans('Shared.RunProcess'))
         runProccess.setIcon(QtGui.QIcon(getFile('shared/icons/start.svg')))
         runProccess.setToolButtonStyle(Qt.ToolButtonIconOnly)
 
         stopProccess = QtWidgets.QToolButton(self)
-        stopProccess.setToolTip(self.tr('Shared.StopProcess'))
+        stopProccess.setToolTip(self.trans('Shared.StopProcess'))
         stopProccess.setIcon(QtGui.QIcon(getFile('shared/icons/stop.svg')))
         stopProccess.setToolButtonStyle(Qt.ToolButtonIconOnly)
 
         restoreGrid = QtWidgets.QToolButton(self)
-        restoreGrid.setToolTip(self.tr('Console.RestoreGrid'))
+        restoreGrid.setToolTip(self.trans('Console.RestoreGrid'))
         restoreGrid.setIcon(QtGui.QIcon(getFile('shared/icons/grid.svg')))
         restoreGrid.setToolButtonStyle(Qt.ToolButtonIconOnly)
 
         exitAct = QtWidgets.QToolButton(self)
-        exitAct.setToolTip(self.tr('Shared.Exit'))
+        exitAct.setToolTip(self.trans('Shared.Exit'))
         exitAct.setIcon(QtGui.QIcon(getFile('shared/icons/delete.svg')))
         exitAct.setToolButtonStyle(Qt.ToolButtonIconOnly)
 
         printOutput = QtWidgets.QToolButton(self)
-        printOutput.setToolTip(self.tr('Shared.Print'))
+        printOutput.setToolTip(self.trans('Shared.Print'))
         printOutput.setIcon(QtGui.QIcon(getFile('shared/icons/printer.svg')))
         printOutput.setToolButtonStyle(Qt.ToolButtonIconOnly)
 

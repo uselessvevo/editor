@@ -4,12 +4,15 @@ from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 
 from toolkit.managers import getFile
+from toolkit.system.manager import System
 
 
 class Workbench(QtWidgets.QToolBar):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
+        self.trans = System.get_object('TranslationManager')
 
         self.setMovable(False)
         self.setIconSize(QtCore.QSize(30, 30))
@@ -21,22 +24,22 @@ class Workbench(QtWidgets.QToolBar):
         ))
 
         openFolder = QtWidgets.QToolButton()
-        openFolder.setToolTip(self.tr('Shared.OpenFolder'))
+        openFolder.setToolTip(self.trans('Shared.OpenFolder'))
         openFolder.setIcon(QtGui.QIcon(getFile('shared/icons/folder-open.svg')))
         openFolder.setToolButtonStyle(Qt.ToolButtonIconOnly)
 
         search = QtWidgets.QToolButton()
-        search.setToolTip(self.tr('Shared.Search'))
+        search.setToolTip(self.trans('Shared.Search'))
         search.setIcon(QtGui.QIcon(getFile('shared/icons/search.svg')))
         search.setToolButtonStyle(Qt.ToolButtonIconOnly)
 
         settings = QtWidgets.QToolButton()
-        settings.setToolTip(self.tr('Shared.Settings'))
+        settings.setToolTip(self.trans('Shared.Settings'))
         settings.setIcon(QtGui.QIcon(getFile('shared/icons/settings.svg')))
         settings.setToolButtonStyle(Qt.ToolButtonIconOnly)
 
         runProcess = QtWidgets.QToolButton()
-        runProcess.setToolTip(self.tr('Shared.RunProcess'))
+        runProcess.setToolTip(self.trans('Shared.RunProcess'))
         runProcess.setIcon(QtGui.QIcon(getFile('shared/icons/start.svg')))
         runProcess.setToolButtonStyle(Qt.ToolButtonIconOnly)
 
@@ -48,7 +51,7 @@ class Workbench(QtWidgets.QToolBar):
         )
 
         self.runConsole = QtWidgets.QToolButton()
-        self.runConsole.setToolTip(self.tr('Shared.runConsole'))
+        self.runConsole.setToolTip(self.trans('Shared.runConsole'))
         self.runConsole.setIcon(QtGui.QIcon(getFile('shared/icons/bug.svg')))
         self.runConsole.setToolButtonStyle(Qt.ToolButtonIconOnly)
 
