@@ -12,7 +12,9 @@ class Editor(Qsci.QsciScintilla):
     ARROW_MARKER_NUM = 8
 
     def __init__(self, parent=None):
-        super(Editor, self).__init__(parent=parent)
+        super().__init__(parent=parent)
+
+        self._parent = parent
 
         font = QFont()
         font.setFamily('Courier')
@@ -41,6 +43,9 @@ class Editor(Qsci.QsciScintilla):
         self.text_size = 1
         self.reduceTextSizeShortcut = QShortcut('Ctrl+-', self, self.reduceTextSize)
         self.increaseTextSizeShortcut = QShortcut('Ctrl+=', self, self.increaseTextSize)
+        # self.setBreakpointShortcut = QShortcut('Ctrl+Shift+b', self, )
+
+        # connect(textEdit, & QTextEdit::cursorPositionChanged, this, & MainWindow::showCurrendCursorPosition);
 
         self.setMarginSensitivity(1, True)
         self.marginClicked.connect(self.onMarginClicked)
@@ -53,9 +58,15 @@ class Editor(Qsci.QsciScintilla):
         self.SendScintilla(self.SCI_SETADDITIONALSELECTIONTYPING, True)
         self.SendScintilla(self.SCI_SETTABWIDTH, 4)
 
+        # Cursor
+        # self.cursor.connect
+
         # -------- Extra settings --------
         extra_style = read_json(System.get_object('AssetsManager').theme_folder / 'editor/style.json').get('extra')
         self.setExtraSettings(extra_style)
+
+    def cursorPositionChanged(self, p_int, p_int_1):
+        print(self.getCursorPosition()[0], self.getCursorPosition()[1])
 
     def getLineSeparator(self):
         m = self.eolMode()
@@ -105,6 +116,9 @@ class Editor(Qsci.QsciScintilla):
             return
 
         self.text_size //= 2
+
+    def onCursorChangePosition(self, event):
+        return
 
     def onMarginClicked(self, nmargin, nline, modifiers):
         # Toggle marker for the line the margin was clicked on

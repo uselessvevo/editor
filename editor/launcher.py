@@ -1,16 +1,7 @@
 import sys
 import traceback
 
-from PyQt5 import QtWidgets
-
-from app.ui import MainUI
-
-from toolkit.system.manager import System
-from toolkit.utils.objects import prepare_dependencies
-from toolkit.utils.system import get_managers
-from toolkit.utils.themes import getTheme
-from toolkit.utils.themes import getPalette
-from ui.windows.errorwindow import SystemErrorWindow
+from ui.windows.errorwindow import SystemError
 
 
 def except_hook(exc_type, exc_value, exc_traceback):
@@ -20,14 +11,15 @@ def except_hook(exc_type, exc_value, exc_traceback):
         for line in format_exception:
             traceback_collect.append(repr(line).replace('\\n', ''))
 
-    SystemErrorWindow(exc_type, exc_value, traceback_collect)
+    SystemError(exc_type, exc_value, traceback_collect)
 
 
 sys.excepthook = except_hook
 
 
 def get_qt_app(*args, **kwargs):
-    """Create a new qt5 app or return an existing one."""
+    from PyQt5 import QtWidgets
+
     app = QtWidgets.QApplication.instance()
     if app is None:
         if not args:
@@ -36,15 +28,21 @@ def get_qt_app(*args, **kwargs):
     return app
 
 
-def prepare_system():
+def launch():
+    from toolkit.utils.installer import prepare_dependencies
+
+    prepare_dependencies()
+
+    from toolkit.system.manager import System
+    from toolkit.utils.system import get_managers
+
     System.set_system_root(__file__)
     System.add_objects(*get_managers())
     System.init_objects()
 
-
-def launch():
-    prepare_dependencies()
-    prepare_system()
+    from editor.app.ui import MainUI
+    from toolkit.utils.themes import getTheme
+    from toolkit.utils.themes import getPalette
 
     app = get_qt_app()
 
@@ -56,8 +54,11 @@ def launch():
         app.setStyleSheet(getTheme(theme))
         app.setPalette(getPalette(theme))
 
-    # widget = ui.IPythonConsoleWidget()
     widget = MainUI()
     widget.show()
 
     sys.exit(app.exec_())
+
+
+if __name__ == '__main__':
+    launch()

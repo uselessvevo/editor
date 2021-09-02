@@ -9,6 +9,7 @@ from toolkit.system.objects import SystemObject
 from toolkit.utils.files import read_json_files
 from toolkit.utils.files import read_json
 from toolkit.utils.files import update_json
+from toolkit.utils.logger import MessageTypes
 from toolkit.utils.objects import import_string
 from toolkit.utils.objects import is_import_string
 
@@ -130,14 +131,14 @@ class SystemManager(SystemObject):
                 self.log(f'Can\'t import "{instance}". Invalid import string')
 
         if name in self.__objects:
-            raise KeyError(f'Object "{name}" already added')
+            self.log(f'Object "{name}" already added. Skipping', MessageTypes.WARNING)
 
         self.__objects[name] = instance
         self.log(f'Object "{self.name}" ({self.type.value}) was added')
 
     def remove_object(self, name: str) -> None:
         if name not in self.__objects:
-            raise KeyError(f'Object "{name}" not found')
+            self.log(f'Object "{name}" not found. Skipping')
 
         self.__objects.pop(name)
         self.log(f'Object "{name}" has been removed')

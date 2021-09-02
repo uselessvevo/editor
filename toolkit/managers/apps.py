@@ -72,14 +72,3 @@ class AppConfigManager(BaseManager):
             # TODO: make a way to collect dependencies of all plugins and then create `PluginSystemObject` nodes
             # System.add_object(plugin.get('exec'))
             # System.config.update(read_configs(*plugin_config_files))
-
-
-def load_plugins(plugins_folder: str = 'plugins'):
-    # Read manifest.json file to get full info about plugins
-    manifest_data = read_json(f'{plugins_folder}/manifest.json')
-    plugins = [f"plugins.{i.get('exec')}" for i in manifest_data.get('plugins')]
-    System.add_objects(*plugins)
-
-    config_files = [glob.glob(f'{plugins_folder}/{i}/{i}/configs/*.json') for i in os.listdir(plugins_folder)]
-    config_files = read_json_files(*config_files)
-    System.config.update(config_files)

@@ -1,1 +1,1 @@
-## Just an excremental code editor
+## Just an experimental code editor

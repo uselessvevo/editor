@@ -1,0 +1,2 @@
+class LexerNotFound(Exception):
+    pass

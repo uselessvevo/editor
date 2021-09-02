@@ -14,6 +14,8 @@ from pygments.lexers import get_lexer_for_filename
 from toolkit.system.manager import System
 from toolkit.utils.files import read_json
 
+from components.editor.exceptions import LexerNotFound
+
 
 def convert_size(size_bytes):
     if size_bytes == 0:
@@ -23,10 +25,6 @@ def convert_size(size_bytes):
     p = math.pow(1024, i)
     s = round(size_bytes / p, 2)
     return f'{s} {size_name[i]}'
-
-
-class LexerNotFound(Exception):
-    pass
 
 
 class ViewLexer(QsciLexerCustom):

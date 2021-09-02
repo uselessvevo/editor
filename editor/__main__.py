@@ -1,3 +1,0 @@
-import launcher
-
-launcher.launch()
