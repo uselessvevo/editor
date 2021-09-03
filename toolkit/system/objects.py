@@ -9,6 +9,7 @@ class SystemObjectTypes(enum.Enum):
     PLUGIN = 'plugin'
     MANAGER = 'manager'
     UTILITY = 'utility'
+    UNSPECIFIED = 'unspecified'
     APPLICATION = 'application'
 
 
@@ -28,7 +29,7 @@ class SystemObject:
 
         if not self.type:
             self.log(f'Object "{self.name}" has no type specified', MessageTypes.WARNING)
-            self.type = SystemObjectTypes.APPLICATION
+            self.type = SystemObjectTypes.UNSPECIFIED
 
     def __repr__(self) -> str:
-        return f'({self.name}) <type: {self.type.value}>'
+        return f'({self.__class__.__name__}) <name: {self.name} type: {self.type.value}>'

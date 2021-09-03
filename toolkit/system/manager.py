@@ -138,7 +138,7 @@ class SystemManager(SystemObject):
 
     def remove_object(self, name: str) -> None:
         if name not in self.__objects:
-            self.log(f'Object "{name}" not found. Skipping')
+            self.log(f'Object "{name}" not found. Skipping', MessageTypes.WARNING)
 
         self.__objects.pop(name)
         self.log(f'Object "{name}" has been removed')
