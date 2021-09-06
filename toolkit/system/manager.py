@@ -5,11 +5,11 @@ from typing import List
 
 from dotty_dict import Dotty
 
-from toolkit.system.objects import SystemObject
+from toolkit.system.objects import SystemObject, SystemObjectTypes
 from toolkit.utils.files import read_json_files
 from toolkit.utils.files import read_json
 from toolkit.utils.files import update_json
-from toolkit.utils.logger import MessageTypes
+from toolkit.utils.logger import MessageTypes, DummyLogger
 from toolkit.utils.objects import import_string
 from toolkit.utils.objects import is_import_string
 
@@ -30,7 +30,7 @@ class CustomDictionary(dict):
         return set(i for i in super().keys() if not i.startswith('__') and not i.endswith('__'))
 
 
-class SystemConfig(Dotty, SystemObject):
+class SystemConfig(Dotty):
     show_hidden_attributes: bool = False
 
     def __init__(self, defaults: dict = None) -> None:
@@ -72,22 +72,31 @@ class SystemConfig(Dotty, SystemObject):
         return f'({self.__class__.__name__}) <items: {list(self._data.keys())[:2]}\n>'
 
 
-class SystemManager(SystemObject):
+class SystemManager:
     """
     System is the core manager
     Provides easy access to the instances, settings and etc.
     """
     version = '0.0.2'
+    logger = DummyLogger
     config_class = SystemConfig
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
-
+        self.logger = kwargs.get('logger', self.logger)()
         self.log(f'Starting a system. Version: {self.version}')
 
         self.__root = None
         self.__objects = {}
-        self.__config = self.config_class(defaults=read_json_files(glob.glob('configs/*.json')))
+
+        defaults = read_json_files(glob.glob('configs/*.json'))
+        if not defaults:
+            raise ValueError('Configuration is empty')
+
+        self.__config = self.config_class(defaults=defaults)
+
+    def log(self, message: str, message_type: MessageTypes = MessageTypes.INFO, **kwargs) -> None:
+        self.logger.log(message=message, message_type=message_type, **kwargs)
 
     def set_system_root(self, root) -> None:
         """
@@ -130,11 +139,14 @@ class SystemManager(SystemObject):
             else:
                 self.log(f'Can\'t import "{instance}". Invalid import string')
 
+        if not isinstance(getattr(instance, 'type', None), SystemObject):
+            self.log(f'Object "{instance.__class__.__name__}" is not SystemObject based')
+
         if name in self.__objects:
-            self.log(f'Object "{name}" already added. Skipping', MessageTypes.WARNING)
+            self.log(f'Object "{instance}" already added. Skipping', MessageTypes.WARNING)
 
         self.__objects[name] = instance
-        self.log(f'Object "{self.name}" ({self.type.value}) was added')
+        self.log(f'Object "{instance}" ({instance.type}) was added')
 
     def remove_object(self, name: str) -> None:
         if name not in self.__objects:

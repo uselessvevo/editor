@@ -19,7 +19,9 @@ class PluginSystemObject(SystemObject, Node):
     type = SystemObjectTypes.PLUGIN
 
 
-class AppConfigManager(BaseManager):
+class AppConfigManager(BaseManager, SystemObject):
+    name = 'app_config_manager'
+    type = SystemObjectTypes.MANAGER
     system_section = 'apps'
 
     def __init__(self, **kwargs):

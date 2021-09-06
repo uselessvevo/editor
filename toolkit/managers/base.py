@@ -6,8 +6,7 @@ from toolkit.system.objects import SystemObject
 from toolkit.system.objects import SystemObjectTypes
 
 
-class BaseManager(SystemObject):
-    type = SystemObjectTypes.MANAGER
+class BaseManager:
     system_section: str = None
 
     def __init__(self, **kwargs):
@@ -18,9 +17,8 @@ class BaseManager(SystemObject):
 
         self._dictionary = {}
 
-    @lru_cache(maxsize=None)
-    def get(self, key, default=None):
-        return self._dictionary.get(key, default)
+    def get(self, *args, **kwargs):
+        raise NotImplementedError
 
     @lru_cache(maxsize=None)
     def set(self, key, value):

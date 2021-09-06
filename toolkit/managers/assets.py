@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from toolkit.system.objects import SystemObject
 from toolkit.utils.files import read_json
 from toolkit.utils.files import write_json
 from toolkit.utils.files import write_assets_file
@@ -9,7 +10,8 @@ from toolkit.system.manager import System
 from toolkit.managers.base import BaseManager
 
 
-class AssetsManager(BaseManager):
+class AssetsManager(BaseManager, SystemObject):
+    name = 'assets_manager'
     system_section = 'assets'
 
     def __init__(self, **kwargs):

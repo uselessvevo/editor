@@ -1,4 +1,6 @@
 from pathlib import Path
+
+from toolkit.system.objects import SystemObject, SystemObjectTypes
 from toolkit.utils.files import read_json
 from toolkit.utils.files import write_json
 
@@ -7,7 +9,9 @@ from toolkit.managers.base import BaseManager
 from toolkit.utils.os import get_locale
 
 
-class TranslationManager(BaseManager):
+class TranslationManager(BaseManager, SystemObject):
+    name = 'translation_manager'
+    type = SystemObjectTypes.MANAGER
     system_section = 'translations'
 
     def __init__(self, **kwargs):
