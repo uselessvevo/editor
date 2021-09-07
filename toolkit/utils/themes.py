@@ -10,28 +10,6 @@ from toolkit.managers import get_file
 from toolkit.utils.files import read_json
 
 
-def json_to_mo(file):
-    data = read_json(file)
-    template = '''msgid ""
-    msgstr ""
-    "MIME-Version: 1.0"
-    "Content-Type: text/plain; charset=UTF-8"
-    "Content-Transfer-Encoding: 8bit"
-    "X-Generator: pogen-script"
-    "Project-Id-Version: CloudyFF"
-    "Language: {locale}"
-    '''
-    template = template.format({
-
-    })
-
-    for k, v in data.items():
-        template += f'msgid "{k}"\rmsgstr "{v}"\n\n'
-
-    with open('cloudyff/locales/en_US/Shared.po', 'w') as file:
-        file.write(template)
-
-
 def parse_stylesheet(path, keys=None):
     """
     Args:

@@ -11,20 +11,22 @@
    },
    "configuration": {
       "required": true,
-      "folder":"config",
       "protected": [
          "shared"
       ]
    },
    "locales":{
       "required": true,
+      "folder": "assets",
+      "file_formats": [
+         "jpg", "jpeg", "png", "svg"
+      ],
       "protected": [
          "shared"
+      ],
+      "dependencies": [
+         "locales",
+         "configuration"
       ]
-   },
-   "managers_order": [
-      "toolkit.managers.assets.AssetsManager",
-      "toolkit.managers.apps.AppConfigManager",
-      "toolkit.managers.translation.TranslationManager"
-   ]
+   }
 }

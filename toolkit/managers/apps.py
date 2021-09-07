@@ -24,8 +24,8 @@ class AppConfigManager(BaseManager, SystemObject):
     type = SystemObjectTypes.MANAGER
     system_section = 'apps'
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self._apps = {}
 
     def load(self, key, file: str):

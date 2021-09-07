@@ -10,8 +10,6 @@ class BaseManager:
     system_section: str = None
 
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
         if not self.system_section:
             raise AttributeError('attribute `system_section` is not set')
 

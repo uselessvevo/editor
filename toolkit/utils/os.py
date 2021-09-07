@@ -2,7 +2,10 @@
 #   Licensed under the terms of the MIT license
 #   File os.py - 28.02.2021, 0:56
 import os
+import sys
 import locale
+import subprocess
+import urllib.error
 import urllib.request
 
 
@@ -27,22 +30,32 @@ def get_screen_info() -> tuple:
         return resolution[0], resolution[1]
 
 
-def get_locale() -> tuple:
+def get_locale() -> str:
     if os.system == 'nt':
         import ctypes
 
         windll = ctypes.windll.kernel32
         return locale.windows_locale[windll.GetUserDefaultUILanguage()]
     else:
-        return locale.getdefaultlocale()
+        return locale.getdefaultlocale()[0]
 
 
 def check_connection(host: str = 'https://google.com'):
     try:
-        urllib.request.urlopen(host)
+        urllib.request.urlopen(host, timeout=3)
         return True
-    except:
+    except urllib.error.URLError:
         return False
+
+
+def call_subprocess(args, exit_or_raise: bool = False):
+    cp = subprocess.run(args)
+    try:
+        cp.check_returncode()
+    except subprocess.CalledProcessError:
+        if exit_or_raise:
+            sys.exit(cp.returncode)
+        raise subprocess.CalledProcessError
 
 
 getLocale = get_locale

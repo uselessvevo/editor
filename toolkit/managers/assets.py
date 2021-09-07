@@ -4,7 +4,7 @@ from toolkit.system.objects import SystemObject
 from toolkit.utils.files import read_json
 from toolkit.utils.files import write_json
 from toolkit.utils.files import write_assets_file
-from toolkit.utils.files import write_folder_size
+from toolkit.utils.files import write_folder_info
 
 from toolkit.system.manager import System
 from toolkit.managers.base import BaseManager
@@ -14,8 +14,8 @@ class AssetsManager(BaseManager, SystemObject):
     name = 'assets_manager'
     system_section = 'assets'
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
         self._theme = None
         self._theme_folder = None
@@ -24,7 +24,7 @@ class AssetsManager(BaseManager, SystemObject):
         self._theme_folder = Path('assets', 'themes', self._theme)
 
         assets_file = self._theme_folder.joinpath('assets.json')
-        is_updated = write_folder_size(self._theme_folder)
+        is_updated = write_folder_info(self._theme_folder)
 
         if not assets_file.exists() or is_updated:
             data = write_assets_file(

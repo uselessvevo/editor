@@ -92,7 +92,7 @@ def update_json(file, data, create=False):
 
 # Managers
 
-def write_folder_size(folder: str) -> bool:
+def write_folder_info(folder: str) -> bool:
     written_folder_size = current_folder_size = 0
     info_file = Path(folder, 'info.json')
 

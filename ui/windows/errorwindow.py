@@ -44,8 +44,9 @@ except ImportError:
 
         def SystemError(err_type: Union[Exception, str], err_value: str, err_traceback: Union[str, list]):
             root = tk.Tk()
+            root.overrideredirect(1)
+            root.withdraw()
             tkinter.messagebox.showerror(master=root, title=f'{err_type} {err_value}', message=err_traceback)
-            root.mainloop()
 
     except ImportError:
         def SystemError(err_type: Union[Exception, str], err_value: str, err_traceback: Union[str, list]):

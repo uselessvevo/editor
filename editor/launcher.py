@@ -1,4 +1,5 @@
 import sys
+import argparse
 import traceback
 
 from ui.windows.errorwindow import SystemError
@@ -31,7 +32,7 @@ def get_qt_app(*args, **kwargs):
 def launch():
     from toolkit.utils.installer import prepare_dependencies
 
-    prepare_dependencies()
+    # prepare_dependencies()
 
     from toolkit.system.manager import System
     from toolkit.utils.system import get_managers

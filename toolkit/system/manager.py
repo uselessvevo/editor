@@ -1,17 +1,22 @@
 import os
 import glob
+from pathlib import Path
+
 from typing import Any
 from typing import List
 
 from dotty_dict import Dotty
 
-from toolkit.system.objects import SystemObject, SystemObjectTypes
-from toolkit.utils.files import read_json_files
-from toolkit.utils.files import read_json
-from toolkit.utils.files import update_json
-from toolkit.utils.logger import MessageTypes, DummyLogger
+from toolkit.utils.logger import DummyLogger
+from toolkit.utils.logger import MessageTypes
+from toolkit.system.objects import SystemObject
+
 from toolkit.utils.objects import import_string
 from toolkit.utils.objects import is_import_string
+
+from toolkit.utils.files import read_json
+from toolkit.utils.files import update_json
+from toolkit.utils.files import read_json_files
 
 
 class CustomDictionary(dict):
@@ -87,6 +92,7 @@ class SystemManager:
         self.log(f'Starting a system. Version: {self.version}')
 
         self.__root = None
+        self.__sys_root = Path.cwd()
         self.__objects = {}
 
         defaults = read_json_files(glob.glob('configs/*.json'))
@@ -111,20 +117,20 @@ class SystemManager:
 
         if os.path.isfile(root):
             self.log(f'Root set to {root}')
-            self.__root = os.path.split(root)[0]
+            self.__root = Path(root).parent
 
     # Object management methods
 
     def init_objects(self) -> None:
         for key, instance in self.__objects.items():
-            self.log(f'Init an object {instance}')
+            self.log(f'Initializing {instance}')
             self.__objects[key] = instance()
 
     def add_objects(self, *objects: str) -> None:
         objects = [i for i in objects if i in objects]
 
         for obj_str in objects:
-            self.log(f'Adding an object {obj_str}')
+            self.log(f'Adding {obj_str}')
             self.add_object(*import_string(obj_str))
 
     def add_object(self, instance: type, name: str) -> None:
@@ -139,14 +145,14 @@ class SystemManager:
             else:
                 self.log(f'Can\'t import "{instance}". Invalid import string')
 
-        if not isinstance(getattr(instance, 'type', None), SystemObject):
+        if not isinstance(getattr(instance, 'type'), SystemObject):
             self.log(f'Object "{instance.__class__.__name__}" is not SystemObject based')
 
         if name in self.__objects:
             self.log(f'Object "{instance}" already added. Skipping', MessageTypes.WARNING)
 
         self.__objects[name] = instance
-        self.log(f'Object "{instance}" ({instance.type}) was added')
+        self.log(f'Object "{instance}" ({instance.type}) added')
 
     def remove_object(self, name: str) -> None:
         if name not in self.__objects:
@@ -183,11 +189,15 @@ class SystemManager:
     # Properties
 
     @property
-    def root(self) -> str:
+    def root(self) -> Path:
         return self.__root
 
     @property
-    def config(self) -> object:
+    def sys_root(self) -> Path:
+        return self.__sys_root
+
+    @property
+    def config(self) -> SystemConfig:
         return self.__config
 
     def __str__(self) -> str:

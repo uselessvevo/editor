@@ -14,36 +14,58 @@ class TranslationManager(BaseManager, SystemObject):
     type = SystemObjectTypes.MANAGER
     system_section = 'translations'
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
-        self._locale = System.config.get(
-            key=get_locale()[0],
+        self.__locale = System.config.get(
+            key=get_locale(),
             default='en_US',
             default_key='configs.locales.locale'
         )
 
-        self._locale_folder = Path(f'locales/{self._locale}')
+        self.__locale_folder = Path(f'locales/{self.__locale}')
 
-        self.log(f'Locale was set to {self._locale}')
+        self.log(f'Locale was set to {self.__locale}')
 
-        dict_data = [read_json(i.as_posix()) for i in self._locale_folder.rglob('*.json')]
+        dict_data = [read_json(i.as_posix()) for i in self.__locale_folder.rglob('*.json')]
         for item in dict_data:
             self._dictionary.update(**item)
-
-    def __call__(self, *args, **kwargs):
-        return self.get(*args, **kwargs)
 
     def get(self, key: str, default=None):
         return self._dictionary.get(key, default)
 
     def save(self, file: str, data: dict):
-        write_json(self._locale_folder / file, data)
+        write_json(self.__locale_folder / file, data)
 
     @property
     def locale(self):
-        return self._locale
+        return self.__locale
 
     @locale.setter
     def locale(self, locale):
-        self._locale = locale
+        self.__locale = locale
+
+    def __call__(self, *args, **kwargs):
+        return self.get(*args, **kwargs)
+
+
+def json_to_mo(file):
+    data = read_json(file)
+    template = '''msgid ""
+    msgstr ""
+    "MIME-Version: 1.0"
+    "Content-Type: text/plain; charset=UTF-8"
+    "Content-Transfer-Encoding: 8bit"
+    "X-Generator: pogen-script"
+    "Project-Id-Version: CloudyFF"
+    "Language: {locale}"
+    '''
+    template = template.format({
+
+    })
+
+    for k, v in data.items():
+        template += f'msgid "{k}"\rmsgstr "{v}"\n\n'
+
+    with open('cloudyff/locales/en_US/Shared.po', 'w') as file:
+        file.write(template)
