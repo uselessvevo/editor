@@ -32,7 +32,7 @@ def get_qt_app(*args, **kwargs):
 def launch():
     from toolkit.utils.installer import prepare_dependencies
 
-    # prepare_dependencies()
+    prepare_dependencies()
 
     from toolkit.system.manager import System
     from toolkit.utils.system import get_managers

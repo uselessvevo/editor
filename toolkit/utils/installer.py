@@ -23,7 +23,7 @@ def create_packaging_env(directory: str, pyver: str, name: str = 'packaging-env'
         command = [sys.executable, '-m', 'venv', fullpath]
         env_path = os.path.join(fullpath, 'Scripts', 'python.exe')
 
-    elif os.name in ('darwin', 'unix'):
+    elif os.name in ('darwin', 'posix'):
         command = [sys.executable, '-m', 'venv', fullpath]
         env_path = os.path.join(fullpath, 'bin', fullpath)
 
@@ -34,7 +34,7 @@ def create_packaging_env(directory: str, pyver: str, name: str = 'packaging-env'
     return env_path
 
 
-def process_packages(command: str, *packages):
+def process_packages(command: str, *packages) -> int:
     call_subprocess((sys.executable, '-m', 'pip', 'install', '--upgrade', 'pip'))
     run_subprocess = subprocess.check_call((sys.executable, '-m', 'pip', command, *packages))
 
@@ -43,7 +43,7 @@ def process_packages(command: str, *packages):
     return run_subprocess
 
 
-def prepare_dependencies(file: str = 'requirements.json', dev: bool = False) -> None:
+def prepare_dependencies(file: str = 'requirements.json', dev: bool = False) -> int:
     import pkg_resources
 
     requirements = read_json(file)
@@ -59,7 +59,7 @@ def prepare_dependencies(file: str = 'requirements.json', dev: bool = False) -> 
         if not check_connection():
             raise ConnectionError('Can\'t connect to the internet')
 
-        process_packages('install', to_install)
+        return process_packages('install', *to_install)
 
     if to_delete:
-        process_packages('uninstall', to_delete)
+        return process_packages('uninstall', *to_delete)
