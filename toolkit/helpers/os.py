@@ -1,9 +1,6 @@
 import os
 import sys
-import locale
 import subprocess
-import urllib.error
-import urllib.request
 
 
 def get_screen_info() -> tuple:
@@ -27,25 +24,7 @@ def get_screen_info() -> tuple:
         return resolution[0], resolution[1]
 
 
-def get_locale() -> str:
-    if os.system == 'nt':
-        import ctypes
-
-        windll = ctypes.windll.kernel32
-        return locale.windows_locale[windll.GetUserDefaultUILanguage()]
-    else:
-        return locale.getdefaultlocale()[0]
-
-
-def check_connection(host: str = 'https://google.com'):
-    try:
-        urllib.request.urlopen(host, timeout=3)
-        return True
-    except urllib.error.URLError:
-        return False
-
-
-def call_subprocess(args, exit_or_raise: bool = False):
+def call_subprocess(args, exit_or_raise: bool = False) -> None:
     cp = subprocess.run(args)
     try:
         cp.check_returncode()
@@ -55,6 +34,4 @@ def call_subprocess(args, exit_or_raise: bool = False):
         raise subprocess.CalledProcessError
 
 
-getLocale = get_locale
 getScreenInfo = get_screen_info
-checkConnection = check_connection

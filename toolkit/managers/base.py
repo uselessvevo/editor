@@ -8,9 +8,6 @@ from toolkit.managers.system.objects import SystemObject
 class BaseManager(SystemObject):
 
     def __init__(self, *args, **kwargs):
-        if not self.section:
-            raise AttributeError('Can\'t find attribute `section`')
-
         self._dictionary = {}
         super().__init__(*args, **kwargs)
 

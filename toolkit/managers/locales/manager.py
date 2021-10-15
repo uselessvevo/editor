@@ -1,12 +1,12 @@
 from pathlib import Path
 
-from toolkit.managers.system.objects import SystemObject, SystemObjectTypes
-from toolkit.utils.files import read_json
-from toolkit.utils.files import write_json
+from toolkit.managers.system.objects import SystemObjectTypes
+from toolkit.helpers.files import read_json
+from toolkit.helpers.files import write_json
 
 from toolkit.managers.system.manager import System
 from toolkit.managers.base import BaseManager
-from toolkit.utils.os import get_locale
+from toolkit.managers.locales.services import get_locale
 
 
 class LocalesManager(BaseManager):

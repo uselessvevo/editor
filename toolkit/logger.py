@@ -1,7 +1,7 @@
 import enum
 from datetime import datetime
 
-from toolkit.utils.objects import is_debug
+from toolkit.helpers.objects import is_debug
 
 
 class MessageTypes(enum.Enum):

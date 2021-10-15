@@ -1,7 +1,7 @@
 from toolkit.managers.base import BaseManager
 from toolkit.managers.system.manager import System
 from toolkit.managers.system.objects import SystemObjectTypes
-from toolkit.utils.files import write_folder_info
+from toolkit.helpers.files import write_folder_info
 
 
 class ThemeManager(BaseManager):

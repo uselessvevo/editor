@@ -4,7 +4,7 @@ import importlib
 import importlib.util
 
 from toolkit.managers import get_file
-from toolkit.utils.files import read_json
+from toolkit.helpers.files import read_json
 
 
 def parse_stylesheet(path, keys=None):

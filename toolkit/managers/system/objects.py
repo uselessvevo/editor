@@ -1,6 +1,6 @@
 import enum
-from toolkit.utils.logger import DummyLogger
-from toolkit.utils.logger import MessageTypes
+from toolkit.logger import DummyLogger
+from toolkit.logger import MessageTypes
 
 
 class SystemObjectTypes(enum.Enum):

@@ -29,19 +29,31 @@ def get_qt_app(*args, **kwargs):
 
 
 def launch():
-    from toolkit.utils.installer import prepare_dependencies
+    from toolkit.installer.installer import prepare_dependencies
 
     prepare_dependencies()
 
     from toolkit.managers.system.manager import System
-    from toolkit.utils.system import get_managers
+    from toolkit.helpers.objects import is_import_string
 
     System.prepare(sys_root='../toolkit', app_root=__file__)
-    System.add_objects(get_managers())
+
+    # get managers
+    managers = set()
+    # TODO: Create SystemObjectsNode to handle objects dependencies
+    managers_order = System.config.get('configs.managers.managers_order')
+    if not managers_order:
+        raise KeyError('Key "configs.managers.managers_order" not found')
+
+    for manager in managers_order:
+        if is_import_string(manager):
+            managers.add(manager)
+
+    System.add_objects(managers)
 
     from editor.app.ui import MainUI
-    from toolkit.utils.themes import getTheme
-    from toolkit.utils.themes import getPalette
+    from toolkit.managers.themes.services import getTheme
+    from toolkit.managers.themes.services import getPalette
 
     app = get_qt_app()
 

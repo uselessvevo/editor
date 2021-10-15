@@ -1,6 +1,12 @@
-from typing import Union
-from pathlib import Path
+import os
+import locale
 
 
-def write_assets_file(assets_root: Union[str, Path], assets_folder: Union[str, Path]) -> None:
-    pass
+def get_locale() -> str:
+    if os.system == 'nt':
+        import ctypes
+
+        windll = ctypes.windll.kernel32
+        return locale.windows_locale[windll.GetUserDefaultUILanguage()]
+    else:
+        return locale.getdefaultlocale()[0]

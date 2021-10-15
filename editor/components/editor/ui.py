@@ -4,7 +4,7 @@ from PyQt5.Qt import *
 from components.editor.lexer import ViewLexer
 
 from toolkit.managers.system.manager import System
-from toolkit.utils.files import read_json
+from toolkit.helpers.files import read_json
 
 
 class Editor(Qsci.QsciScintilla):

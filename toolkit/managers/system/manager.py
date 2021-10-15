@@ -8,17 +8,17 @@ from typing import Union
 
 from dotty_dict import Dotty
 
-from toolkit.utils.logger import DummyLogger
-from toolkit.utils.logger import MessageTypes
+from toolkit.logger import DummyLogger
+from toolkit.logger import MessageTypes
 from toolkit.managers.system.objects import SystemObject
-from toolkit.utils.objects import get_caller_name
+from toolkit.managers.system.services import get_caller_name
 
-from toolkit.utils.objects import import_string
-from toolkit.utils.objects import is_import_string
+from toolkit.helpers.objects import import_string
+from toolkit.helpers.objects import is_import_string
 
-from toolkit.utils.files import read_json
-from toolkit.utils.files import update_json
-from toolkit.utils.files import read_json_files
+from toolkit.helpers.files import read_json
+from toolkit.helpers.files import update_json
+from toolkit.helpers.files import read_json_files
 
 
 class CustomDictionary(dict):

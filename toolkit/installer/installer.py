@@ -2,9 +2,9 @@ import os
 import sys
 import subprocess
 
-from toolkit.utils.files import read_json
-from toolkit.utils.os import call_subprocess
-from toolkit.utils.os import check_connection
+from toolkit.helpers.files import read_json
+from toolkit.helpers.os import call_subprocess
+from toolkit.helpers.network import check_connection
 
 
 def create_packaging_env(directory: str, pyver: str, name: str = 'packaging-env', conda_path: str = None):
