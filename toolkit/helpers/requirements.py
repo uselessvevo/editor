@@ -1,57 +1,25 @@
-import pkg_resources
+from toolkit.helpers.files import read_json
+from toolkit.helpers.network import check_connection
+from toolkit.installer.installer import process_packages
 
 
-def show_warning(message):
-    """Show warning using Tkinter if available"""
-    try:
-        # If Tkinter is installed (highly probable), showing an error pop-up
-        import tkinter
-        import tkinter.messagebox
+def prepare_dependencies(file: str = 'requirements.json', dev: bool = False) -> int:
+    import pkg_resources
 
-        root = tkinter.Tk()
-        root.withdraw()
+    requirements = read_json(file)
+    requirements = requirements.get('dev') if dev else requirements.get('prod')
 
-        tkinter.messagebox.showerror('Editor', message)
+    to_install = set(f'{k.lower()}=={v}' for (k, v) in requirements.get('install').items())
+    to_delete = set(f'{k.lower()}=={v}' for (k, v) in requirements.get('delete').items())
 
-    except ImportError:
-        pass
+    installed = set(str(v).replace(' ', '==').lower() for v in pkg_resources.working_set.by_key.values())
+    to_install = to_install - installed
 
-    raise RuntimeError(message)
+    if to_install:
+        if not check_connection():
+            raise ConnectionError('Can\'t connect to the internet')
 
+        return process_packages('install', *to_install)
 
-def check_requirements():
-    import sys
-    import subprocess
-
-    with open('../../requirements.txt') as output:
-        required = set(output.readlines())
-
-    installed = {pkg.key for pkg in pkg_resources.working_set}
-    missing = required - installed
-
-    if missing:
-        python = sys.executable
-        subprocess.check_call([python, '-m', 'pip', 'install', *missing], stdout=subprocess.DEVNULL)
-
-
-def check_qt():
-    """Check Qt binding requirements"""
-    qt_infos = dict(pyqt5=("PyQt5", "5.6"))
-
-    try:
-        import PyQt5.QtCore
-        package_name, required_ver = qt_infos['pyqt5']
-        actual_ver = PyQt5.QtCore.PYQT_VERSION_STR
-
-        if pkg_resources.parse_version(actual_ver) < pkg_resources.parse_version(required_ver):
-            show_warning(
-                'Please check installation requirements:\n'
-                '%s %s+ is required (found v%s).' % (
-                    package_name, required_ver, actual_ver
-                ))
-
-    except ImportError:
-        show_warning(
-            'Failed to run user interface'
-            'Please check installation requirements'
-        )
+    if to_delete:
+        return process_packages('uninstall', *to_delete)
