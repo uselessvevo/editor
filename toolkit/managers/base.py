@@ -6,7 +6,6 @@ from toolkit.managers.system.objects import SystemObject
 
 
 class BaseManager(SystemObject):
-    section: str = None
 
     def __init__(self, *args, **kwargs):
         if not self.section:
