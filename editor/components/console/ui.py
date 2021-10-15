@@ -8,7 +8,7 @@ from components.console.methods import get_process_id
 from components.console.methods import rainbow
 
 from toolkit.managers import getFile
-from toolkit.system.manager import System
+from toolkit.managers.system.manager import System
 
 
 class Console(QtWidgets.QWidget):
@@ -18,7 +18,7 @@ class Console(QtWidgets.QWidget):
 
     def __init__(self, parent=None):
         super(Console, self).__init__(parent)
-        self.trans = System.get_object('TranslationManager')
+        self.trans = System.get_object('LocalesManager')
 
         self.setWindowTitle('Editor Console')
         self.setGeometry(300, 300, 800, 550)

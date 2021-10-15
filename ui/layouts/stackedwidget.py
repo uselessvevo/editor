@@ -1,7 +1,3 @@
-#   Copyright @ Crab Dudes Developers
-#   Licensed under the terms of the MIT license
-#   File stackedwidget.py - 27.01.2021, 19:31
-
 from PyQt5.QtWidgets import QStackedWidget
 from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtWidgets import QVBoxLayout

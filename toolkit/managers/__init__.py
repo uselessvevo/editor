@@ -1,7 +1,4 @@
-#   Copyright @ Crab Dudes Developers
-#   Licensed under the terms of the MIT license
-#   File __init__.py - 02.03.2021, 15:33
-from toolkit.system.manager import System
+from toolkit.managers.system.manager import System
 
 
 def tr(key, **kwargs):

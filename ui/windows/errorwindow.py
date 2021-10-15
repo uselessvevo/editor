@@ -1,6 +1,3 @@
-#   Copyright @ Crab Dudes Developers
-#   Licensed under the terms of the MIT license
-#   File errorwindow.py - 02.03.2021, 16:01
 import sys
 from typing import Union
 

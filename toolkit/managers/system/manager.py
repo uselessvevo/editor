@@ -4,12 +4,14 @@ from pathlib import Path
 
 from typing import Any
 from typing import List
+from typing import Union
 
 from dotty_dict import Dotty
 
 from toolkit.utils.logger import DummyLogger
 from toolkit.utils.logger import MessageTypes
-from toolkit.system.objects import SystemObject
+from toolkit.managers.system.objects import SystemObject
+from toolkit.utils.objects import get_caller_name
 
 from toolkit.utils.objects import import_string
 from toolkit.utils.objects import is_import_string
@@ -45,7 +47,7 @@ class SystemConfig(Dotty):
 
         super().__init__(dictionary=dictionary)
 
-    def get(self, key, default=None, default_key=None) -> Any:
+    def get(self, key: str, default_key: str = None, default: Any = None) -> Any:
         if default_key:
             default = super().get(default_key, default)
         return super().get(key) or default
@@ -53,7 +55,7 @@ class SystemConfig(Dotty):
     def set(self, key, value) -> None:
         self[key] = value
 
-    def save(self, key) -> None:
+    def save(self, key: str) -> None:
         """
         Args:
             key (str): f.e. 'dictionary.nested.key'
@@ -70,11 +72,11 @@ class SystemConfig(Dotty):
 
         update_json(key, self[key])
 
-    def from_json_file(self, file, **kwargs) -> None:
+    def from_json_file(self, file: Union[str, os.PathLike], **kwargs) -> None:
         self.update(**read_json(file, **kwargs))
 
     def __repr__(self) -> str:
-        return f'({self.__class__.__name__}) <items: {list(self._data.keys())[:2]}\n>'
+        return f'({self.__class__.__name__}) <items keys: {list(self._data.keys())[:4]} . . .>'
 
 
 class SystemManager:
@@ -88,52 +90,58 @@ class SystemManager:
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
-        self.logger = kwargs.get('logger', self.logger)()
+
+        self.__app_root = None
+        self.__sys_root = None
+        self.__config = None
+        self._objects = {}
+
+    def log(self, message: str, message_type: MessageTypes = MessageTypes.INFO, **kwargs) -> None:
+        self.logger.log(message=message, message_type=message_type, **kwargs)
+
+    def prepare(self, sys_root: str, app_root: str) -> None:
+        if not app_root or not sys_root:
+            raise AttributeError('System or app root were not set')
+
+        self.logger = self.logger()
         self.log(f'Starting a system. Version: {self.version}')
+        self._read_configuration_files()
 
-        self.__root = None
-        self.__sys_root = Path.cwd()
-        self.__objects = {}
+        self._set_system_root(sys_root)
+        self._set_app_root(app_root)
 
-        defaults = read_json_files(glob.glob('configs/*.json'))
+    # Private methods
+
+    def _read_configuration_files(self, root: str = 'configs', pattern: str = '*.json'):
+        defaults = read_json_files(glob.glob(f'{root}/{pattern}'))
         if not defaults:
             raise ValueError('Configuration is empty')
 
         self.__config = self.config_class(defaults=defaults)
 
-    def log(self, message: str, message_type: MessageTypes = MessageTypes.INFO, **kwargs) -> None:
-        self.logger.log(message=message, message_type=message_type, **kwargs)
+    def _set_system_root(self, path: str) -> None:
+        if not os.path.exists(path):
+            raise OSError(f'Path "{path}" not found')
 
-    def set_system_root(self, root) -> None:
-        """
-        Args:
-            root (str): project root path
+        if os.path.isfile(path):
+            self.log(f'System root set to "{path}"')
+            self.__sys_root = Path(path).parent
+        elif os.path.isdir(path):
+            self.__sys_root = Path(path)
 
-        Returns:
-            None
-        """
-        if not os.path.exists(root):
-            raise FileNotFoundError('file or path not found')
+    def _set_app_root(self, path: str):
+        if not os.path.exists(path):
+            raise FileNotFoundError('File or path not found')
 
-        if os.path.isfile(root):
-            self.log(f'Root set to {root}')
-            self.__root = Path(root).parent
+        if os.path.isfile(path):
+            self.log(f'Root set to {path}')
+            self.__app_root = Path(path).parent
+        elif os.path.isdir(path):
+            self.__sys_root = Path(path)
 
-    # Object management methods
+    # Private object access methods
 
-    def init_objects(self) -> None:
-        for key, instance in self.__objects.items():
-            self.log(f'Initializing {instance}')
-            self.__objects[key] = instance()
-
-    def add_objects(self, *objects: str) -> None:
-        objects = [i for i in objects if i in objects]
-
-        for obj_str in objects:
-            self.log(f'Adding {obj_str}')
-            self.add_object(*import_string(obj_str))
-
-    def add_object(self, instance: type, name: str) -> None:
+    def _add_object(self, instance: type, name: str) -> None:
         """
         Args:
             instance (type): object that will be added
@@ -148,20 +156,22 @@ class SystemManager:
         if not isinstance(getattr(instance, 'type'), SystemObject):
             self.log(f'Object "{instance.__class__.__name__}" is not SystemObject based')
 
-        if name in self.__objects:
+        if name in self._objects:
             self.log(f'Object "{instance}" already added. Skipping', MessageTypes.WARNING)
 
-        self.__objects[name] = instance
+        self._objects[name] = instance
         self.log(f'Object "{instance}" ({instance.type}) added')
 
-    def remove_object(self, name: str) -> None:
-        if name not in self.__objects:
-            self.log(f'Object "{name}" not found. Skipping', MessageTypes.WARNING)
+    # Public object access methods
 
-        self.__objects.pop(name)
-        self.log(f'Object "{name}" has been removed')
+    def add_objects(self, objects: Union[list, tuple]) -> None:
+        for obj_str in objects:
+            self.log(f'Adding {obj_str}')
+            self._add_object(*import_string(obj_str))
 
-    # Object access methods
+        for obj_name, obj_type in self._objects.items():
+            self.log(f'Initializing {obj_type}')
+            self._objects[obj_name] = obj_type()
 
     def get_object(self, name: str) -> object:
         """
@@ -173,38 +183,46 @@ class SystemManager:
         Returns:
             object
         """
-        if name not in self.__objects:
+        if name not in self._objects:
             self.log(f'Object "{name}" not found')
 
-        return self.__objects[name]
+        return self._objects[name]
 
-    def get_objects_list(self) -> List[object]:
-        return list(self.__objects.keys())
+    def remove_object(self, name: str) -> None:
+        """ Semiprivate method """
+        caller = get_caller_name()
+
+        if name not in self._objects:
+            self.log(f'Object "{name}" not found. Skipping', MessageTypes.WARNING)
+
+        self._objects.pop(name)
+        self.log(f'Object "{name}" has been removed')
 
     # Event methods
 
     def ready(self) -> None:
-        self.log(f'System is ready. Objects loaded: {len(self.__objects)}')
+        self.log(f'System is ready. Objects loaded: {len(self._objects)}')
 
     # Properties
 
-    @property
-    def root(self) -> Path:
-        return self.__root
+    def get_objects_list(self) -> List[object]:
+        return list(self._objects.keys())
 
     @property
     def sys_root(self) -> Path:
+        # System/Toolkit root
         return self.__sys_root
+
+    @property
+    def app_root(self) -> Path:
+        return self.__app_root
 
     @property
     def config(self) -> SystemConfig:
         return self.__config
 
-    def __str__(self) -> str:
-        return f'Objects: {self.get_objects_list()[:4]} . . .'
-
     def __repr__(self) -> str:
-        return f'({self.__class__.__name__}) <objects: {self.get_objects_list()[:4]}, ...>'
+        return f'({self.__class__.__name__}) <objects: {self.get_objects_list()[:4]} . . .>'
 
 
 System = SystemManager()

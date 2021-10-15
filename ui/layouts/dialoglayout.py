@@ -1,14 +1,10 @@
-#   Copyright @ Crab Dudes Developers
-#   Licensed under the terms of the MIT license
-#   File dialoglayout.py - 02.03.2021, 16:01
-
 # Qt
 from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtWidgets import QVBoxLayout
 from PyQt5.QtWidgets import QHBoxLayout
 
 # Managers
-from toolkit.system.manager import System
+from toolkit.managers.system.manager import System
 
 
 class DialogLayout(QHBoxLayout):
@@ -16,7 +12,7 @@ class DialogLayout(QHBoxLayout):
     def __init__(self, parent=None, props=None):
         super(DialogLayout, self).__init__(parent)
 
-        self.trans = System.get_object('TranslationManager')
+        self.trans = System.get_object('LocalesManager')
 
         self.helpButton = QPushButton(parent)
         self.helpButton.setText('?')

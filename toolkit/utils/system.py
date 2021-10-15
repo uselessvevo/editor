@@ -1,4 +1,4 @@
-from toolkit.system.manager import System
+from toolkit.managers.system.manager import System
 from toolkit.utils.objects import is_import_string
 
 

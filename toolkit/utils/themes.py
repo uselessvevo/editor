@@ -1,6 +1,3 @@
-#   Copyright @ Crab Dudes Developers
-#   Licensed under the terms of the MIT license
-#   File themes.py - 01.02.2021, 14:31
 import os
 import re
 import importlib

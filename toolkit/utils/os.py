@@ -1,6 +1,3 @@
-#   Copyright @ Crab Dudes Developers
-#   Licensed under the terms of the MIT license
-#   File os.py - 28.02.2021, 0:56
 import os
 import sys
 import locale

@@ -9,9 +9,8 @@ from pygments import lexers
 from pygments.lexer import Text
 from pygments.lexer import Error
 from pygments.lexer import _TokenType
-from pygments.lexers import get_lexer_for_filename
 
-from toolkit.system.manager import System
+from toolkit.managers.system.manager import System
 from toolkit.utils.files import read_json
 
 from components.editor.exceptions import LexerNotFound

@@ -1,5 +1,4 @@
 import sys
-import argparse
 import traceback
 
 from ui.windows.errorwindow import SystemError
@@ -15,7 +14,7 @@ def except_hook(exc_type, exc_value, exc_traceback):
     SystemError(exc_type, exc_value, traceback_collect)
 
 
-sys.excepthook = except_hook
+# sys.excepthook = except_hook
 
 
 def get_qt_app(*args, **kwargs):
@@ -34,12 +33,11 @@ def launch():
 
     prepare_dependencies()
 
-    from toolkit.system.manager import System
+    from toolkit.managers.system.manager import System
     from toolkit.utils.system import get_managers
 
-    System.set_system_root(__file__)
-    System.add_objects(*get_managers())
-    System.init_objects()
+    System.prepare(sys_root='../toolkit', app_root=__file__)
+    System.add_objects(get_managers())
 
     from editor.app.ui import MainUI
     from toolkit.utils.themes import getTheme

@@ -1,15 +1,10 @@
-#   Copyright @ Crab Dudes Developers
-#   Licensed under the terms of the MIT license
-#   File richlabel.py - 27.01.2021, 19:31
-
-# Standard libraries
 import logging
 
 # Qt
 from PyQt5.QtWidgets import QLabel
 
 # Utils
-from cloudykit.utils.themes import textParser
+from toolkit.utils.themes import textParser
 
 
 class RichLabel(QLabel):

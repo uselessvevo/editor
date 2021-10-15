@@ -1,18 +1,18 @@
 from pathlib import Path
 
-from toolkit.system.objects import SystemObject
+from toolkit.managers.system.objects import SystemObject
 from toolkit.utils.files import read_json
 from toolkit.utils.files import write_json
 from toolkit.utils.files import write_assets_file
 from toolkit.utils.files import write_folder_info
 
-from toolkit.system.manager import System
+from toolkit.managers.system.manager import System
 from toolkit.managers.base import BaseManager
 
 
-class AssetsManager(BaseManager, SystemObject):
+class AssetsManager(BaseManager):
     name = 'assets_manager'
-    system_section = 'assets'
+    section = 'assets'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -29,7 +29,7 @@ class AssetsManager(BaseManager, SystemObject):
         if not assets_file.exists() or is_updated:
             data = write_assets_file(
                 prefix='shared',
-                root=System.root,
+                root=System.app_root,
                 folder=self._theme_folder,
                 file_formats=System.config.get('configs.managers.assets.file_formats'),
                 path_slice=-2

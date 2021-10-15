@@ -1,26 +1,29 @@
 from functools import lru_cache
 from toolkit import exceptions
 
-from toolkit.system.manager import System
-from toolkit.system.objects import SystemObject
-from toolkit.system.objects import SystemObjectTypes
+from toolkit.managers.system.manager import System
+from toolkit.managers.system.objects import SystemObject
 
 
-class BaseManager:
-    system_section: str = None
+class BaseManager(SystemObject):
+    section: str = None
 
-    def __init__(self, **kwargs):
-        if not self.system_section:
-            raise AttributeError('attribute `system_section` is not set')
+    def __init__(self, *args, **kwargs):
+        if not self.section:
+            raise AttributeError('Can\'t find attribute `section`')
 
         self._dictionary = {}
+        super().__init__(*args, **kwargs)
 
     def get(self, *args, **kwargs):
-        raise NotImplementedError
+        raise NotImplementedError('Method "get" must be implemented')
+
+    def save(self, file: str, data: dict):
+        raise NotImplementedError('Method "save" must be implemented')
 
     @lru_cache(maxsize=None)
     def set(self, key, value):
-        key = f'configs.{key}.{self.system_section}.protected'
+        key = f'configs.{key}.{self.section}.protected'
 
         if key not in System.config.get(key):
             raise exceptions.ProtectedSystemSectionKey(key)
@@ -30,8 +33,8 @@ class BaseManager:
 
         self._dictionary[key] = value
 
-    def save(self, file: str, data: dict):
-        raise NotImplementedError('save method must be implemented')
+    def __call__(self, *args, **kwargs):
+        return self.get(*args, **kwargs)
 
     def __repr__(self) -> str:
-        return f'({self.__class__.__name__}) <hash: {self.__hash__()}, files count: {len(self._dictionary)}>'
+        return f'({self.__class__.__name__}) <hash: {self.__hash__()} section: {self.section}>'

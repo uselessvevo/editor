@@ -1,10 +1,9 @@
 from PyQt5 import Qsci
 from PyQt5.Qt import *
-from IPython.core.debugger import set_trace
 
 from components.editor.lexer import ViewLexer
 
-from toolkit.system.manager import System
+from toolkit.managers.system.manager import System
 from toolkit.utils.files import read_json
 
 

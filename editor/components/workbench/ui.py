@@ -4,7 +4,7 @@ from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 
 from toolkit.managers import getFile
-from toolkit.system.manager import System
+from toolkit.managers.system.manager import System
 
 
 class Workbench(QtWidgets.QToolBar):
@@ -12,7 +12,7 @@ class Workbench(QtWidgets.QToolBar):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.trans = System.get_object('TranslationManager')
+        self.trans = System.get_object('LocalesManager')
 
         self.setMovable(False)
         self.setIconSize(QtCore.QSize(30, 30))

@@ -1,6 +1,3 @@
-#   Copyright @ Crab Dudes Developers
-#   Licensed under the terms of the MIT license
-#   File files.py - 04.03.2021, 0:23
 import os
 import json
 from pathlib import Path

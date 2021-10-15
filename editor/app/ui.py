@@ -6,7 +6,7 @@ from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
 
 from toolkit.managers import getFile
-from toolkit.system.manager import System
+from toolkit.managers.system.manager import System
 
 from ui.windows.window import BaseWindowMixin
 
@@ -22,7 +22,7 @@ class MainUI(BaseWindowMixin, QtWidgets.QMainWindow):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.trans = System.get_object('TranslationManager')
+        self.trans = System.get_object('LocalesManager')
 
         self.initMain()
         self.initLayout()

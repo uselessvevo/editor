@@ -1,10 +1,6 @@
 """
-Table item but it's so fancy. I guess.
+Custom QListWidget
 """
-#   Copyright @ Crab Dudes Developers
-#   Licensed under the terms of the MIT license
-#   File listwidget.py - 27.01.2021, 19:31
-
 from PyQt5.QtWidgets import QListWidget
 
 

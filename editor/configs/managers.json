@@ -28,5 +28,10 @@
          "locales",
          "configuration"
       ]
-   }
+   },
+   "managers_order": [
+      "toolkit.managers.assets.manager.AssetsManager",
+      "toolkit.managers.apps.manager.AppConfigManager",
+      "toolkit.managers.locales.manager.TranslationManager"
+   ]
 }

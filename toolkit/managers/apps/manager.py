@@ -1,13 +1,12 @@
 import os
 import glob
 from anytree import Node
-from anytree import RenderTree
 
 from toolkit.managers.base import BaseManager
 
-from toolkit.system.manager import System
-from toolkit.system.objects import SystemObject
-from toolkit.system.objects import SystemObjectTypes
+from toolkit.managers.system.manager import System
+from toolkit.managers.system.objects import SystemObject
+from toolkit.managers.system.objects import SystemObjectTypes
 from toolkit.utils.files import read_json_files
 
 from toolkit.utils.files import read_json
@@ -19,10 +18,10 @@ class PluginSystemObject(SystemObject, Node):
     type = SystemObjectTypes.PLUGIN
 
 
-class AppConfigManager(BaseManager, SystemObject):
+class AppConfigManager(BaseManager):
     name = 'app_config_manager'
-    type = SystemObjectTypes.MANAGER
-    system_section = 'apps'
+    type = SystemObjectTypes.CORE_MANAGER
+    section = 'apps'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

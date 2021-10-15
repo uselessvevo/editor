@@ -1,7 +1,3 @@
-#   Copyright @ Crab Dudes Developers
-#   Licensed under the terms of the MIT license
-#   File palette.py - 27.01.2021, 19:31
-
 # fuck you qt
 # this module was made
 # because i can't set link (href) color in qss file

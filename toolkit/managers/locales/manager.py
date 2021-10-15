@@ -1,21 +1,21 @@
 from pathlib import Path
 
-from toolkit.system.objects import SystemObject, SystemObjectTypes
+from toolkit.managers.system.objects import SystemObject, SystemObjectTypes
 from toolkit.utils.files import read_json
 from toolkit.utils.files import write_json
 
-from toolkit.system.manager import System
+from toolkit.managers.system.manager import System
 from toolkit.managers.base import BaseManager
 from toolkit.utils.os import get_locale
 
 
-class TranslationManager(BaseManager, SystemObject):
+class LocalesManager(BaseManager):
     name = 'translation_manager'
-    type = SystemObjectTypes.MANAGER
-    system_section = 'translations'
+    type = SystemObjectTypes.CORE_MANAGER
+    section = 'locales'
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self):
+        super().__init__()
 
         self.__locale = System.config.get(
             key=get_locale(),
@@ -44,28 +44,3 @@ class TranslationManager(BaseManager, SystemObject):
     @locale.setter
     def locale(self, locale):
         self.__locale = locale
-
-    def __call__(self, *args, **kwargs):
-        return self.get(*args, **kwargs)
-
-
-def json_to_mo(file):
-    data = read_json(file)
-    template = '''msgid ""
-    msgstr ""
-    "MIME-Version: 1.0"
-    "Content-Type: text/plain; charset=UTF-8"
-    "Content-Transfer-Encoding: 8bit"
-    "X-Generator: pogen-script"
-    "Project-Id-Version: CloudyFF"
-    "Language: {locale}"
-    '''
-    template = template.format({
-
-    })
-
-    for k, v in data.items():
-        template += f'msgid "{k}"\rmsgstr "{v}"\n\n'
-
-    with open('cloudyff/locales/en_US/Shared.po', 'w') as file:
-        file.write(template)
