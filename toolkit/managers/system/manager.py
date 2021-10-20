@@ -1,5 +1,4 @@
 import os
-import glob
 from pathlib import Path
 
 from typing import Any
@@ -11,7 +10,6 @@ from dotty_dict import Dotty
 from toolkit.logger import DummyLogger
 from toolkit.logger import MessageTypes
 from toolkit.managers.system.objects import SystemObject
-from toolkit.managers.system.services import get_caller_name
 
 from toolkit.helpers.objects import import_string
 from toolkit.helpers.objects import is_import_string
@@ -82,7 +80,7 @@ class SystemConfig(Dotty):
 class SystemManager:
     """
     System is the core manager
-    Provides easy access to the instances, settings and etc.
+    Provides an easy access to the instances, settings and etc.
     """
     version = '0.0.2'
     logger = DummyLogger
@@ -190,16 +188,6 @@ class SystemManager:
             self.log(f'Object "{name}" not found')
 
         return self._objects[name]
-
-    def remove_object(self, name: str) -> None:
-        """ Semiprivate method """
-        caller = get_caller_name()
-
-        if name not in self._objects:
-            self.log(f'Object "{name}" not found. Skipping', MessageTypes.WARNING)
-
-        self._objects.pop(name)
-        self.log(f'Object "{name}" has been removed')
 
     # Event methods
 
