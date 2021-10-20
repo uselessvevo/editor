@@ -14,7 +14,7 @@ def except_hook(exc_type, exc_value, exc_traceback):
     SystemError(exc_type, exc_value, traceback_collect)
 
 
-# sys.excepthook = except_hook
+sys.excepthook = except_hook
 
 
 def get_qt_app(*args, **kwargs):
@@ -29,14 +29,14 @@ def get_qt_app(*args, **kwargs):
 
 
 def launch():
-    from toolkit.installer.installer import prepare_dependencies
+    from toolkit.helpers.requirements import prepare_dependencies
 
-    prepare_dependencies()
+    prepare_dependencies('editor/requirements.json')
 
     from toolkit.managers.system.manager import System
     from toolkit.helpers.objects import is_import_string
 
-    System.prepare(sys_root='../toolkit', app_root=__file__)
+    System.prepare(sys_root='toolkit', app_root='editor')
 
     # get managers
     managers = set()
@@ -53,17 +53,17 @@ def launch():
 
     from editor.app.ui import MainUI
     from toolkit.managers.themes.services import getTheme
-    from toolkit.managers.themes.services import getPalette
+    # from toolkit.managers.themes.services import getPalette
 
     app = get_qt_app()
 
     theme = System.config.get(
-        key='configs.ui.theme',
+        'configs.ui.theme',
         default_key='configs.ui.default_theme'
     )
     if theme:
-        app.setStyleSheet(getTheme(theme))
-        app.setPalette(getPalette(theme))
+        app.setStyleSheet(getTheme(System.app_root, theme))
+        # app.setPalette(getPalette(theme))
 
     widget = MainUI()
     widget.show()

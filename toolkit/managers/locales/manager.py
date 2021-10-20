@@ -24,6 +24,7 @@ class LocalesManager(BaseManager):
         )
 
         self.__locale_folder = Path(f'locales/{self.__locale}')
+        self.__locale_folder = System.app_root / 'locales' / self.__locale
 
         self.log(f'Locale was set to {self.__locale}')
 

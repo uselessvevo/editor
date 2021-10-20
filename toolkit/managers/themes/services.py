@@ -7,12 +7,7 @@ from toolkit.managers import get_file
 from toolkit.helpers.files import read_json
 
 
-def parse_stylesheet(path, keys=None):
-    """
-    Args:
-        path (str or os.PathLike) - path to theme file
-        keys (dict) - additional value
-    """
+def parse_stylesheet(path: str, keys: dict = None) -> str:
     if not os.path.exists(f'{path}/theme.qss'):
         with open(f'{path}/theme.template.qss', encoding='utf-8') as output:
             # Template pattern and variables
@@ -37,18 +32,12 @@ def parse_stylesheet(path, keys=None):
     return stylesheet
 
 
-def get_theme(theme):
+def get_theme(root: str, theme_name: str) -> str:
     """
     Parse and get stylesheet
-
-    Args:
-        theme (str): theme name
-
-    Returns:
-        stylesheet (str): stylesheet string
     """
-    theme_name = f'assets/themes/{theme}'
-    themes_list = os.listdir('assets/themes')
+    theme_name = f'{root}/assets/themes/{theme_name}'
+    themes_list = os.listdir(f'{root}/assets/themes')
     stylesheet = ''
 
     # Check if folder exists

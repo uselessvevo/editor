@@ -1,7 +1,7 @@
 from toolkit.managers.system.manager import System
 
 
-def tr(key, **kwargs):
+def tr(key: str, **kwargs):
     """
     This is a shortcut to LocalesManager's 'get' method
     Args:
@@ -16,7 +16,7 @@ def tr(key, **kwargs):
     return System.get_object('LocalesManager').get(key, **kwargs)
 
 
-def get_file(key, default=''):
+def get_file(key: str, default: str = ''):
     """
     This is a shortcut to ResourcesManager's 'get' method with some additions
     Args:
@@ -32,7 +32,7 @@ def get_file(key, default=''):
     return System.get_object('AssetsManager').get(key, default)
 
 
-def get_font(key, default='Arial'):
+def get_font(key: str, default: str = 'Arial'):
     return System.get_object('AssetsManager').get(key, default)
 
 

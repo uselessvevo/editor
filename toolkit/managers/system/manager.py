@@ -103,6 +103,9 @@ class SystemManager:
         if not app_root or not sys_root:
             raise AttributeError('System or app root were not set')
 
+        self.__app_root = Path(app_root).resolve()
+        self.__sys_root = Path(sys_root).resolve()
+
         self.logger = self.logger()
         self.log(f'Starting a system. Version: {self.version}')
         self._read_configuration_files()
@@ -112,8 +115,8 @@ class SystemManager:
 
     # Private methods
 
-    def _read_configuration_files(self, root: str = 'configs', pattern: str = '*.json'):
-        defaults = read_json_files(glob.glob(f'{root}/{pattern}'))
+    def _read_configuration_files(self, folder: str = 'configs', pattern: str = '*.json'):
+        defaults = read_json_files((self.__app_root / folder).rglob(pattern))
         if not defaults:
             raise ValueError('Configuration is empty')
 

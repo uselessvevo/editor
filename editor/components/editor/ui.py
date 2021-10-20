@@ -1,7 +1,7 @@
 from PyQt5 import Qsci
 from PyQt5.Qt import *
 
-from components.editor.lexer import ViewLexer
+from editor.components.editor.lexer import ViewLexer
 
 from toolkit.managers.system.manager import System
 from toolkit.helpers.files import read_json

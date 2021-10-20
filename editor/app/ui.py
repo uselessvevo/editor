@@ -10,9 +10,9 @@ from toolkit.managers.system.manager import System
 
 from ui.windows.window import BaseWindowMixin
 
-from components.editor.ui import Editor
-from components.console.ui import Console
-from components.workbench.ui import Workbench
+from editor.components.editor.ui import Editor
+from editor.components.console.ui import Console
+from editor.components.workbench.ui import Workbench
 
 
 class MainUI(BaseWindowMixin, QtWidgets.QMainWindow):
