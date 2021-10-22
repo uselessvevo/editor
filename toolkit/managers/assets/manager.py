@@ -1,5 +1,3 @@
-from pathlib import Path
-
 from toolkit.helpers.files import read_json
 from toolkit.helpers.files import write_json
 from toolkit.helpers.files import write_assets_file
@@ -13,8 +11,8 @@ class AssetsManager(BaseManager):
     name = 'assets_manager'
     section = 'assets'
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self):
+        super().__init__()
 
         self._theme = None
         self._theme_folder = None

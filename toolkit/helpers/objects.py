@@ -4,7 +4,7 @@ import importlib
 
 
 def is_import_string(string: str):
-    return True if re.match(r'^([a-zA-Z.]+)$', string) else False
+    return True if re.match(r'^([a-zA-Z|a-zA-Z\d+.]+)$', string) else False
 
 
 def is_file_path_string(string: str):

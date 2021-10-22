@@ -36,7 +36,7 @@ def launch():
     from toolkit.managers.system.manager import System
     from toolkit.helpers.objects import is_import_string
 
-    System.prepare(sys_root='toolkit', app_root='editor')
+    System.init(sys_root='toolkit', app_root='editor')
 
     # get managers
     managers = set()
@@ -52,7 +52,7 @@ def launch():
     System.add_objects(managers)
 
     from editor.app.ui import MainUI
-    from toolkit.managers.themes.services import getTheme
+    from toolkit.managers.assets.services import getTheme
     # from toolkit.managers.themes.services import getPalette
 
     app = get_qt_app()

@@ -7,9 +7,9 @@ from toolkit.managers.system.objects import SystemObject
 
 class BaseManager(SystemObject):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self):
         self._dictionary = {}
-        super().__init__(*args, **kwargs)
+        super().__init__()
 
     def get(self, *args, **kwargs):
         raise NotImplementedError('Method "get" must be implemented')
@@ -31,6 +31,3 @@ class BaseManager(SystemObject):
 
     def __call__(self, *args, **kwargs):
         return self.get(*args, **kwargs)
-
-    def __repr__(self) -> str:
-        return f'({self.__class__.__name__}) <hash: {self.__hash__()} section: {self.section}>'

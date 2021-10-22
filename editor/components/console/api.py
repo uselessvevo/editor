@@ -5,7 +5,7 @@ from qtconsole.inprocess import QtInProcessKernelManager
 from qtconsole.rich_jupyter_widget import RichJupyterWidget
 
 from toolkit.managers.system.manager import System
-from toolkit.managers.themes.services import getTheme
+from toolkit.managers.assets.services import getTheme
 
 
 def getApp(*args, **kwargs):

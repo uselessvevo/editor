@@ -1,7 +1,7 @@
 import logging
 
 from PyQt5.QtWidgets import QLabel
-from toolkit.managers.themes.services import textParser
+from toolkit.managers.assets.services import textParser
 
 
 class RichLabel(QLabel):

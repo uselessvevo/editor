@@ -86,9 +86,7 @@ class SystemManager:
     logger = DummyLogger
     config_class = SystemConfig
 
-    def __init__(self, **kwargs) -> None:
-        super().__init__(**kwargs)
-
+    def __init__(self) -> None:
         self.__app_root = None
         self.__sys_root = None
         self.__config = None
@@ -97,7 +95,7 @@ class SystemManager:
     def log(self, message: str, message_type: MessageTypes = MessageTypes.INFO, **kwargs) -> None:
         self.logger.log(message=message, message_type=message_type, **kwargs)
 
-    def prepare(self, sys_root: str, app_root: str) -> None:
+    def init(self, sys_root: str, app_root: str) -> None:
         if not app_root or not sys_root:
             raise AttributeError('System or app root were not set')
 
@@ -106,21 +104,21 @@ class SystemManager:
 
         self.logger = self.logger()
         self.log(f'Starting a system. Version: {self.version}')
-        self._read_configuration_files()
+        self.__read_configuration_files()
 
-        self._set_system_root(sys_root)
-        self._set_app_root(app_root)
+        self.__set_system_root(sys_root)
+        self.__set_app_root(app_root)
 
     # Private methods
 
-    def _read_configuration_files(self, folder: str = 'configs', pattern: str = '*.json'):
+    def __read_configuration_files(self, folder: str = 'configs', pattern: str = '*.json'):
         defaults = read_json_files((self.__app_root / folder).rglob(pattern))
         if not defaults:
             raise ValueError('Configuration is empty')
 
         self.__config = self.config_class(defaults=defaults)
 
-    def _set_system_root(self, path: str) -> None:
+    def __set_system_root(self, path: str) -> None:
         if not os.path.exists(path):
             raise OSError(f'Path "{path}" not found')
 
@@ -130,7 +128,7 @@ class SystemManager:
         elif os.path.isdir(path):
             self.__sys_root = Path(path)
 
-    def _set_app_root(self, path: str):
+    def __set_app_root(self, path: str):
         if not os.path.exists(path):
             raise FileNotFoundError('File or path not found')
 
@@ -142,7 +140,7 @@ class SystemManager:
 
     # Private object access methods
 
-    def _add_object(self, instance: type, name: str) -> None:
+    def __add_object(self, instance: type, name: str) -> None:
         """
         Args:
             instance (type): object that will be added
@@ -166,13 +164,28 @@ class SystemManager:
     # Public object access methods
 
     def add_objects(self, objects: Union[list, tuple]) -> None:
+        # Iter trough the list of objects and import them
         for obj_str in objects:
             self.log(f'Adding {obj_str}')
-            self._add_object(*import_string(obj_str))
+            self.__add_object(*import_string(obj_str))
 
+        # Add imported objects into the node
         for obj_name, obj_type in self._objects.items():
-            self.log(f'Initializing {obj_type}')
-            self._objects[obj_name] = obj_type()
+            self.log(f'Initializing "{obj_type.name}"')
+
+            # Init object with the parent node
+            if obj_type.parent_name:
+                parent_obj = self._objects.get(obj_type.parent_name)
+                if not parent_obj:
+                    raise KeyError(f'Can\'t find object named "{parent_obj.parent_name}"')
+
+                obj_type = obj_type()
+                obj_type.add_to_parent_node(parent_obj, [obj_type])
+                self._objects[obj_name] = obj_type
+
+            # Init object without the parent node
+            else:
+                self._objects[obj_name] = obj_type()
 
     def get_object(self, name: str) -> object:
         """
@@ -194,10 +207,10 @@ class SystemManager:
     def ready(self) -> None:
         self.log(f'System is ready. Objects loaded: {len(self._objects)}')
 
-    # Properties
+    def close(self):
+        self.log(f'System shutdown. Good bye!')
 
-    def get_objects_list(self) -> List[object]:
-        return list(self._objects.keys())
+    # Properties
 
     @property
     def sys_root(self) -> Path:
@@ -213,7 +226,7 @@ class SystemManager:
         return self.__config
 
     def __repr__(self) -> str:
-        return f'({self.__class__.__name__}) <objects: {self.get_objects_list()[:4]} . . .>'
+        return f'({self.__class__.__name__}) <objects: {list(self._objects.keys())[:4]} . . .>'
 
 
 System = SystemManager()
