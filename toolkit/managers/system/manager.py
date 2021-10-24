@@ -108,8 +108,8 @@ class SystemManager:
         if not app_root or not sys_root:
             raise AttributeError('System or app root were not set')
 
-        self.__app_root = Path(app_root).resolve()
-        self.__sys_root = Path(sys_root).resolve()
+        self.__app_root = Path(app_root)
+        self.__sys_root = Path(sys_root)
 
         self.logger = self.logger()
         self.log(f'Starting System. Version: {self.version}')
