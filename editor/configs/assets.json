@@ -1,7 +1,0 @@
-{
-    "theme": "dark theme",
-    "default_theme": "dark theme",
-    "protected":[
-        "default_theme"
-    ]
-}

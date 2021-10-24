@@ -18,9 +18,9 @@ class LocalesManager(BaseManager):
         super().__init__()
 
         self.__locale = System.config.get(
-            key=get_locale(),
-            default='en_US',
-            default_key='configs.locales.locale'
+            key='toolkit.locales.locale',
+            default=get_locale(),
+            default_key='toolkit.locales.locale'
         )
 
         self.__locale_folder = Path(f'locales/{self.__locale}')

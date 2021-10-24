@@ -1,3 +1,4 @@
+import os
 from typing import Tuple
 
 from PyQt5 import QtCore
@@ -15,6 +16,11 @@ class BaseWindowMixin(AbstractWindow):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        if os.name == 'nt':
+            import ctypes
+            myappid = 'mycompany.myproduct.subproduct.version'  # arbitrary string
+            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+
         self.__config = kwargs.get('config', {})
 
     def setMinSize(self, w: int = None, h: int = None) -> None:
@@ -46,7 +52,7 @@ class BaseWindowMixin(AbstractWindow):
         """ After window was closed """
 
     def closeEvent(self, event) -> None:
-        notification = self.__config.get('ui.show_close_notification', False)
+        notification = self.__config.get('app.ui.show_close_notification', False)
         if notification:
             message = MessageBox(self)
 

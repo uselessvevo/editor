@@ -1,6 +1,0 @@
-{
-    "commands": {
-        "launch": ["${project_root}/launcher.main"],
-        "dev": ["${project_root}/launcher.main", "--debug", "--output-file", "%H%M%S.log"]
-    }
-}

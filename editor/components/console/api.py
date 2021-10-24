@@ -39,7 +39,7 @@ class QIPythonWidget(RichJupyterWidget):
 
         self.exit_requested.connect(self.stop)
         self.style_sheet = getTheme(
-            System.app_root, System.config.get('configs.ui.theme', default_key='ui.default_theme')
+            System.app_root, System.config.get('app.ui.theme', default_key='app.ui.default_theme')
         )
 
     def stop(self):

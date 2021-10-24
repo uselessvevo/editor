@@ -33,7 +33,7 @@ class ViewLexer(QsciLexerCustom):
 
         # Lexer + Style
         assets = System.get_object('AssetsManager')
-        lexer = System.config.get('configs.editor.current_lexer')
+        lexer = System.config.get('app.editor.current_lexer')
         # lexer = get_lexer_for_filename()
 
         if not lexer:

@@ -3,6 +3,6 @@ from toolkit.managers.system.objects import SystemObjectTypes
 
 
 class Manager2(BaseManager):
-    name = 'manager1'
     type = SystemObjectTypes.CORE_MANAGER
+    name = 'manager2'
     section = 'locales'

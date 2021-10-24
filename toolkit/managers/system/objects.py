@@ -43,7 +43,7 @@ class SystemObject(anytree.NodeMixin):
     # System object name
     name: str = None
 
-    # Node settings
+    # Node settings.json
     parent_name: str = None
 
     # System object type
@@ -83,13 +83,10 @@ class SystemObject(anytree.NodeMixin):
     def log(self, message: str, message_type: MessageTypes = MessageTypes.INFO, **kwargs) -> None:
         self.logger.log(message=message, message_type=message_type, **kwargs)
 
-    def add_to_parent_node(self, parent: object, children: List[object]) -> None:
-        try:
-            parent.children = children
-            self.log(f'Object "{parent.name}" was set as parent for "{self.name}"')
-            self.log(RenderTree(parent))
-        except TreeError:
-            self.log(f'Can\'t set parent node', MessageTypes.CRITICAL)
+    # Hooks
+
+    def __str__(self):
+        return f'{self.name} ({self.id})'
 
     def __repr__(self) -> str:
         return f'({self.__class__.__name__}) <id: {self.id}, name: {self.name!r}, type: {self.type.value!r}>'

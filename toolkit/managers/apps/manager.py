@@ -21,10 +21,10 @@ class PluginSystemObject(SystemObject, Node):
 class AppConfigManager(BaseManager):
     name = 'app_config_manager'
     type = SystemObjectTypes.CORE_MANAGER
-    section = 'apps'
+    section = 'managers@apps'
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self):
+        super().__init__()
         self._apps = {}
 
     def load(self, key, file: str):

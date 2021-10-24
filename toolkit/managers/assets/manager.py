@@ -9,7 +9,7 @@ from toolkit.managers.base import BaseManager
 
 class AssetsManager(BaseManager):
     name = 'assets_manager'
-    section = 'assets'
+    section = 'managers.assets'
 
     def __init__(self):
         super().__init__()
@@ -17,7 +17,7 @@ class AssetsManager(BaseManager):
         self._theme = None
         self._theme_folder = None
 
-        self._theme = System.config.get('configs.ui.theme', default_key='configs.ui.default_theme')
+        self._theme = System.config.get('app.ui.theme', default_key='app.ui.default_theme')
         self._theme_folder = System.app_root / 'assets' / 'themes' / self._theme
 
         assets_file = self._theme_folder.joinpath('assets.json')
@@ -28,7 +28,7 @@ class AssetsManager(BaseManager):
                 prefix='shared',
                 root=System.app_root,
                 folder=self._theme_folder,
-                file_formats=System.config.get('configs.managers.assets.file_formats'),
+                file_formats=System.config.get('toolkit.managers.assets.file_formats'),
                 path_slice=-2
             )
             write_json(assets_file, data)

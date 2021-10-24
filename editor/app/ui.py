@@ -99,10 +99,10 @@ class MainUI(BaseWindowMixin, QtWidgets.QMainWindow):
         result, folder = fileDialog.getOpenFileNames(
             parent=self,
             caption=self.trans('Editor.OpenFiles'),
-            directory=System.config.get('configs.files.last_opened_folder', os.path.expanduser('~')),
+            directory=System.config.get('app.files.last_opened_folder', os.path.expanduser('~')),
             filter=self.getFileFormats()
         )
-        System.config.set('files.last_opened_folder', folder)
+        System.config.set('app.files.last_opened_folder', folder)
         System.config.save('files')
 
         if result:
@@ -112,7 +112,7 @@ class MainUI(BaseWindowMixin, QtWidgets.QMainWindow):
         folder = QtWidgets.QFileDialog.getExistingDirectory(
             parent=self,
             caption=self.trans('Editor.OpenFolder'),
-            directory=System.config.get('configs.files.last_opened_folder', os.path.expanduser('~'))
+            directory=System.config.get('app.files.last_opened_folder', os.path.expanduser('~'))
         )
         System.config.set('files.last_opened_folder', folder)
         if folder:
@@ -120,7 +120,7 @@ class MainUI(BaseWindowMixin, QtWidgets.QMainWindow):
 
     @lru_cache(None)
     def getFileFormats(self) -> str:
-        formats = System.config.get('editor.formats')
+        formats = System.config.get('app.editor.formats')
         result = ';;'.join('{}{}'.format(
             self.translation.get(k), v) for (k, v) in formats.items())
         return result + ';;'.join(formats)

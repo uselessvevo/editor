@@ -20,8 +20,5 @@
     "Shared.Author": "Автор",
     "Shared.FileNotFound": "Файл не найден",
     "Shared.Menu": "Меню",
-    "Shared.PopularAudioFormats": "Все аудио-форматы",
-    "Shared.PopularVideoFormats": "Все видео-форматы",
-    "Shared.ffmpegPath": "Путь до ffmpeg",
     "Shared.BaseErrorTitle": "Ошибка"
 }

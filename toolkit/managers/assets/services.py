@@ -56,7 +56,7 @@ def get_theme(root: str, theme_name: str) -> str:
     return stylesheet
 
 
-def get_palette(theme):
+def get_palette(root: str, theme_name: str):
     """
     Get palette module from theme folder
 
@@ -66,7 +66,7 @@ def get_palette(theme):
     Returns:
         palette (module): app.setPalette(palette.getPalette())
     """
-    theme_name = f'assets/themes/{theme}'
+    theme_name = f'{root}/assets/themes/{theme_name}'
     palette = None
 
     if os.path.exists(f'{theme_name}/palette.py'):

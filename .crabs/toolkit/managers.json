@@ -23,17 +23,6 @@
       ],
       "protected": [
          "shared"
-      ],
-      "dependencies": [
-         "locales",
-         "configuration"
       ]
-   },
-   "managers_order": [
-      "toolkit.managers.assets.manager.AssetsManager",
-      "toolkit.managers.apps.manager.AppConfigManager",
-      "toolkit.managers.locales.manager.LocalesManager",
-      "toolkit.managers.manager1.manager.Manager1",
-      "toolkit.managers.manager2.manager.Manager2"
-   ]
+   }
 }

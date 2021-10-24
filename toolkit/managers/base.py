@@ -19,7 +19,7 @@ class BaseManager(SystemObject):
 
     @lru_cache(maxsize=None)
     def set(self, key, value):
-        key = f'configs.{key}.{self.section}.protected'
+        key = f'{key}.{self.section}.protected'
 
         if key not in System.config.get(key):
             raise exceptions.ProtectedSystemSectionKey(key)

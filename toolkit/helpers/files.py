@@ -18,7 +18,7 @@ def read_json(file: Union[str, Path], hang_on_error: bool = True, default: bool 
             raise err
 
 
-def read_json_files(files: List[Path], skip_error: bool = True, create: bool = False) -> Any:
+def read_json_files(files: List[Union[Path, str]], skip_error: bool = True, create: bool = False) -> Any:
     """
     Args:
         files (List[str]): list of files
@@ -26,6 +26,9 @@ def read_json_files(files: List[Path], skip_error: bool = True, create: bool = F
         create (bool): set True if you need to create file
     """
     collect = {}
+    if not all(isinstance(item, Path) for item in files):
+        files = list(map(Path, files))
+
     for file in files:
         # Get file without path and extension
         key = file.stem

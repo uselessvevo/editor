@@ -14,7 +14,7 @@ def except_hook(exc_type, exc_value, exc_traceback):
     SystemError(exc_type, exc_value, traceback_collect)
 
 
-sys.excepthook = except_hook
+# sys.excepthook = except_hook
 
 
 def get_qt_app(*args, **kwargs):
@@ -41,7 +41,7 @@ def launch():
     # get managers
     managers = set()
     # TODO: Create SystemObjectsNode to handle objects dependencies
-    managers_order = System.config.get('configs.managers.managers_order')
+    managers_order = System.config.get('apps')
     if not managers_order:
         raise KeyError('Key "configs.managers.managers_order" not found')
 
@@ -53,17 +53,17 @@ def launch():
 
     from editor.app.ui import MainUI
     from toolkit.managers.assets.services import getTheme
-    # from toolkit.managers.themes.services import getPalette
+    from toolkit.managers.assets.services import getPalette
 
     app = get_qt_app()
 
     theme = System.config.get(
-        'configs.ui.theme',
-        default_key='configs.ui.default_theme'
+        'app.ui.theme',
+        default_key='app.ui.default_theme'
     )
     if theme:
         app.setStyleSheet(getTheme(System.app_root, theme))
-        # app.setPalette(getPalette(theme))
+        app.setPalette(getPalette(System.app_root, theme))
 
     widget = MainUI()
     widget.show()

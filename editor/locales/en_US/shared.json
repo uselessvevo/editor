@@ -1,4 +1,9 @@
 {
+    "Shared.File": "&File",
+    "Shared.Edit": "&Edit",
+    "Shared.View": "&View",
+    "Shared.Run": "&Run",
+    "Shared.Help": "&Help",
     "Shared.Exit": "Exit",
     "Shared.ExitMessage": "Are you sure you want to exit?",
     "Shared.Settings": "Settings",
@@ -15,8 +20,5 @@
     "Shared.Author": "Author",
     "Shared.FileNotFound": "File not found",
     "Shared.Menu": "Menu",
-    "Shared.PopularAudioFormats": "All audio formats",
-    "Shared.PopularVideoFormats": "All video formats",
-    "Shared.ffmpegPath": "Path to ffmpeg",
     "Shared.BaseErrorTitle": "Error"
 }

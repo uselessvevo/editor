@@ -1,10 +1,13 @@
+import fnmatch
 import os
+import atexit
+import anytree
 from pathlib import Path
 
-from typing import Any
-from typing import List
+from typing import Any, List
 from typing import Union
 
+from anytree import RenderTree, TreeError
 from dotty_dict import Dotty
 
 from toolkit.logger import DummyLogger
@@ -87,15 +90,21 @@ class SystemManager:
     config_class = SystemConfig
 
     def __init__(self) -> None:
+        self.__is_init = False
         self.__app_root = None
         self.__sys_root = None
         self.__config = None
-        self._objects = {}
 
-    def log(self, message: str, message_type: MessageTypes = MessageTypes.INFO, **kwargs) -> None:
+        self.__objects = {}
+        self.__objects_node_map = {}
+
+    def log(self, message: Any, message_type: MessageTypes = MessageTypes.INFO, **kwargs) -> None:
         self.logger.log(message=message, message_type=message_type, **kwargs)
 
     def init(self, sys_root: str, app_root: str) -> None:
+        if self.__is_init:
+            raise Exception('Can\'t init twice')
+
         if not app_root or not sys_root:
             raise AttributeError('System or app root were not set')
 
@@ -103,20 +112,26 @@ class SystemManager:
         self.__sys_root = Path(sys_root).resolve()
 
         self.logger = self.logger()
-        self.log(f'Starting a system. Version: {self.version}')
+        self.log(f'Starting System. Version: {self.version}')
         self.__read_configuration_files()
 
         self.__set_system_root(sys_root)
         self.__set_app_root(app_root)
+        self.__is_init = True
 
     # Private methods
 
-    def __read_configuration_files(self, folder: str = 'configs', pattern: str = '*.json'):
-        defaults = read_json_files((self.__app_root / folder).rglob(pattern))
-        if not defaults:
+    def __read_configuration_files(self, folder: str = '.crabs', pattern: str = '*.json'):
+        root_settings = read_json('settings.json')
+        patterns = []
+        for p in root_settings.get('configs'):
+            patterns += list(Path().rglob(p))
+
+        system_settings = read_json_files(patterns)
+        if not system_settings:
             raise ValueError('Configuration is empty')
 
-        self.__config = self.config_class(defaults=defaults)
+        self.__config = self.config_class(defaults={**root_settings, **system_settings})
 
     def __set_system_root(self, path: str) -> None:
         if not os.path.exists(path):
@@ -155,11 +170,27 @@ class SystemManager:
         if not isinstance(getattr(instance, 'type'), SystemObject):
             self.log(f'Object "{instance.__class__.__name__}" is not SystemObject based')
 
-        if name in self._objects:
+        if name in self.__objects:
             self.log(f'Object "{instance}" already added. Skipping', MessageTypes.WARNING)
 
-        self._objects[name] = instance
+        self.__objects[name] = instance
         self.log(f'Object "{instance}" ({instance.type}) added')
+
+    def __add_to_parent_node(self, parent: object, children: List[object]) -> None:
+        try:
+            parent.children = children
+            self.log(f'Object "{parent.name}" was set as parent for "{self.name}"')
+            self.log(RenderTree(parent))
+        except TreeError:
+            self.log(f'Can\'t set parent node', MessageTypes.CRITICAL)
+
+    def __get_objects_order(self, obj_name: str) -> list:
+        """ Get object's node order  """
+        obj = self.__objects.get(obj_name)
+        if not obj:
+            self.log(f'Can\'t find object name "{obj_name}"')
+
+        return [i for i in anytree.iterators.levelorderiter.LevelOrderIter(obj)]
 
     # Public object access methods
 
@@ -170,22 +201,23 @@ class SystemManager:
             self.__add_object(*import_string(obj_str))
 
         # Add imported objects into the node
-        for obj_name, obj_type in self._objects.items():
+        for obj_name, obj_type in self.__objects.items():
             self.log(f'Initializing "{obj_type.name}"')
 
             # Init object with the parent node
             if obj_type.parent_name:
-                parent_obj = self._objects.get(obj_type.parent_name)
+                parent_obj = self.__objects.get(obj_type.parent_name)
                 if not parent_obj:
                     raise KeyError(f'Can\'t find object named "{parent_obj.parent_name}"')
 
-                obj_type = obj_type()
-                obj_type.add_to_parent_node(parent_obj, [obj_type])
-                self._objects[obj_name] = obj_type
+                # Create init order
+                # По сути, нам надо собрать все классы объектов, пробежаться по ним и взять атрибут `parent_name`
+                # Потом составить карту зависимостей и составить порядок запуска
+                self.__objects[obj_name] = obj_type()
 
             # Init object without the parent node
             else:
-                self._objects[obj_name] = obj_type()
+                self.__objects[obj_name] = obj_type()
 
     def get_object(self, name: str) -> object:
         """
@@ -197,18 +229,15 @@ class SystemManager:
         Returns:
             object
         """
-        if name not in self._objects:
+        if name not in self.__objects:
             self.log(f'Object "{name}" not found')
 
-        return self._objects[name]
+        return self.__objects[name]
 
     # Event methods
 
-    def ready(self) -> None:
-        self.log(f'System is ready. Objects loaded: {len(self._objects)}')
-
-    def close(self):
-        self.log(f'System shutdown. Good bye!')
+    def on_ready(self) -> None:
+        self.log(f'System is ready. Objects loaded: {len(self.__objects)}')
 
     # Properties
 
@@ -225,8 +254,10 @@ class SystemManager:
     def config(self) -> SystemConfig:
         return self.__config
 
+    # Hooks
+
     def __repr__(self) -> str:
-        return f'({self.__class__.__name__}) <objects: {list(self._objects.keys())[:4]} . . .>'
+        return f'({self.__class__.__name__}) <objects: {list(self.__objects.keys())[:4]} . . .>'
 
 
 System = SystemManager()
