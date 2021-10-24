@@ -2,6 +2,7 @@ import os
 import re
 import importlib
 import importlib.util
+from pathlib import Path
 
 from toolkit.managers import get_file
 from toolkit.helpers.files import read_json
@@ -20,7 +21,7 @@ def parse_stylesheet(path: str, keys: dict = None) -> str:
             matches = re.findall(pattern, stylesheet)
 
             for match in matches:
-                stylesheet = stylesheet.replace(match[0], variables[match[0]])
+                stylesheet = stylesheet.replace(match[0], variables[match[2]])
 
         with open(f'{path}/theme.qss', 'w') as output:
             output.write(stylesheet)
@@ -32,25 +33,25 @@ def parse_stylesheet(path: str, keys: dict = None) -> str:
     return stylesheet
 
 
-def get_theme(root: str, theme_name: str) -> str:
+def get_theme(root: Path, theme_name: str) -> str:
     """
     Parse and get stylesheet
     """
-    theme_name = f'{root}/assets/themes/{theme_name}'
-    themes_list = os.listdir(f'{root}/assets/themes')
+    theme_name = root / 'assets' / 'themes' / theme_name
+    themes_list = os.listdir(root / 'assets' / 'themes')
     stylesheet = ''
 
     # Check if folder exists
-    if not os.path.exists(theme_name):
+    if not theme_name.exists():
         # Get one of theme
         if themes_list and os.path.exists(themes_list[0]):
             theme_name = f'assets/themes/{themes_list[0]}'
         else:
             theme_name = None
 
-    if theme_name and os.path.exists(theme_name):
+    if theme_name and theme_name.exists():
         stylesheet = parse_stylesheet(theme_name, {
-            '@themeFolder': theme_name
+            'themeFolder': str(theme_name.as_posix())
         })
 
     return stylesheet
@@ -61,7 +62,8 @@ def get_palette(root: str, theme_name: str):
     Get palette module from theme folder
 
     Args:
-        theme (str): theme name
+        root (str):
+        theme_name (str):
 
     Returns:
         palette (module): app.setPalette(palette.getPalette())
@@ -93,7 +95,6 @@ PREFIXES = {
 
 
 def text_parser(text):
-
     def resources(args):
         filename = get_file(*args)
         view = f'<img src=\"{filename}\" alt="{filename}">'

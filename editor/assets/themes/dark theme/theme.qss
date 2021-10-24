@@ -1,6 +1,6 @@
 * {
     color: #f2f2f2;
-    font-family: url(assets/themes/dark theme/fonts/GoogleSans.ttf);
+    font-family: url(E:/Work/editor/editor/assets/themes/dark theme/fonts/GoogleSans.ttf);
     background-color: #21252B;
 }
 
@@ -20,14 +20,14 @@ QMainWindow::separator:horizontal {
   width: 5px;
   margin-top: 2px;
   margin-bottom: 2px;
-  image: url("assets/themes/dark theme/Icons/Controls/ToolbarSeparatorV.png");
+  image: url("E:/Work/editor/editor/assets/themes/dark theme/Icons/Controls/ToolbarSeparatorV.png");
 }
 
 QMainWindow::separator:vertical {
   height: 5px;
   margin-left: 2px;
   margin-right: 2px;
-  image: url("assets/themes/dark theme/Icons/Controls/ToolbarSeparatorH.png");
+  image: url("E:/Work/editor/editor/assets/themes/dark theme/Icons/Controls/ToolbarSeparatorH.png");
 }
 
 /*
@@ -262,47 +262,47 @@ QCheckBox::indicator {
 }
 
 QCheckBox::indicator:unchecked {
-  image: url("assets/themes/dark theme/Icons/CheckBox.Blank.svg");
+  image: url("E:/Work/editor/editor/assets/themes/dark theme/Icons/CheckBox.Blank.svg");
 }
 
 QCheckBox::indicator:unchecked:hover,
 QCheckBox::indicator:unchecked:focus,
 QCheckBox::indicator:unchecked:pressed {
   border: none;
-  image: url("assets/themes/dark theme/Icons/CheckBox.Blank.svg");
+  image: url("E:/Work/editor/editor/assets/themes/dark theme/Icons/CheckBox.Blank.svg");
 }
 
 QCheckBox::indicator:unchecked:disabled {
-  image: url("assets/themes/dark theme/Icons/CheckBox.Blank.svg");
+  image: url("E:/Work/editor/editor/assets/themes/dark theme/Icons/CheckBox.Blank.svg");
 }
 
 QCheckBox::indicator:checked {
-  image: url("assets/themes/dark theme/Icons/CheckBox.Checked.svg");
+  image: url("E:/Work/editor/editor/assets/themes/dark theme/Icons/CheckBox.Checked.svg");
 }
 
 QCheckBox::indicator:checked:hover,
 QCheckBox::indicator:checked:focus,
 QCheckBox::indicator:checked:pressed {
   border: none;
-  image: url("assets/themes/dark theme/Icons/CheckBox.Checked.svg");
+  image: url("E:/Work/editor/editor/assets/themes/dark theme/Icons/CheckBox.Checked.svg");
 }
 
 QCheckBox::indicator:checked:disabled {
-  image: url("assets/themes/dark theme/Icons/CheckBox.Checked.svg");
+  image: url("E:/Work/editor/editor/assets/themes/dark theme/Icons/CheckBox.Checked.svg");
 }
 
 QCheckBox::indicator:indeterminate {
-  image: url("assets/themes/dark theme/Icons/CheckBox.Indeterminate.svg");
+  image: url("E:/Work/editor/editor/assets/themes/dark theme/Icons/CheckBox.Indeterminate.svg");
 }
 
 QCheckBox::indicator:indeterminate:disabled {
-  image: url("assets/themes/dark theme/Icons/CheckBox.Indeterminate.svg");
+  image: url("E:/Work/editor/editor/assets/themes/dark theme/Icons/CheckBox.Indeterminate.svg");
 }
 
 QCheckBox::indicator:indeterminate:focus,
 QCheckBox::indicator:indeterminate:hover,
 QCheckBox::indicator:indeterminate:pressed {
-  image: url("assets/themes/dark theme/Icons/CheckBox.Checked.svg");
+  image: url("E:/Work/editor/editor/assets/themes/dark theme/Icons/CheckBox.Checked.svg");
 }
 
 /*
@@ -395,7 +395,7 @@ QComboBox::drop-down {
 }
 
 QComboBox::down-arrow {
-  image: url("assets/themes/dark theme/Icons/Arrow.Down.svg");
+  image: url("E:/Work/editor/editor/assets/themes/dark theme/Icons/Arrow.Down.svg");
   height: 8px;
   width: 8px;
 }
@@ -403,7 +403,7 @@ QComboBox::down-arrow {
 QComboBox::down-arrow:on,
 QComboBox::down-arrow:hover,
 QComboBox::down-arrow:focus {
-  image: url("assets/themes/dark theme/Icons/Arrow.Down.svg");
+  image: url("E:/Work/editor/editor/assets/themes/dark theme/Icons/Arrow.Down.svg");
 }
 
 /*
@@ -498,15 +498,15 @@ QTabBar::close-button {
   border: 0;
   margin: 2px;
   padding: 2px;
-  image: url("assets/themes/dark theme/Icons/Close.svg");
+  image: url("E:/Work/editor/editor/assets/themes/dark theme/Icons/Close.svg");
 }
 
 QTabBar::close-button:hover {
-  image: url("assets/themes/dark theme/Icons/Close.Focused.svg");
+  image: url("E:/Work/editor/editor/assets/themes/dark theme/Icons/Close.Focused.svg");
 }
 
 QTabBar::close-button:pressed {
-  image: url("assets/themes/dark theme/Icons/Close.Pressed.svg");
+  image: url("E:/Work/editor/editor/assets/themes/dark theme/Icons/Close.Pressed.svg");
 }
 
 /*
