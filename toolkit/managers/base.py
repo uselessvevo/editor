@@ -2,7 +2,7 @@ from functools import lru_cache
 from toolkit import exceptions
 
 from toolkit.managers.system.manager import System
-from toolkit.managers.system.objects import SystemObject
+from toolkit.objects.system import SystemObject
 
 
 class BaseManager(SystemObject):

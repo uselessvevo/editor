@@ -6,4 +6,6 @@ class BasePluginObject(SystemObject):
 
 
 class Plugin(BasePluginObject):
-    pass
+
+    def register_shortcut(self, key: str):
+        pass

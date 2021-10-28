@@ -1,0 +1,3 @@
+{
+  "exec": "testplugin.main.TestPlugin"
+}

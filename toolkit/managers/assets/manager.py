@@ -5,11 +5,13 @@ from toolkit.helpers.files import write_folder_info
 
 from toolkit.managers.system.manager import System
 from toolkit.managers.base import BaseManager
+from toolkit.objects.system import SystemObjectTypes
 
 
 class AssetsManager(BaseManager):
     name = 'assets_manager'
     section = 'managers.assets'
+    type = SystemObjectTypes.CORE_MANAGER
 
     def __init__(self):
         super().__init__()
@@ -17,6 +19,7 @@ class AssetsManager(BaseManager):
         self._theme = None
         self._theme_folder = None
 
+    def init(self, *args, **kwargs):
         self._theme = System.config.get('app.ui.theme', default_key='app.ui.default_theme')
         self._theme_folder = System.app_root / 'assets' / 'themes' / self._theme
 

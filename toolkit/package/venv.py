@@ -30,12 +30,3 @@ def create_packaging_env(directory: str, pyver: str, name: str = 'packaging-env'
 
     call_subprocess(command)
     return env_path
-
-
-def process_packages(command: str, *packages) -> int:
-    call_subprocess((sys.executable, '-m', 'pip', 'install', '--upgrade', 'pip'))
-    run_subprocess = subprocess.check_call((sys.executable, '-m', 'pip', command, *packages))
-
-    if run_subprocess != 0:
-        raise subprocess.SubprocessError('Сan\'t install requirements')
-    return run_subprocess

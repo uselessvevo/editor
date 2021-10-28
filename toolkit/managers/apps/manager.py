@@ -1,31 +1,28 @@
 import os
 import glob
-from anytree import Node
-
 from toolkit.managers.base import BaseManager
 
-from toolkit.managers.system.manager import System
-from toolkit.managers.system.objects import SystemObject
-from toolkit.managers.system.objects import SystemObjectTypes
+from toolkit.objects.system import SystemObject
+from toolkit.objects.system import SystemObjectTypes
 from toolkit.helpers.files import read_json_files
 
 from toolkit.helpers.files import read_json
-from toolkit.logger import MessageTypes
+from toolkit.logger import Messages
 from toolkit.helpers.objects import import_string
 
 
-class PluginSystemObject(SystemObject, Node):
+class PluginSystemObject(SystemObject):
     type = SystemObjectTypes.PLUGIN
 
 
 class AppConfigManager(BaseManager):
     name = 'app_config_manager'
     type = SystemObjectTypes.CORE_MANAGER
-    section = 'managers@apps'
+    section = 'apps'
 
     def __init__(self):
-        super().__init__()
         self._apps = {}
+        super().__init__()
 
     def load(self, key, file: str):
         self._dictionary.update({key: read_json(file)})
@@ -36,11 +33,6 @@ class AppConfigManager(BaseManager):
             raise KeyError(f'key "{key}" not found')
 
         self._dictionary.pop(key)
-
-    @staticmethod
-    def make_node(name: str, parent: str) -> PluginSystemObject:
-        name = System.get_object(name)
-        return PluginSystemObject(name=name, parent=parent)
 
     def load_plugins(self, plugins_root: str = 'plugins', manifest_file: str = 'manifest.json'):
         """
@@ -53,7 +45,7 @@ class AppConfigManager(BaseManager):
             plugin_folder = f'{plugins_root}/{plugin_name}'
 
             if not os.path.exists(plugin_folder):
-                self.log(f'Plugin "{plugin_name}" was not found', MessageTypes.WARNING)
+                self.log(f'Plugin "{plugin_name}" was not found', Messages.WARNING)
                 continue
 
             if not os.path.exists(f'{plugin_folder}/configs/plugin.json'):

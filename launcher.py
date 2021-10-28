@@ -14,7 +14,7 @@ def except_hook(exc_type, exc_value, exc_traceback):
     SystemError(exc_type, exc_value, traceback_collect)
 
 
-# sys.excepthook = except_hook
+sys.excepthook = except_hook
 
 
 def get_qt_app(*args, **kwargs):
@@ -29,9 +29,10 @@ def get_qt_app(*args, **kwargs):
 
 
 def launch():
-    from toolkit.helpers.requirements import prepare_dependencies
+    from toolkit.package.requirements import manage_requirements
 
-    prepare_dependencies('editor/requirements.json')
+    # Install all requirements
+    manage_requirements()
 
     from toolkit.managers.system.manager import System
     from toolkit.helpers.objects import is_import_string
@@ -57,15 +58,13 @@ def launch():
 
     app = get_qt_app()
 
-    theme = System.config.get(
-        'app.ui.theme',
-        default_key='app.ui.default_theme'
-    )
+    theme = System.config.get('app.ui.theme', 'app.ui.default_theme')
     if theme:
         app.setStyleSheet(getTheme(System.app_root, theme))
         app.setPalette(getPalette(System.app_root, theme))
 
     widget = MainUI()
+    widget.init()
     widget.show()
 
     sys.exit(app.exec_())

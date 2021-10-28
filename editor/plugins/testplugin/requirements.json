@@ -1,0 +1,10 @@
+{
+    "prod": {
+        "install": {},
+        "delete": []
+    },
+    "dev": {
+        "install": {},
+        "delete": []
+    }
+}

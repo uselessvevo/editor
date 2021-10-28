@@ -5,7 +5,7 @@ from toolkit.helpers.files import write_json
 
 from toolkit.managers.base import BaseManager
 from toolkit.managers.system.manager import System
-from toolkit.managers.system.objects import SystemObjectTypes
+from toolkit.objects.system import SystemObjectTypes
 from toolkit.managers.locales.services import get_locale
 
 
@@ -14,12 +14,12 @@ class LocalesManager(BaseManager):
     type = SystemObjectTypes.CORE_MANAGER
     section = 'locales'
 
-    def __init__(self,):
+    def __init__(self):
         super().__init__()
 
         self.__locale = System.config.get(
             key='toolkit.locales.locale',
-            default=get_locale(),
+            default_value=get_locale(),
             default_key='toolkit.locales.locale'
         )
 
@@ -32,8 +32,8 @@ class LocalesManager(BaseManager):
         for item in dict_data:
             self._dictionary.update(**item)
 
-    def get(self, key: str, default=None):
-        return self._dictionary.get(key, default)
+    def get(self, key: str, default: str = None):
+        return self._dictionary.get(key, f'{key}@{self.locale}')
 
     def save(self, file: str, data: dict):
         write_json(self.__locale_folder / file, data)

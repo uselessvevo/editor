@@ -4,9 +4,11 @@ from functools import lru_cache
 from PyQt5 import QtGui, Qt
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QAction
 
-from toolkit.managers import getFile
 from toolkit.managers.system.manager import System
+from toolkit.objects.system import SystemObject
+from toolkit.objects.system import SystemObjectTypes
 
 from ui.windows.window import BaseWindowMixin
 
@@ -15,15 +17,18 @@ from editor.components.console.ui import Console
 from editor.components.workbench.ui import Workbench
 
 
-class MainUI(BaseWindowMixin, QtWidgets.QMainWindow):
+class MainUI(SystemObject, BaseWindowMixin, QtWidgets.QMainWindow):
     defaultMinSize = (1020, 670)
     defaultPosition = (150, 150)
+    name = 'main_ui'
+    type = SystemObjectTypes.PLUGIN
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.trans = System.get_object('LocalesManager')
+        self.files = System.get_object('AssetsManager')
 
+    def init(self, *args, **kwargs):
         self.initMain()
         self.initLayout()
         self.initMenu()
@@ -33,7 +38,7 @@ class MainUI(BaseWindowMixin, QtWidgets.QMainWindow):
 
     def initMain(self):
         self.setWindowTitle(f'Editor - {os.getcwd()}')
-        self.setWindowIcon(QtGui.QIcon(getFile('shared/icons/magic.svg')))
+        self.setWindowIcon(QtGui.QIcon(self.files('shared/icons/magic.svg')))
         self.setMinSize()
         self.moveToCenter()
 
@@ -60,19 +65,23 @@ class MainUI(BaseWindowMixin, QtWidgets.QMainWindow):
         self.setCentralWidget(widget)
 
     def initMenu(self):
-        self.fileMenu = self.menuBar().addMenu(self.trans('Shared.File'))
-        self.editMenu = self.menuBar().addMenu(self.trans('Shared.Edit'))
-        self.viewMenu = self.menuBar().addMenu(self.trans('Shared.View'))
-        self.runMenu = self.menuBar().addMenu(self.trans('Shared.Run'))
-        self.helpMenu = self.menuBar().addMenu(self.trans('Shared.Help'))
+        self.mainMenuBar = self.menuBar()
+        self.fileMenu = self.mainMenuBar.addMenu(self.trans('Shared.File'))
+        self.fileMenu.addAction(QAction(self.trans('Shared.OpenFile'), self))
+        self.editMenu = self.mainMenuBar.addMenu(self.trans('Shared.Edit'))
+        self.viewMenu = self.mainMenuBar.addMenu(self.trans('Shared.View'))
+        self.runMenu = self.mainMenuBar.addMenu(self.trans('Shared.Run'))
+        self.helpMenu = self.mainMenuBar.addMenu(self.trans('Shared.Help'))
 
     def initWorkbench(self):
         self.workbench = Workbench()
+        self.workbench.init()
         self.workbench.runConsole.clicked.connect(self.initConsole)
         self.addToolBar(Qt.LeftToolBarArea, self.workbench)
 
     def initTextEditor(self) -> None:
         self.editor = Editor()
+        self.editor.init()
         self.editor.setSizePolicy(
             QtWidgets.QSizePolicy.Expanding,
             QtWidgets.QSizePolicy.Expanding
@@ -90,6 +99,7 @@ class MainUI(BaseWindowMixin, QtWidgets.QMainWindow):
 
         self.addDockWidget(Qt.BottomDockWidgetArea, self.dock)
         self.console = Console()
+        self.console.init()
         self.dock.setWidget(self.console)
 
     def openFiles(self) -> None:

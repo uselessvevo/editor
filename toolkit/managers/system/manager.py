@@ -1,18 +1,14 @@
-import fnmatch
 import os
-import atexit
-import anytree
 from pathlib import Path
 
-from typing import Any, List
+from typing import Any
 from typing import Union
 
-from anytree import RenderTree, TreeError
 from dotty_dict import Dotty
 
 from toolkit.logger import DummyLogger
-from toolkit.logger import MessageTypes
-from toolkit.managers.system.objects import SystemObject
+from toolkit.logger import Messages
+from toolkit.objects.system import SystemObject
 
 from toolkit.helpers.objects import import_string
 from toolkit.helpers.objects import is_import_string
@@ -48,10 +44,16 @@ class SystemConfig(Dotty):
 
         super().__init__(dictionary=dictionary)
 
-    def get(self, key: str, default_key: str = None, default: Any = None) -> Any:
+    def get(self, key: str, default_key: str = None, default_value: Any = None) -> Any:
+        """
+        Caller -> Config<get method> [check if called ]
+        """
+        # caller = inspect.stack()
+        # caller = caller[1][0].f_locals.get('self')
+
         if default_key:
-            default = super().get(default_key, default)
-        return super().get(key) or default
+            default_value = super().get(default_key, default_value)
+        return super().get(key) or default_value
 
     def set(self, key, value) -> None:
         self[key] = value
@@ -94,11 +96,9 @@ class SystemManager:
         self.__app_root = None
         self.__sys_root = None
         self.__config = None
-
         self.__objects = {}
-        self.__objects_node_map = {}
 
-    def log(self, message: Any, message_type: MessageTypes = MessageTypes.INFO, **kwargs) -> None:
+    def log(self, message: Any, message_type: Messages = Messages.INFO, **kwargs) -> None:
         self.logger.log(message=message, message_type=message_type, **kwargs)
 
     def init(self, sys_root: str, app_root: str) -> None:
@@ -121,7 +121,8 @@ class SystemManager:
 
     # Private methods
 
-    def __read_configuration_files(self, folder: str = '.crabs', pattern: str = '*.json'):
+    def __read_configuration_files(self):
+        """ Read files from .crabs folder """
         root_settings = read_json('settings.json')
         patterns = []
         for p in root_settings.get('configs'):
@@ -134,6 +135,7 @@ class SystemManager:
         self.__config = self.config_class(defaults={**root_settings, **system_settings})
 
     def __set_system_root(self, path: str) -> None:
+        """ Set system/toolkit root by __file__ or by relative path """
         if not os.path.exists(path):
             raise OSError(f'Path "{path}" not found')
 
@@ -144,6 +146,7 @@ class SystemManager:
             self.__sys_root = Path(path)
 
     def __set_app_root(self, path: str):
+        """ Set app root by __file__ or by relative path """
         if not os.path.exists(path):
             raise FileNotFoundError('File or path not found')
 
@@ -155,12 +158,8 @@ class SystemManager:
 
     # Private object access methods
 
-    def __add_object(self, instance: type, name: str) -> None:
-        """
-        Args:
-            instance (type): object that will be added
-            name (str): object key name
-        """
+    def __add_object(self, instance: SystemObject, name: str) -> None:
+        """ Add SystemObject """
         if isinstance(instance, str):
             if is_import_string(instance):
                 instance = import_string(instance)
@@ -171,55 +170,32 @@ class SystemManager:
             self.log(f'Object "{instance.__class__.__name__}" is not SystemObject based')
 
         if name in self.__objects:
-            self.log(f'Object "{instance}" already added. Skipping', MessageTypes.WARNING)
+            self.log(f'Object "{instance}" already added. Skipping', Messages.WARNING)
 
         self.__objects[name] = instance
-        self.log(f'Object "{instance}" ({instance.type}) added')
-
-    def __add_to_parent_node(self, parent: object, children: List[object]) -> None:
-        try:
-            parent.children = children
-            self.log(f'Object "{parent.name}" was set as parent for "{self.name}"')
-            self.log(RenderTree(parent))
-        except TreeError:
-            self.log(f'Can\'t set parent node', MessageTypes.CRITICAL)
-
-    def __get_objects_order(self, obj_name: str) -> list:
-        """ Get object's node order  """
-        obj = self.__objects.get(obj_name)
-        if not obj:
-            self.log(f'Can\'t find object name "{obj_name}"')
-
-        return [i for i in anytree.iterators.levelorderiter.LevelOrderIter(obj)]
+        self.log(f'Object "{instance.name}" with type {instance.type.name} was added')
 
     # Public object access methods
 
     def add_objects(self, objects: Union[list, tuple]) -> None:
         # Iter trough the list of objects and import them
         for obj_str in objects:
-            self.log(f'Adding {obj_str}')
+            self.log(f'Preparing {obj_str}')
             self.__add_object(*import_string(obj_str))
 
         # Add imported objects into the node
         for obj_name, obj_type in self.__objects.items():
+            if not issubclass(obj_type, SystemObject):
+                self.log(f'Can\'t init non SystemObject "{obj_name}" object')
+                continue
+
             self.log(f'Initializing "{obj_type.name}"')
 
-            # Init object with the parent node
-            if obj_type.parent_name:
-                parent_obj = self.__objects.get(obj_type.parent_name)
-                if not parent_obj:
-                    raise KeyError(f'Can\'t find object named "{parent_obj.parent_name}"')
+            obj_type = obj_type()
+            self.__objects[obj_name] = obj_type
+            obj_type.init()
 
-                # Create init order
-                # По сути, нам надо собрать все классы объектов, пробежаться по ним и взять атрибут `parent_name`
-                # Потом составить карту зависимостей и составить порядок запуска
-                self.__objects[obj_name] = obj_type()
-
-            # Init object without the parent node
-            else:
-                self.__objects[obj_name] = obj_type()
-
-    def get_object(self, name: str) -> object:
+    def get_object(self, name: str) -> SystemObject:
         """
         Get object by name
 
@@ -257,7 +233,7 @@ class SystemManager:
     # Hooks
 
     def __repr__(self) -> str:
-        return f'({self.__class__.__name__}) <objects: {list(self.__objects.keys())[:4]} . . .>'
+        return f'({self.__class__.__name__}) <objects: {", ".join(self.__objects.keys()[:4])} . . .>'
 
 
 System = SystemManager()

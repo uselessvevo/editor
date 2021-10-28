@@ -14,6 +14,7 @@ from toolkit.managers.system.manager import System
 from toolkit.helpers.files import read_json
 
 from editor.components.editor.exceptions import LexerNotFound
+from toolkit.objects.system import SystemObject, SystemObjectTypes
 
 
 def convert_size(size_bytes):
@@ -26,11 +27,12 @@ def convert_size(size_bytes):
     return f'{s} {size_name[i]}'
 
 
-class ViewLexer(QsciLexerCustom):
+class ViewLexer(SystemObject, QsciLexerCustom):
+    name = 'main_ui.editor.lexer'
+    parent_name = 'main_ui.editor'
+    type = SystemObjectTypes.UTILITY
 
-    def __init__(self):
-        super().__init__()
-
+    def init(self, *args, **kwargs):
         # Lexer + Style
         assets = System.get_object('AssetsManager')
         lexer = System.config.get('app.editor.current_lexer')

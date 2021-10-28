@@ -34,7 +34,3 @@ def get_file(key: str, default: str = ''):
 
 def get_font(key: str, default: str = 'Arial'):
     return System.get_object('AssetsManager').get(key, default)
-
-
-getFile = get_file
-getFont = get_font

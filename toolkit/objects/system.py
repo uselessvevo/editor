@@ -1,12 +1,9 @@
 import enum
 import uuid
-from typing import List
+from typing import Tuple
 
-import anytree
-from anytree import TreeError, RenderTree
-
+from toolkit.logger import Messages
 from toolkit.logger import DummyLogger
-from toolkit.logger import MessageTypes
 
 
 class SystemObjectTypes(enum.Enum):
@@ -35,22 +32,18 @@ class SystemConfigCategories(enum.Enum):
     # Private, protected data
     PROTECTED = 'protected'
 
-    # Etc.
-    UNSPECIFIED = 'unspecified'
 
-
-class SystemObject(anytree.NodeMixin):
-    # System object name
+class SystemObject:
+    # Object name
     name: str = None
 
-    # Node settings.json
-    parent_name: str = None
-
-    # System object type
-    type: SystemObjectTypes = SystemObjectTypes.UNSPECIFIED
+    # Allowance policy
+    type: SystemObjectTypes = None
+    allowed_types: Tuple[SystemObjectTypes] = ()
 
     # System configuration key. Gives access to configuration
-    section: SystemConfigCategories = SystemObjectTypes.UNSPECIFIED
+    section: str = None
+    config_category: SystemConfigCategories = None
 
     # Just a logger
     logger: type = DummyLogger
@@ -58,29 +51,36 @@ class SystemObject(anytree.NodeMixin):
     def __init__(self, *args, **kwargs) -> None:
         # Node settings
         self.id = uuid.uuid4()
-        self.separator = '.'
         self.logger = kwargs.get('logger', self.logger)()
 
         if not self.name:
             self.name = self.__class__.__name__
             self.log(f'System attribute "name" was not set. '
-                     f'Will be set with default class name "{self.name}"', MessageTypes.WARNING)
+                     f'Will be set with default class name "{self.name}"', Messages.WARNING)
 
-        if self.type is SystemObjectTypes.UNSPECIFIED:
+        if not self.type:
             self.type = SystemObjectTypes.UNSPECIFIED
-            self.log(f'System attribute "type" was not set. '
-                     f'Will be set with default type "{self.type}"', MessageTypes.WARNING)
+            self.log(f'System attribute "type" for object "{self.name}" was not set. '
+                     f'Will be set with default type "{self.type.name}"', Messages.WARNING)
 
-        if self.section is SystemConfigCategories.UNSPECIFIED:
-            self.log('System attribute "section" was not set. '
-                     'Will not be able to get access to System configuration', MessageTypes.WARNING)
+        if not self.config_category:
+            self.config_category = SystemConfigCategories.PROTECTED
+            self.log(f'System attribute "config_access" in object "{self.name}" is None'
+                     f'Will be set with default type "{self.config_category.name}"', Messages.WARNING)
+
+        if not self.section:
+            self.log(f'System attribute "section" in object "{self.name}" was not set. '
+                     'Will not be able to get access to object\'s configuration', Messages.WARNING)
 
         # Init node
         super().__init__(*args, **kwargs)
 
     # Public methods
 
-    def log(self, message: str, message_type: MessageTypes = MessageTypes.INFO, **kwargs) -> None:
+    def init(self, *args, **kwargs):
+        self.log(f'Initializing object "{self.name}"')
+
+    def log(self, message: str, message_type: Messages = Messages.INFO, **kwargs) -> None:
         self.logger.log(message=message, message_type=message_type, **kwargs)
 
     # Hooks

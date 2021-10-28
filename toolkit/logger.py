@@ -1,19 +1,21 @@
+import abc
 import enum
 from datetime import datetime
 
 from toolkit.helpers.objects import is_debug
 
 
-class MessageTypes(enum.Enum):
+class Messages(enum.Enum):
     INFO = 'Info'
     WARNING = 'Warning'
     CRITICAL = 'Critical'
 
 
-class AbstractLogger:
+class AbstractLogger(abc.ABC):
 
+    @abc.abstractmethod
     def log(self) -> None:
-        raise NotImplementedError('Call method must be implemented')
+        pass
 
 
 class LoggerException(Exception):
@@ -44,7 +46,7 @@ class DummyLogger(AbstractLogger):
             if not issubclass(exc_type, (BaseException, Exception)):
                 raise TypeError('Exception type (exc_type) is not an exception')
 
-            message_type = kwargs.get('message_type', MessageTypes.CRITICAL.value).value
+            message_type = kwargs.get('message_type', Messages.CRITICAL.value).value
             exc_message = (
                 f'[{"DEBUG |" if debug else ""}{timestamp} | '
                 f'{message_type + "]":<10} {exc_type}, {exc_message}'
@@ -52,6 +54,6 @@ class DummyLogger(AbstractLogger):
 
             raise LoggerException(exc_message)
 
-        message_type = kwargs.get('message_type', MessageTypes.INFO.value).value
+        message_type = kwargs.get('message_type', Messages.INFO.value).value
 
         self._stdout(f'[{"DEBUG |" if debug else ""}{timestamp} | {message_type + "]":<10} {message}')

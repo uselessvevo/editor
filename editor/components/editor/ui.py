@@ -5,16 +5,16 @@ from editor.components.editor.lexer import ViewLexer
 
 from toolkit.managers.system.manager import System
 from toolkit.helpers.files import read_json
+from toolkit.objects.system import SystemObject, SystemObjectTypes
 
 
-class Editor(Qsci.QsciScintilla):
+class Editor(SystemObject, Qsci.QsciScintilla):
     ARROW_MARKER_NUM = 8
+    name = 'main_ui.editor'
+    parent_name = 'main_ui'
+    type = SystemObjectTypes.PLUGIN
 
-    def __init__(self, parent=None):
-        super().__init__(parent=parent)
-
-        self._parent = parent
-
+    def init(self, *args, **kwargs):
         font = QFont()
         font.setFamily('Courier')
         font.setFixedPitch(True)
@@ -36,6 +36,7 @@ class Editor(Qsci.QsciScintilla):
         # -------- Lexer --------
         self.setEolMode(Qsci.QsciScintilla.EolUnix)
         self.lexer = ViewLexer()
+        self.lexer.init()
         self.setLexer(self.lexer)
 
         # -------- Shortcuts --------
