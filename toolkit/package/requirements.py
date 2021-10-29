@@ -44,7 +44,7 @@ def manage_requirements(requirements_file: str = 'requirements.json', dev: bool 
     requirements = requirements.get('dev') if dev else requirements.get('prod')
 
     to_install = set(f'{k.lower()}{"==" + v if v else ""}' for (k, v) in requirements.get('install').items())
-    to_delete = set(v.project_name for v in pkg_resources.working_set.by_key.values()) \
+    to_delete = set(v.project_name for v in pkg_resources.working_set.by_key.values())\
         .intersection(set(requirements.get('delete')))
     to_delete = list(to_delete)
     if to_delete:
@@ -60,8 +60,15 @@ def manage_requirements(requirements_file: str = 'requirements.json', dev: bool 
             class App(tk.Tk):
                 def __init__(self):
                     super().__init__()
-                    self.geometry('500x300')
                     self.attributes('-disabled', True)
+
+                    screen_width = self.winfo_screenwidth()
+                    screen_height = self.winfo_screenheight()
+
+                    x_cordinate = int((screen_width / 2) - (500 / 2))
+                    y_cordinate = int((screen_height / 2) - (300 / 2))
+
+                    self.geometry("{}x{}+{}+{}".format(500, 300, x_cordinate, y_cordinate))
 
                     self.title('Toolkit. Requirements installation')
                     self.label = ttk.Label(self, text='Processing requirements', font=('Arial', 14))

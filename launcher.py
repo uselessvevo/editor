@@ -1,7 +1,6 @@
 import sys
 import traceback
-
-from ui.windows.errorwindow import SystemError
+from ui.helpers.error import SystemError
 
 
 def except_hook(exc_type, exc_value, exc_traceback):
@@ -17,7 +16,7 @@ def except_hook(exc_type, exc_value, exc_traceback):
 sys.excepthook = except_hook
 
 
-def get_qt_app(*args, **kwargs):
+def getQtApp(*args, **kwargs):
     from PyQt5 import QtWidgets
 
     app = QtWidgets.QApplication.instance()
@@ -39,7 +38,15 @@ def launch():
 
     System.init(sys_root='toolkit', app_root='editor')
 
-    # get managers
+    from PyQt5.QtWidgets import QApplication
+    from ui.helpers.splash import createSplashScreen
+
+    app = getQtApp()
+    splash = createSplashScreen('branding/splash.png')
+    splash.show()
+    QApplication.processEvents()
+
+    # Get managers
     managers = set()
     # TODO: Create SystemObjectsNode to handle objects dependencies
     managers_order = System.config.get('apps')
@@ -56,13 +63,12 @@ def launch():
     from toolkit.managers.assets.services import getTheme
     from toolkit.managers.assets.services import getPalette
 
-    app = get_qt_app()
-
     theme = System.config.get('app.ui.theme', 'app.ui.default_theme')
     if theme:
         app.setStyleSheet(getTheme(System.app_root, theme))
         app.setPalette(getPalette(System.app_root, theme))
 
+    splash.close()
     widget = MainUI()
     widget.init()
     widget.show()
