@@ -1,4 +1,5 @@
 import os
+import sys
 from functools import lru_cache
 
 from PyQt5 import QtGui, Qt
@@ -144,3 +145,18 @@ class MainUI(SystemObject, BaseWindowMixin, QtWidgets.QMainWindow):
 
     def onCloseEventDefault(self) -> None:
         pass
+
+
+def main(app, options: dict = None) -> None:
+    from toolkit.managers.assets.services import getTheme
+    from toolkit.managers.assets.services import getPalette
+
+    widget = MainUI()
+    theme = System.config.get('app.ui.theme', 'app.ui.default_theme')
+    if theme:
+        app.setStyleSheet(getTheme(System.app_root, theme))
+        app.setPalette(getPalette(System.app_root, theme))
+
+    widget.init()
+    widget.show()
+    sys.exit(app.exec_())

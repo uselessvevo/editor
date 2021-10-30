@@ -10,12 +10,12 @@ from toolkit.logger import DummyLogger
 from toolkit.logger import Messages
 from toolkit.objects.system import SystemObject
 
-from toolkit.helpers.objects import import_string
-from toolkit.helpers.objects import is_import_string
+from toolkit.utils.objects import import_string
+from toolkit.utils.objects import is_import_string
 
-from toolkit.helpers.files import read_json
-from toolkit.helpers.files import update_json
-from toolkit.helpers.files import read_json_files
+from toolkit.utils.files import read_json
+from toolkit.utils.files import update_json
+from toolkit.utils.files import read_json_files
 
 
 class CustomDictionary(dict):

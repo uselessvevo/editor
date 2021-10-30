@@ -4,11 +4,11 @@ from toolkit.managers.base import BaseManager
 
 from toolkit.objects.system import SystemObject
 from toolkit.objects.system import SystemObjectTypes
-from toolkit.helpers.files import read_json_files
+from toolkit.utils.files import read_json_files
 
-from toolkit.helpers.files import read_json
+from toolkit.utils.files import read_json
 from toolkit.logger import Messages
-from toolkit.helpers.objects import import_string
+from toolkit.utils.objects import import_string
 
 
 class PluginSystemObject(SystemObject):

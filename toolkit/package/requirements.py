@@ -6,9 +6,9 @@ from functools import partial
 
 import pkg_resources
 
-from toolkit.helpers.files import read_json
-from toolkit.helpers.os import call_subprocess
-from toolkit.helpers.network import check_connection
+from toolkit.utils.files import read_json
+from toolkit.utils.os import call_subprocess
+from toolkit.utils.network import check_connection
 
 try:
     import tkinter as tk

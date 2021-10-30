@@ -6,5 +6,5 @@
       "toolkit.managers.locales.manager.LocalesManager"
   ],
   "configs": ["app/*.json", "toolkit/*.json"],
-  "launch": "app.MainUI.init"
+  "launch": "editor.app.ui.main"
 }

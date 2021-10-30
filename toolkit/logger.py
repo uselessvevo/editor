@@ -2,7 +2,7 @@ import abc
 import enum
 from datetime import datetime
 
-from toolkit.helpers.objects import is_debug
+from toolkit.utils.objects import is_debug
 
 
 class Messages(enum.Enum):

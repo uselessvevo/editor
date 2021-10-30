@@ -1,6 +1,9 @@
 import sys
 import traceback
-from ui.helpers.error import SystemError
+
+from toolkit.logger import Messages
+from toolkit.utils.objects import import_string
+from ui.utils.error import SystemError
 
 
 def except_hook(exc_type, exc_value, exc_traceback):
@@ -34,12 +37,12 @@ def launch():
     manage_requirements()
 
     from toolkit.managers.system.manager import System
-    from toolkit.helpers.objects import is_import_string
+    from toolkit.utils.objects import is_import_string
 
     System.init(sys_root='toolkit', app_root='editor')
 
     from PyQt5.QtWidgets import QApplication
-    from ui.helpers.splash import createSplashScreen
+    from ui.utils.splash import createSplashScreen
 
     app = getQtApp()
     splash = createSplashScreen('branding/splash.png')
@@ -59,20 +62,14 @@ def launch():
 
     System.add_objects(managers)
 
-    from editor.app.ui import MainUI
-    from toolkit.managers.assets.services import getTheme
-    from toolkit.managers.assets.services import getPalette
+    launch = System.config.get('launch')
+    if not is_import_string(launch):
+        System.log(f'Can\'t start application from {launch}.'
+                   f' Incorrect import path', Messages.CRITICAL)
 
-    theme = System.config.get('app.ui.theme', 'app.ui.default_theme')
-    if theme:
-        app.setStyleSheet(getTheme(System.app_root, theme))
-        app.setPalette(getPalette(System.app_root, theme))
-
+    launch = import_string(launch, False)
     splash.close()
-    widget = MainUI()
-    widget.init()
-    widget.show()
-
+    launch(app)
     sys.exit(app.exec_())
 
 

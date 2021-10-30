@@ -11,7 +11,7 @@ from pygments.lexer import Error
 from pygments.lexer import _TokenType
 
 from toolkit.managers.system.manager import System
-from toolkit.helpers.files import read_json
+from toolkit.utils.files import read_json
 
 from editor.components.editor.exceptions import LexerNotFound
 from toolkit.objects.system import SystemObject, SystemObjectTypes

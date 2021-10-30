@@ -11,13 +11,13 @@ def is_file_path_string(string: str):
     return True if re.match(r'(\w+:|/[a-zA-Z./]*[\s]?)', string) else False
 
 
-def import_string(string: str, both: bool = True):
+def import_string(string: str, ret_both: bool = True):
     """
     Import module by string:
 
     Args:
         string (str): <module path>.<ClassName>
-        both (bool): if true - get import string and module, else - only module
+        ret_both (bool): if true - get import string and module, else - only module
 
     Returns:
         object
@@ -31,7 +31,7 @@ def import_string(string: str, both: bool = True):
     module = importlib.import_module(path)
     module = getattr(module, name)
 
-    return (module, name) if both else module
+    return (module, name) if ret_both else module
 
 
 def is_debug():
