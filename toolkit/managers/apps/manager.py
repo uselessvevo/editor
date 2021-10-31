@@ -1,21 +1,17 @@
 import os
 import glob
-from toolkit.managers.base import BaseManager
 
+from toolkit.managers.base import ManagerMixin
 from toolkit.objects.system import SystemObject
 from toolkit.objects.system import SystemObjectTypes
-from toolkit.utils.files import read_json_files
 
-from toolkit.utils.files import read_json
 from toolkit.logger import Messages
+from toolkit.utils.files import read_json
+from toolkit.utils.files import read_json_files
 from toolkit.utils.objects import import_string
 
 
-class PluginSystemObject(SystemObject):
-    type = SystemObjectTypes.PLUGIN
-
-
-class AppConfigManager(BaseManager):
+class AppConfigManager(ManagerMixin, SystemObject):
     name = 'app_config_manager'
     type = SystemObjectTypes.CORE_MANAGER
     section = 'apps'

@@ -1,4 +1,4 @@
-from toolkit.objects.plugins import Plugin
+from toolkit.objects.plugin import Plugin
 from toolkit.objects.system import SystemObjectTypes
 from toolkit.objects.system import SystemConfigCategories
 from toolkit.managers.system.manager import SystemManager

@@ -1,14 +1,17 @@
 import abc
 import enum
 from datetime import datetime
+from types import MethodType
+from typing import Union, Final
 
 from toolkit.utils.objects import is_debug
 
 
 class Messages(enum.Enum):
-    INFO = 'Info'
-    WARNING = 'Warning'
-    CRITICAL = 'Critical'
+    INFO: Final = 'Info'
+    WARNING: Final = 'Warning'
+    CRITICAL: Final = 'Critical'
+    ERROR: Final = 'Error'
 
 
 class AbstractLogger(abc.ABC):
@@ -30,30 +33,30 @@ class LoggerException(Exception):
 class DummyLogger(AbstractLogger):
 
     def __init__(self, **kwargs) -> None:
-        self._stdout = kwargs.get('stdout', print)
+        self._stdout: MethodType = kwargs.get('stdout', print)
 
     def log(self, *args, **kwargs) -> None:
-        debug = is_debug()
-        do_raise = kwargs.get('do_raise', False)
+        debug: bool = is_debug()
+        do_raise: bool = kwargs.get('do_raise', False)
 
-        message = kwargs.get('message', None)
-        timestamp = datetime.now().strftime('%H:%M:%S %m.%d.%Y')
+        message: Union[str] = kwargs.get('message', None)
+        timestamp: datetime.now = datetime.now().strftime('%H:%M:%S %m.%d.%Y')
 
         if do_raise:
-            exc_type = kwargs.get('exc_type', Exception)
-            exc_message = kwargs.get('exc_message', message)
+            exc_type: Exception = kwargs.get('exc_type', Exception)
+            exc_message: str = kwargs.get('exc_message', message)
 
-            if not issubclass(exc_type, (BaseException, Exception)):
+            if not issubclass(exc_type, Exception):
                 raise TypeError('Exception type (exc_type) is not an exception')
 
-            message_type = kwargs.get('message_type', Messages.CRITICAL.value).value
-            exc_message = (
+            message_type: Messages = kwargs.get('message_type', Messages.CRITICAL.value).value
+            exc_message: str = (
                 f'[{"DEBUG |" if debug else ""}{timestamp} | '
                 f'{message_type + "]":<10} {exc_type}, {exc_message}'
             )
 
             raise LoggerException(exc_message)
 
-        message_type = kwargs.get('message_type', Messages.INFO.value).value
+        message_type: Messages = kwargs.get('message_type', Messages.INFO.value).value
 
         self._stdout(f'[{"DEBUG |" if debug else ""}{timestamp} | {message_type + "]":<10} {message}')

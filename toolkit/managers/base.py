@@ -1,25 +1,17 @@
-from functools import lru_cache
+import types
+import typing
+
 from toolkit import exceptions
-
+from functools import lru_cache
 from toolkit.managers.system.manager import System
-from toolkit.objects.system import SystemObject
 
 
-class BaseManager(SystemObject):
-
-    def __init__(self):
-        self._dictionary = {}
-        super().__init__()
-
-    def get(self, *args, **kwargs):
-        raise NotImplementedError('Method "get" must be implemented')
-
-    def save(self, file: str, data: dict):
-        raise NotImplementedError('Method "save" must be implemented')
+class ManagerMixin:
+    _dictionary: typing.Dict = {}
 
     @lru_cache(maxsize=None)
-    def set(self, key, value):
-        key = f'{key}.{self.section}.protected'
+    def set(self, key, value) -> None:
+        key = f'{key}.{self.section}.{self.config_access.value}'
 
         if key not in System.config.get(key):
             raise exceptions.ProtectedSystemSectionKey(key)
@@ -29,5 +21,5 @@ class BaseManager(SystemObject):
 
         self._dictionary[key] = value
 
-    def __call__(self, *args, **kwargs):
+    def __call__(self, *args, **kwargs) -> typing.Any:
         return self.get(*args, **kwargs)

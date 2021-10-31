@@ -1,6 +1,9 @@
 import enum
+import inspect
+import types
+import typing
 import uuid
-from typing import Tuple
+from typing import Tuple, Final
 
 from toolkit.logger import Messages
 from toolkit.logger import DummyLogger
@@ -8,29 +11,27 @@ from toolkit.logger import DummyLogger
 
 class SystemObjectTypes(enum.Enum):
     # Managers
-    CORE_MANAGER = 'core_manager'
-    PLUGIN_MANAGER = 'plugin_manager'
+    CORE_MANAGER: Final = 'core_manager'
+    PLUGIN_MANAGER: Final = 'plugin_manager'
 
     # Objects
-    OBJECT = 'object'
-    UTILITY = 'utility'
-
-    # Applications and plugins
-    PLUGIN = 'plugin'
+    OBJECT: Final = 'object'
+    PLUGIN: Final = 'plugin'
+    UTILITY: Final = 'utility'
 
     # Etc.
-    UNSPECIFIED = 'unspecified'
+    UNSPECIFIED: Final = 'unspecified'
 
 
 class SystemConfigCategories(enum.Enum):
-    # Can share data publicly
-    PUBLIC = 'public'
+    # Can share data with any object
+    PUBLIC: Final = 'public'
 
     # Can share data inside a package
-    SHARED = 'shared'
+    SHARED: Final = 'shared'
 
     # Private, protected data
-    PROTECTED = 'protected'
+    PROTECTED: Final = 'protected'
 
 
 class SystemObject:
@@ -43,41 +44,49 @@ class SystemObject:
 
     # System configuration key. Gives access to configuration
     section: str = None
-    config_category: SystemConfigCategories = None
+    config_access: SystemConfigCategories = None
 
     # Just a logger
     logger: type = DummyLogger
 
     def __init__(self, *args, **kwargs) -> None:
         # Node settings
-        self.id = uuid.uuid4()
-        self.logger = kwargs.get('logger', self.logger)()
+        self.id: uuid.UUID = uuid.uuid4()
+        self._hooked_methods: typing.Set[types.MethodType] = set()
+        self.logger: type = kwargs.get('logger', self.logger)()
 
         if not self.name:
             self.name = self.__class__.__name__
-            self.log(f'System attribute "name" was not set. '
+            self.log(f'Object attribute "name" was not set. '
                      f'Will be set with default class name "{self.name}"', Messages.WARNING)
 
         if not self.type:
             self.type = SystemObjectTypes.UNSPECIFIED
-            self.log(f'System attribute "type" for object "{self.name}" was not set. '
+            self.log(f'Object attribute "type" for object "{self.name}" was not set. '
                      f'Will be set with default type "{self.type.name}"', Messages.WARNING)
 
-        if not self.config_category:
-            self.config_category = SystemConfigCategories.PROTECTED
-            self.log(f'System attribute "config_access" in object "{self.name}" is None'
-                     f'Will be set with default type "{self.config_category.name}"', Messages.WARNING)
+        if not self.config_access:
+            self.config_access = SystemConfigCategories.PROTECTED
+            self.log(f'Object attribute "config_access" in object "{self.name}" is None'
+                     f'Will be set with default type "{self.config_access.name}"', Messages.WARNING)
 
         if not self.section:
-            self.log(f'System attribute "section" in object "{self.name}" was not set. '
+            self.log(f'Object attribute "section" in object "{self.name}" was not set. '
                      'Will not be able to get access to object\'s configuration', Messages.WARNING)
 
-        # Init node
+        # Collect methods to create hooks
         super().__init__(*args, **kwargs)
+        methods = inspect.getmembers(self)
+
+    # Private methods
+
+    def _hook_methods(self, ignored: typing.List[typing.AnyStr]) -> typing.Set[types.MethodType]:
+        """ Creates hooks for methods """
+        methods = inspect.getmembers(self)
 
     # Public methods
 
-    def init(self, *args, **kwargs):
+    def init(self, *args, **kwargs) -> None:
         self.log(f'Initializing object "{self.name}"')
 
     def log(self, message: str, message_type: Messages = Messages.INFO, **kwargs) -> None:
@@ -85,7 +94,7 @@ class SystemObject:
 
     # Hooks
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.name} ({self.id})'
 
     def __repr__(self) -> str:

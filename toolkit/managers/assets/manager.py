@@ -1,14 +1,17 @@
+import typing
+
 from toolkit.utils.files import read_json
 from toolkit.utils.files import write_json
 from toolkit.utils.files import write_assets_file
 from toolkit.utils.files import write_folder_info
 
-from toolkit.managers.system.manager import System
-from toolkit.managers.base import BaseManager
+from toolkit.managers.base import ManagerMixin
+from toolkit.objects.system import SystemObject
 from toolkit.objects.system import SystemObjectTypes
+from toolkit.managers.system.manager import System
 
 
-class AssetsManager(BaseManager):
+class AssetsManager(ManagerMixin, SystemObject):
     name = 'assets_manager'
     section = 'managers.assets'
     type = SystemObjectTypes.CORE_MANAGER
@@ -41,6 +44,9 @@ class AssetsManager(BaseManager):
 
     def get(self, key: str, default: str = ''):
         return self._dictionary.get(key, default)
+
+    def set(self, key: str, value: typing.Any) -> None:
+        self._dictionary.update({key: value})
 
     @property
     def theme(self):

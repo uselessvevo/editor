@@ -2,17 +2,19 @@ from pathlib import Path
 
 from toolkit.utils.files import read_json
 from toolkit.utils.files import write_json
-
-from toolkit.managers.base import BaseManager
-from toolkit.managers.system.manager import System
-from toolkit.objects.system import SystemObjectTypes
 from toolkit.managers.locales.services import get_locale
 
+from toolkit.managers.base import ManagerMixin
+from toolkit.objects.system import SystemObject, SystemConfigCategories
+from toolkit.objects.system import SystemObjectTypes
+from toolkit.managers.system.manager import System
 
-class LocalesManager(BaseManager):
-    name = 'translation_manager'
-    type = SystemObjectTypes.CORE_MANAGER
+
+class LocalesManager(ManagerMixin, SystemObject):
     section = 'locales'
+    name = 'locales_manager'
+    type = SystemObjectTypes.CORE_MANAGER
+    config_access = SystemConfigCategories
 
     def __init__(self):
         super().__init__()

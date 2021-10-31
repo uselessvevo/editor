@@ -1,8 +1,6 @@
 import sys
 import traceback
 
-from toolkit.logger import Messages
-from toolkit.utils.objects import import_string
 from ui.utils.error import SystemError
 
 
@@ -16,7 +14,7 @@ def except_hook(exc_type, exc_value, exc_traceback):
     SystemError(exc_type, exc_value, traceback_collect)
 
 
-sys.excepthook = except_hook
+# sys.excepthook = except_hook
 
 
 def getQtApp(*args, **kwargs):
@@ -31,13 +29,15 @@ def getQtApp(*args, **kwargs):
 
 
 def launch():
-    from toolkit.package.requirements import manage_requirements
+    from toolkit.package.reqs import manage_requirements
 
     # Install all requirements
     manage_requirements()
 
+    from toolkit.logger import Messages
     from toolkit.managers.system.manager import System
     from toolkit.utils.objects import is_import_string
+    from toolkit.utils.objects import import_string
 
     System.init(sys_root='toolkit', app_root='editor')
 
@@ -46,7 +46,7 @@ def launch():
 
     app = getQtApp()
     splash = createSplashScreen('branding/splash.png')
-    splash.show()
+    # splash.show()
     QApplication.processEvents()
 
     # Get managers
@@ -68,7 +68,7 @@ def launch():
                    f' Incorrect import path', Messages.CRITICAL)
 
     launch = import_string(launch, False)
-    splash.close()
+    # splash.close()
     launch(app)
     sys.exit(app.exec_())
 
