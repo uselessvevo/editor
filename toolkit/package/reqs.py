@@ -1,13 +1,11 @@
-from pathlib import Path
 import sys
 import threading
 import subprocess
+import pkg_resources
+from pathlib import Path
 from typing import List
 from functools import partial
 
-import pkg_resources
-
-from toolkit.utils.files import read_json
 from toolkit.utils.os import call_subprocess
 from toolkit.utils.network import check_connection
 

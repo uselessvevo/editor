@@ -1,6 +1,5 @@
 import sys
 import traceback
-
 from ui.utils.error import SystemError
 
 
@@ -19,8 +18,12 @@ def except_hook(exc_type, exc_value, exc_traceback):
 
 def getQtApp(*args, **kwargs):
     from PyQt5 import QtWidgets
+    from PyQt5.QtCore import Qt
 
     app = QtWidgets.QApplication.instance()
+    QtWidgets.QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
+    QtWidgets.QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
+
     if app is None:
         if not args:
             args = ([''],)
