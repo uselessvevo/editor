@@ -3,7 +3,7 @@ import inspect
 import types
 import typing
 import uuid
-from typing import Tuple, Final
+from typing import Tuple
 
 from toolkit.logger import Messages
 from toolkit.logger import DummyLogger
@@ -11,27 +11,27 @@ from toolkit.logger import DummyLogger
 
 class SystemObjectTypes(enum.Enum):
     # Managers
-    CORE_MANAGER: Final = 'core_manager'
-    PLUGIN_MANAGER: Final = 'plugin_manager'
+    CORE_MANAGER = 'core_manager'
+    PLUGIN_MANAGER = 'plugin_manager'
 
     # Objects
-    OBJECT: Final = 'object'
-    PLUGIN: Final = 'plugin'
-    UTILITY: Final = 'utility'
+    OBJECT = 'object'
+    PLUGIN = 'plugin'
+    UTILITY = 'utility'
 
     # Etc.
-    UNSPECIFIED: Final = 'unspecified'
+    UNSPECIFIED = 'unspecified'
 
 
 class SystemConfigCategories(enum.Enum):
     # Can share data with any object
-    PUBLIC: Final = 'public'
+    PUBLIC = 'public'
 
     # Can share data inside a package
-    SHARED: Final = 'shared'
+    SHARED = 'shared'
 
     # Private, protected data
-    PROTECTED: Final = 'protected'
+    PROTECTED = 'protected'
 
 
 class SystemObject:
@@ -67,7 +67,7 @@ class SystemObject:
 
         if not self.config_access:
             self.config_access = SystemConfigCategories.PROTECTED
-            self.log(f'Object attribute "config_access" in object "{self.name}" is None'
+            self.log(f'Object attribute "config_access" in object "{self.name}" is None. '
                      f'Will be set with default type "{self.config_access.name}"', Messages.WARNING)
 
         if not self.section:
@@ -76,7 +76,7 @@ class SystemObject:
 
         # Collect methods to create hooks
         super().__init__(*args, **kwargs)
-        methods = inspect.getmembers(self)
+        methods = self._hook_methods(['init'])
 
     # Private methods
 

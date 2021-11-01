@@ -1,3 +1,4 @@
+from pathlib import Path
 import sys
 import threading
 import subprocess
@@ -39,14 +40,17 @@ def _process_requirements(to_install: List[str], to_delete: List[str]) -> int:
         return process_packages('uninstall', *to_delete)
 
 
-def manage_requirements(requirements_file: str = 'requirements.json', dev: bool = False):
-    requirements = read_json(requirements_file)
-    requirements = requirements.get('dev') if dev else requirements.get('prod')
+def manage_requirements(requirements_folder: str = 'requirements', dev: bool = False):
+    mode_str = "dev" if dev else "prod"
+    requirements = Path(requirements_folder).rglob(f'{mode_str}.*.txt')
+    requirements = [{i.stem: i.read_text().replace('\n', '').split(',')} for i in requirements]
+    requirements = dict(j for i in requirements for j in i.items())
 
-    to_install = set(f'{k.lower()}{"==" + v if v else ""}' for (k, v) in requirements.get('install').items())
-    to_delete = set(v.project_name for v in pkg_resources.working_set.by_key.values())\
-        .intersection(set(requirements.get('delete')))
+    to_install = set(requirements.get(f'{mode_str}.install'))
+    to_delete = set(requirements.get(f'{mode_str}.delete'))
+    to_delete = set(v.project_name for v in pkg_resources.working_set.by_key.values()).intersection(to_delete)
     to_delete = list(to_delete)
+
     if to_delete:
         to_delete.insert(len(to_delete), '-y')
 

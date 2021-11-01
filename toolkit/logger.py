@@ -2,16 +2,16 @@ import abc
 import enum
 from datetime import datetime
 from types import MethodType
-from typing import Union, Final
+from typing import Union
 
 from toolkit.utils.objects import is_debug
 
 
 class Messages(enum.Enum):
-    INFO: Final = 'Info'
-    WARNING: Final = 'Warning'
-    CRITICAL: Final = 'Critical'
-    ERROR: Final = 'Error'
+    INFO = 'Info'
+    WARNING = 'Warning'
+    CRITICAL = 'Critical'
+    ERROR = 'Error'
 
 
 class AbstractLogger(abc.ABC):
