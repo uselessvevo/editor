@@ -18,7 +18,6 @@ class LocalesManager(ManagerMixin, SystemObject):
 
     def __init__(self):
         super().__init__()
-
         self.__locale = System.config.get(
             key='toolkit.locales.locale',
             default_value=get_locale(),

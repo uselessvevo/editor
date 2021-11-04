@@ -52,7 +52,7 @@ class SystemObject:
     def __init__(self, *args, **kwargs) -> None:
         # Node settings
         self.id: uuid.UUID = uuid.uuid4()
-        self._hooked_methods: typing.Set[types.MethodType] = set()
+        # self._hooked_methods: typing.Set[types.MethodType] = set()
         self.logger: type = kwargs.get('logger', self.logger)()
 
         if not self.name:
@@ -75,14 +75,24 @@ class SystemObject:
                      'Will not be able to get access to object\'s configuration', Messages.WARNING)
 
         # Collect methods to create hooks
+        self._hook_methods(['init', '_hook_methods'], '_logger_hook')
         super().__init__(*args, **kwargs)
-        methods = self._hook_methods(['init'])
 
     # Private methods
 
-    def _hook_methods(self, ignored: typing.List[typing.AnyStr]) -> typing.Set[types.MethodType]:
-        """ Creates hooks for methods """
-        methods = inspect.getmembers(self)
+    def _hook_methods(self, ignored: typing.List[typing.AnyStr], hook: str):
+        """ Creates hooks for methods with given method call """
+        methods = [i for i in inspect.getmembers(self)
+                   if inspect.ismethod(i[1])
+                   and not i[0].startswith('__')
+                   and not i[0].endswith('__')
+                   and i[0] not in ignored]
+
+        for name, method in methods:
+            setattr(self, name, getattr(self, hook)(method))
+
+    def _logger_hook(self, method: types.MethodType):
+        self.logger(method, f'Method "{self.name}.{method.__name__}" was called', Messages.INFO)
 
     # Public methods
 

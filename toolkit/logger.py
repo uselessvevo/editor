@@ -1,6 +1,7 @@
 import abc
 import enum
 from datetime import datetime
+import functools
 from types import MethodType
 from typing import Union
 
@@ -32,8 +33,8 @@ class LoggerException(Exception):
 
 class DummyLogger(AbstractLogger):
 
-    def __init__(self, **kwargs) -> None:
-        self._stdout: MethodType = kwargs.get('stdout', print)
+    # def __init__(self, **kwargs) -> None:
+    #     self._stdout: MethodType = kwargs.get('stdout', print)
 
     def log(self, *args, **kwargs) -> None:
         debug: bool = is_debug()
@@ -59,4 +60,12 @@ class DummyLogger(AbstractLogger):
 
         message_type: Messages = kwargs.get('message_type', Messages.INFO.value).value
 
-        self._stdout(f'[{"DEBUG |" if debug else ""}{timestamp} | {message_type + "]":<10} {message}')
+        print(f'[{"DEBUG |" if debug else ""}{timestamp} | {message_type + "]":<10} {message}')
+
+    def __call__(self, fn, m, t) -> log:
+        @functools.wraps(fn)
+        def decorated(*args, **kwargs):
+            result = fn(*args, **kwargs)
+            self.log(message=m, message_type=t)
+            return result
+        return decorated

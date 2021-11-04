@@ -180,7 +180,7 @@ class SystemManager:
     def add_objects(self, objects: Union[list, tuple]) -> None:
         # Iter trough the list of objects and import them
         for obj_str in objects:
-            self.log(f'Preparing {obj_str}')
+            self.log(f'Importing "{obj_str}"')
             self.__add_object(*import_string(obj_str))
 
         # Add imported objects into the node

@@ -53,7 +53,7 @@ def launch():
     QApplication.processEvents()
 
     # Get managers
-    managers = set()
+    managers = []
     # TODO: Create SystemObjectsNode to handle objects dependencies
     managers_order = System.config.get('apps')
     if not managers_order:
@@ -61,7 +61,7 @@ def launch():
 
     for manager in managers_order:
         if is_import_string(manager):
-            managers.add(manager)
+            managers.append(manager)
 
     System.add_objects(managers)
 

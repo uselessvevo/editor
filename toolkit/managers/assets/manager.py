@@ -18,7 +18,6 @@ class AssetsManager(ManagerMixin, SystemObject):
 
     def __init__(self):
         super().__init__()
-
         self._theme = None
         self._theme_folder = None
 
@@ -44,9 +43,6 @@ class AssetsManager(ManagerMixin, SystemObject):
 
     def get(self, key: str, default: str = ''):
         return self._dictionary.get(key, default)
-
-    def set(self, key: str, value: typing.Any) -> None:
-        self._dictionary.update({key: value})
 
     @property
     def theme(self):
