@@ -1,5 +1,7 @@
 import sys
 import traceback
+
+from toolkit.utils.objects import is_debug
 from ui.utils.error import SystemError
 
 
@@ -13,10 +15,10 @@ def except_hook(exc_type, exc_value, exc_traceback):
     SystemError(exc_type, exc_value, traceback_collect)
 
 
-# sys.excepthook = except_hook
+sys.excepthook = except_hook
 
 
-def getQtApp(*args, **kwargs):
+def get_qt_app(*args, **kwargs):
     from PyQt5 import QtWidgets
     from PyQt5.QtCore import Qt
 
@@ -47,9 +49,16 @@ def launch():
     from PyQt5.QtWidgets import QApplication
     from ui.utils.splash import createSplashScreen
 
-    app = getQtApp()
-    splash = createSplashScreen('branding/splash.png')
-    # splash.show()
+    app = get_qt_app()
+    if not System.config.get('debug', is_debug()):
+        splash = createSplashScreen(
+            path='branding/splash.svg',
+            width=720,
+            height=480,
+            project_name='Toolkit.Editor',
+            project_version=System.version
+        )
+        splash.show()
     QApplication.processEvents()
 
     # Get managers
@@ -71,7 +80,9 @@ def launch():
                    f' Incorrect import path', Messages.CRITICAL)
 
     launch = import_string(launch, False)
-    # splash.close()
+    if not System.config.get('debug', is_debug()):
+        splash.close()
+
     launch(app)
     sys.exit(app.exec_())
 

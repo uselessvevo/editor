@@ -1,15 +1,19 @@
-from PyQt5 import QtGui, QtCore
+from PyQt5 import QtCore, QtSvg
 from PyQt5 import QtWidgets
 
 
-def createSplashScreen(path: str) -> QtWidgets.QSplashScreen:
+def createSplashScreen(path: str, **options) -> QtWidgets.QSplashScreen:
     """ Create splash screen. Forked from Spyder: spyder/app/utils.py """
-    splashPix = QtGui.QPixmap(path)
-    splashPix = splashPix.scaled(720, 480)
-    splash = QtWidgets.QSplashScreen(splashPix, QtCore.Qt.WindowStaysOnTopHint)
+    with open(path, 'r') as svg_out:
+        svg_data = svg_out.read().format(**options)
+        svg_data = bytearray(svg_data, encoding='utf-8')
 
-    splashFont = splash.font()
-    splashFont.setPixelSize(14)
-    splash.setFont(splashFont)
+    splash = QtSvg.QSvgWidget()
+    splash.renderer().load(svg_data)
+    splash.setWindowFlags(QtCore.Qt.WindowFlags(
+        QtCore.Qt.FramelessWindowHint | QtCore.Qt.WindowStaysOnTopHint
+    ))
+    splash.setFixedWidth(options.get('width'))
+    splash.setFixedHeight(options.get('height'))
 
     return splash
