@@ -15,13 +15,6 @@ class Messages(enum.Enum):
     ERROR = 'Error'
 
 
-class AbstractLogger(abc.ABC):
-
-    @abc.abstractmethod
-    def log(self) -> None:
-        pass
-
-
 class LoggerException(Exception):
 
     def __init__(self, exc_message: str) -> None:
@@ -31,41 +24,41 @@ class LoggerException(Exception):
         return self._exc_message
 
 
+class AbstractLogger(abc.ABC):
+
+    def __init__(self, **kwargs) -> None:
+        self._stdout: MethodType = kwargs.get('stdout', print)
+
+    def __call__(self, *args, **kwargs):
+        self.log(*args, **kwargs)
+
+    @abc.abstractmethod
+    def log(self, *args, **kwargs) -> None:
+        pass
+
+
 class DummyLogger(AbstractLogger):
 
-    # def __init__(self, **kwargs) -> None:
-    #     self._stdout: MethodType = kwargs.get('stdout', print)
-
-    def log(self, *args, **kwargs) -> None:
-        debug: bool = is_debug()
-        do_raise: bool = kwargs.get('do_raise', False)
-
-        message: Union[str] = kwargs.get('message', None)
+    def log(
+        self,
+        message: str,
+        message_type: Messages = Messages.INFO,
+        do_raise: bool = False,
+        debug: bool = False,
+        exc_type: Exception = Exception
+    ) -> None:
         timestamp: datetime.now = datetime.now().strftime('%H:%M:%S %m.%d.%Y')
-
         if do_raise:
-            exc_type: Exception = kwargs.get('exc_type', Exception)
-            exc_message: str = kwargs.get('exc_message', message)
-
             if not issubclass(exc_type, Exception):
                 raise TypeError('Exception type (exc_type) is not an exception')
 
-            message_type: Messages = kwargs.get('message_type', Messages.CRITICAL.value).value
             exc_message: str = (
                 f'[{"DEBUG |" if debug else ""}{timestamp} | '
-                f'{message_type + "]":<10} {exc_type}, {exc_message}'
+                f'{message_type.value + "]":<10} {exc_type}, {message}'
             )
-
             raise LoggerException(exc_message)
 
-        message_type: Messages = kwargs.get('message_type', Messages.INFO.value).value
+        self._stdout(f'[{"DEBUG |" if debug else ""}{timestamp} | {message_type.value + "]":<10} {message}')
 
-        print(f'[{"DEBUG |" if debug else ""}{timestamp} | {message_type + "]":<10} {message}')
-
-    def __call__(self, fn, m, t) -> log:
-        @functools.wraps(fn)
-        def decorated(*args, **kwargs):
-            result = fn(*args, **kwargs)
-            self.log(message=m, message_type=t)
-            return result
-        return decorated
+    def __call__(self, method):
+        self.log(f'Method "{method.__qualname__}" was called', Messages.INFO)

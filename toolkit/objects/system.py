@@ -49,6 +49,11 @@ class SystemObject:
     # Just a logger
     logger: type = DummyLogger
 
+    hooks_mapping = {
+        # hook_name: (method_a, method_b, ...)
+        '_logger_hook': ('init',)
+    }
+
     def __init__(self, *args, **kwargs) -> None:
         # Node settings
         self.id: uuid.UUID = uuid.uuid4()
@@ -75,24 +80,32 @@ class SystemObject:
                      'Will not be able to get access to object\'s configuration', Messages.WARNING)
 
         # Collect methods to create hooks
-        self._hook_methods(['init', '_hook_methods'], '_logger_hook')
+        self._create_hooks(self.hooks_mapping)
         super().__init__(*args, **kwargs)
 
     # Private methods
 
-    def _hook_methods(self, ignored: typing.List[typing.AnyStr], hook: str):
-        """ Creates hooks for methods with given method call """
-        methods = [i for i in inspect.getmembers(self)
-                   if inspect.ismethod(i[1])
-                   and not i[0].startswith('__')
-                   and not i[0].endswith('__')
-                   and i[0] not in ignored]
+    def _create_hooks(self, hook_mapping: dict) -> None:
+        """
+        Register hook
+        Args:
+            hook_mapping(dict): {hook_name: (method_a, method_b, ...), ...}
+        """
+        for hook_name, methods in hook_mapping.items():
+            for method_name in methods:
+                if not hasattr(self, method_name):
+                    raise AttributeError(f'Method {method_name!s} not found')
 
-        for name, method in methods:
-            setattr(self, name, getattr(self, hook)(method))
+                if not hasattr(self, hook_name):
+                    raise AttributeError(f'Hook {hook_name!s} not found')
 
-    def _logger_hook(self, method: types.MethodType):
-        self.logger(method, f'Method "{self.name}.{method.__name__}" was called', Messages.INFO)
+                method = getattr(self, method_name, None)
+                hook = getattr(self, hook_name, None)
+                hooked_method_name = f'{hook_name}_{method_name}'
+                setattr(self, hooked_method_name, hook(method))
+
+    def _logger_hook(self, method: callable):
+        self.logger(method)
 
     # Public methods
 

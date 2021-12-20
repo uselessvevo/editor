@@ -49,7 +49,7 @@ def launch():
 
     app = getQtApp()
     splash = createSplashScreen('branding/splash.png')
-    splash.show()
+    # splash.show()
     QApplication.processEvents()
 
     # Get managers
@@ -71,7 +71,7 @@ def launch():
                    f' Incorrect import path', Messages.CRITICAL)
 
     launch = import_string(launch, False)
-    splash.close()
+    # splash.close()
     launch(app)
     sys.exit(app.exec_())
 
