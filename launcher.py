@@ -50,7 +50,7 @@ def launch():
     from ui.utils.splash import createSplashScreen
 
     app = get_qt_app()
-    if not System.config.get('debug', is_debug()):
+    if not System.config.get('debug') and not is_debug():
         splash = createSplashScreen(
             path='branding/splash.svg',
             width=720,
@@ -80,7 +80,7 @@ def launch():
                    f' Incorrect import path', Messages.CRITICAL)
 
     launch = import_string(launch, False)
-    if not System.config.get('debug', is_debug()):
+    if not System.config.get('debug') and not is_debug():
         splash.close()
 
     launch(app)
