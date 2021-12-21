@@ -4,6 +4,13 @@ from typing import List, Union, Any
 from pathlib import Path
 
 
+def touch(file_name):
+    try:
+        os.utime(file_name, None)
+    except OSError:
+        open(file_name, 'a').close()
+
+
 def read_json(file: Union[str, Path], hang_on_error: bool = True, default: bool = None, create: bool = False) -> Any:
     try:
         if create and not os.path.exists(file):

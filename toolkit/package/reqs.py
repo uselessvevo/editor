@@ -39,9 +39,9 @@ def _process_requirements(to_install: List[str], to_delete: List[str]) -> int:
 
 
 def manage_requirements(requirements_folder: str = 'requirements', dev: bool = False):
-    mode_str = "dev" if dev else "prod"
+    mode_str = 'dev' if dev else 'prod'
     requirements = Path(requirements_folder).rglob(f'{mode_str}.*.txt')
-    requirements = [{i.stem: i.read_text().replace('\n', '').split(',')} for i in requirements]
+    requirements = [{i.stem: i.read_text().replace('\n', ',').split(',')} for i in requirements]
     requirements = dict(j for i in requirements for j in i.items())
 
     to_install = set(requirements.get(f'{mode_str}.install'))
