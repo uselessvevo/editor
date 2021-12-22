@@ -5,7 +5,7 @@ import importlib.util
 from PyQt5.Qt import *
 from PyQt5.Qsci import QsciLexerCustom
 
-from pygments import lexers, styles
+from pygments import lexers
 from pygments.lexer import Text
 from pygments.lexer import Error
 from pygments.lexer import _TokenType

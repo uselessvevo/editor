@@ -65,3 +65,4 @@ class BaseWindowMixin(AbstractWindow):
                 event.ignore()
 
         self.onCloseEventDefault()
+        self.log('Goodbye!')

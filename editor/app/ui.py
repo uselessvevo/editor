@@ -5,6 +5,7 @@ from functools import lru_cache
 from PyQt5 import QtGui, Qt
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QKeySequence
 from PyQt5.QtWidgets import QAction
 
 from toolkit.managers.system.manager import System
@@ -30,20 +31,21 @@ class MainUI(SystemObject, BaseWindowMixin, QtWidgets.QMainWindow):
         self.files = System.get_object('AssetsManager')
 
     def init(self, *args, **kwargs):
-        self.initMain()
-        self.initLayout()
-        self.initMenu()
-        self.initTextEditor()
-        self.initWorkbench()
-        self.initStatusBar()
+        self.prepareMain()
+        self.prepareLayout()
+        self.prepareMenu()
+        self.prepareTextEditor()
+        self.prepareWorkbench()
+        self.prepareStatusBar()
+        self.prepareShortcuts()
 
-    def initMain(self):
+    def prepareMain(self):
         self.setWindowTitle(f'Editor - {os.getcwd()}')
         self.setWindowIcon(QtGui.QIcon(self.files('shared/icons/magic.svg')))
         self.setMinSize()
         self.moveToCenter()
 
-    def initLayout(self):
+    def prepareLayout(self):
         self.mainHBox = QtWidgets.QHBoxLayout()
         self.toolBarHBox = QtWidgets.QHBoxLayout()
         self.workbenchVBox = QtWidgets.QVBoxLayout()
@@ -51,7 +53,6 @@ class MainUI(SystemObject, BaseWindowMixin, QtWidgets.QMainWindow):
         self.editorHBox = QtWidgets.QHBoxLayout()
 
         self.dock = QtWidgets.QDockWidget('Console', self)
-        # self.dock.setFloating(True)
 
         self.mainHBox.addLayout(self.workbenchVBox)
         self.mainHBox.addLayout(self.treeViewVBox)
@@ -65,7 +66,7 @@ class MainUI(SystemObject, BaseWindowMixin, QtWidgets.QMainWindow):
         widget.setLayout(self.mainHBox)
         self.setCentralWidget(widget)
 
-    def initMenu(self):
+    def prepareMenu(self):
         self.mainMenuBar = self.menuBar()
         self.fileMenu = self.mainMenuBar.addMenu(self.trans('Shared.File'))
         self.fileMenu.addAction(QAction(self.trans('Shared.OpenFile'), self))
@@ -74,13 +75,17 @@ class MainUI(SystemObject, BaseWindowMixin, QtWidgets.QMainWindow):
         self.runMenu = self.mainMenuBar.addMenu(self.trans('Shared.Run'))
         self.helpMenu = self.mainMenuBar.addMenu(self.trans('Shared.Help'))
 
-    def initWorkbench(self):
+    def prepareShortcuts(self):
+        self.shortcutClose = QtWidgets.QShortcut(QKeySequence('Ctrl+Q'), self)
+        self.shortcutClose.activated.connect(self.close)
+
+    def prepareWorkbench(self):
         self.workbench = Workbench()
         self.workbench.init()
-        self.workbench.runConsole.clicked.connect(self.initConsole)
+        self.workbench.runConsole.clicked.connect(self.prepareConsole)
         self.addToolBar(Qt.LeftToolBarArea, self.workbench)
 
-    def initTextEditor(self) -> None:
+    def prepareTextEditor(self) -> None:
         self.editor = Editor()
         self.editor.init()
         self.editor.setSizePolicy(
@@ -89,12 +94,12 @@ class MainUI(SystemObject, BaseWindowMixin, QtWidgets.QMainWindow):
         )
         self.mainHBox.addWidget(self.editor)
 
-    def initStatusBar(self):
+    def prepareStatusBar(self):
         self.statusBar = QtWidgets.QStatusBar()
         self.statusBar.insertPermanentWidget(0, QtWidgets.QWidget())
         self.setStatusBar(self.statusBar)
 
-    def initConsole(self):
+    def prepareConsole(self):
         if not self.mainHBox.findChild(QtWidgets.QDockWidget, 'dock'):
             self.dock = QtWidgets.QDockWidget('Dockable', self)
 

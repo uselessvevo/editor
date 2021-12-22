@@ -31,12 +31,12 @@ class Editor(SystemObject, Qsci.QsciScintilla):
         font = QFont()
         font.setFamily('JetBrains Mono')
         font.setFixedPitch(False)
-        font.setPointSize(10)
+        font.setPointSize(8)
 
         self.setFont(font)
         self.setMarginsFont(font)
         self.setEolVisibility(System.config.get('app.eol_visibility', default_value=False))
-        self.zoomTo(4)
+        self.zoomTo(2)
 
         self.setMarginSensitivity(1, True)
         self.marginClicked.connect(self.onMarginClicked)
@@ -120,7 +120,7 @@ class Editor(SystemObject, Qsci.QsciScintilla):
         self.setAutoCompletionCaseSensitivity(False)
 
         # Set the autocompletion to not replace the word to the right of the cursor
-        # self.setAutoCompletionReplaceWord(False)
+        self.setAutoCompletionReplaceWord(False)
 
         # Set the autocompletion dialog to appear as soon as 1 character is typed
         self.setAutoCompletionThreshold(1)
