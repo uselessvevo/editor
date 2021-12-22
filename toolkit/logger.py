@@ -1,14 +1,18 @@
 import abc
 import enum
+import colorama
 from datetime import datetime
 from types import MethodType
 
 
+colorama.init()
+
+
 class Messages(enum.Enum):
-    INFO = 'Info'
-    WARNING = 'Warning'
-    CRITICAL = 'Critical'
-    ERROR = 'Error'
+    INFO = 'Info', colorama.Fore.WHITE
+    WARNING = 'Warning', colorama.Fore.LIGHTYELLOW_EX
+    CRITICAL = 'Critical', colorama.Fore.LIGHTRED_EX
+    ERROR = 'Error', colorama.Fore.LIGHTCYAN_EX
 
 
 class LoggerException(Exception):
@@ -49,12 +53,13 @@ class DummyLogger(AbstractLogger):
                 raise TypeError('Exception type (exc_type) is not an exception')
 
             exc_message: str = (
-                f'[{"DEBUG |" if debug else ""}{timestamp} | '
-                f'{message_type.value + "]":<10} {exc_type}, {message}'
+                f'{message_type.value[1]}[{"DEBUG |" if debug else ""}{timestamp} | '
+                f'{message_type.value + "]":<10}{colorama.Style.RESET_ALL} {exc_type}, {message}'
             )
             raise LoggerException(exc_message)
 
-        self._stdout(f'[{"DEBUG |" if debug else ""}{timestamp} | {message_type.value + "]":<10} {message}')
+        self._stdout(f'{message_type.value[1]}[{"DEBUG |" if debug else ""}{timestamp} | '
+                     f'{message_type.value[0] + "]":<10}{colorama.Style.RESET_ALL} {message}')
 
     def __call__(self, method):
         self.log(f'Method "{method.__qualname__}" was called', Messages.INFO)

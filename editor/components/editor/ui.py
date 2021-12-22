@@ -34,12 +34,19 @@ class Editor(SystemObject, Qsci.QsciScintilla):
         font.setPointSize(8)
 
         self.setFont(font)
-        self.setMarginsFont(font)
         self.setEolVisibility(System.config.get('app.eol_visibility', default_value=False))
         self.zoomTo(2)
 
+        fontMetrics = QFontMetrics(font)
+        self.setMarginsFont(font)
+        self.setMarginWidth(0, fontMetrics.width("00000") + 6)
+        self.setMarginLineNumbers(0, True)
+        self.setMarginsBackgroundColor(QColor("cccccc"))
+
         self.setMarginSensitivity(1, True)
         self.marginClicked.connect(self.onMarginClicked)
+        self.markerDefine(Qsci.QsciScintilla.RightArrow, self.ARROW_MARKER_NUM)
+        self.setMarkerBackgroundColor(QColor("#ee1111"), self.ARROW_MARKER_NUM)
 
     def prepareWraping(self):
         # Set the text wrapping mode to word wrap
@@ -142,14 +149,14 @@ class Editor(SystemObject, Qsci.QsciScintilla):
         self.SendScintilla(self.SCI_SETTABWIDTH, 4)
 
     def getLineSeparator(self):
-        m = self.eolMode()
-        if m == Qsci.QsciScintilla.EolWindows:
+        eolMode = self.eolMode()
+        if eolMode == Qsci.QsciScintilla.EolWindows:
             eol = '\r\n'
 
-        elif m == Qsci.QsciScintilla.EolUnix:
+        elif eolMode == Qsci.QsciScintilla.EolUnix:
             eol = '\n'
 
-        elif m == Qsci.QsciScintilla.EolMac:
+        elif eolMode == Qsci.QsciScintilla.EolMac:
             eol = '\r'
 
         else:
@@ -190,9 +197,6 @@ class Editor(SystemObject, Qsci.QsciScintilla):
             return
 
         self.text_size //= 2
-
-    def onCursorChangePosition(self, event):
-        return
 
     def onMarginClicked(self, nmargin, nline, modifiers):
         # Toggle marker for the line the margin was clicked on
