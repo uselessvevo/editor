@@ -5,7 +5,7 @@ import importlib.util
 from PyQt5.Qt import *
 from PyQt5.Qsci import QsciLexerCustom
 
-from pygments import lexers
+from pygments import lexers, styles
 from pygments.lexer import Text
 from pygments.lexer import Error
 from pygments.lexer import _TokenType
@@ -49,7 +49,7 @@ class ViewLexer(SystemObject, QsciLexerCustom):
         self.extra_style = self.style_config.get('extra', {})
 
         # Generate QScintilla styles
-        self.font = QFont(*self.style_config['main'].get('font', ['Arial', 12]), weight=QFont.Bold)
+        self.font = QFont(*self.style_config['main'].get('font', ['JetBrains Mono', 12]), weight=QFont.StyleNormal)
         self.token_styles = {}
         index = 0
         for k, v in self.pyg_style:
@@ -69,15 +69,9 @@ class ViewLexer(SystemObject, QsciLexerCustom):
             name='style',
             location=theme_folder / 'editor/style.py'
         )
-        # style = self.style_config.get('style', {})
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
-
         module = getattr(module, 'EditorStyle')
-        # for k, v in module.styles.items():
-        #     val = style.get(str(k))
-        #     module.styles[k] = val
-        #
         return module
 
     def defaultPaper(self, style):

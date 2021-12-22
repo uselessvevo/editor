@@ -1,4 +1,7 @@
-from PyQt5 import Qsci
+import keyword
+import pkgutil
+
+from PyQt5 import Qsci, QtGui
 from PyQt5.Qt import *
 
 from editor.components.editor.lexer import ViewLexer
@@ -15,58 +18,128 @@ class Editor(SystemObject, Qsci.QsciScintilla):
     type = SystemObjectTypes.PLUGIN
 
     def init(self, *args, **kwargs):
+        self.prepareMainSettings()
+        self.prepareLexer()
+        self.prepareAutocompletition()
+        self.prepareWraping()
+        self.prepareEdgeMarker()
+        self.prepareIndent()
+        self.prepareCaret()
+        self.setExtraSettings()
+
+    def prepareMainSettings(self):
         font = QFont()
-        font.setFamily('Courier')
-        font.setFixedPitch(True)
+        font.setFamily('JetBrains Mono')
+        font.setFixedPitch(False)
         font.setPointSize(10)
+
         self.setFont(font)
         self.setMarginsFont(font)
-
-        fontMetrics = QFontMetrics(font)
-        self.setMarginsFont(font)
-        self.setMarginWidth(0, fontMetrics.width('00000') + 6)
-        self.setMarginLineNumbers(0, True)
-        self.setMarginsBackgroundColor(QColor('cccccc'))
+        self.setEolVisibility(System.config.get('app.eol_visibility', default_value=False))
+        self.zoomTo(4)
 
         self.setMarginSensitivity(1, True)
         self.marginClicked.connect(self.onMarginClicked)
-        self.markerDefine(Qsci.QsciScintilla.RightArrow, self.ARROW_MARKER_NUM)
-        self.setMarkerBackgroundColor(QColor('#ee1111'), self.ARROW_MARKER_NUM)
 
-        # -------- Lexer --------
-        self.setEolMode(Qsci.QsciScintilla.EolUnix)
-        self.lexer = ViewLexer()
-        self.lexer.init()
-        self.setLexer(self.lexer)
+    def prepareWraping(self):
+        # Set the text wrapping mode to word wrap
+        self.setWrapMode(Qsci.QsciScintilla.WrapWord)
 
-        # -------- Shortcuts --------
+        # Set the text wrapping mode visual indication
+        self.setWrapVisualFlags(Qsci.QsciScintilla.WrapFlagByText)
+
+        # Set the text wrapping to indent the wrapped lines
+        self.setWrapIndentMode(Qsci.QsciScintilla.WrapIndentSame)
+
+    def prepareEdgeMarker(self):
+        # Set the edge marker's position and set it to color the background
+        # when a line goes over the limit of 50 characters
+        self.setEdgeMode(Qsci.QsciScintilla.EdgeBackground)
+        self.setEdgeColumn(50)
+        edge_color = QtGui.QColor(System.config.get('app.edge_color', default_value='ff00ff00'))
+        self.setEdgeColor(edge_color)
+
+    def prepareIndent(self):
+        # Set indentation with spaces instead of tabs
+        self.setIndentationsUseTabs(System.config.get('app.indent.use_tabs', default_value=False))
+
+        # Set the tab width to 4 spaces
+        self.setTabWidth(System.config.get('app.indent.tab_width', default_value=4))
+
+        # Set tab indent mode, see the 3.3.4 chapter in QSciDocs
+        # for a detailed explanation
+        self.setTabIndents(System.config.get('app.indent.tab_indents', default_value=True))
+
+        # Set autoindentation mode to maintain the indentation
+        # level of the previous line (the editor's lexer HAS
+        # to be disabled)
+        self.setAutoIndent(System.config.get('app.indent.auto_indent', default_value=True))
+
+        # Make the backspace jump back to the tab width guides
+        # instead of deleting one character, but only when
+        # there are ONLY whitespaces on the left side of the
+        # cursor
+        self.setBackspaceUnindents(System.config.get('app.indent.backspace_unindents', default_value=True))
+
+        # Set indentation guides to be visible
+        self.setIndentationGuides(System.config.get('app.indent.indentation_guides', default_value=True))
+
+    def prepareCaret(self):
+        # Set the caret color to red
+        caret_fg_color = QtGui.QColor(System.config.get('app.caret_fg_color'))
+        self.setCaretForegroundColor(caret_fg_color)
+
+        # Enable and set the caret line background color to slightly transparent blue
+        # self.setCaretLineVisible(True)
+        caret_bg_color = QtGui.QColor(System.config.get('app.caret_bg_color'))
+        self.setCaretLineBackgroundColor(caret_bg_color)
+
+        # Set the caret width of 4 pixels
+        self.setCaretWidth(System.config.get('app.caret_width', default_value=4))
+
+    def prepareLexer(self):
+        # lexer = Qsci.QsciLexerPython(self)
+        lexer = ViewLexer(self)
+        lexer.init()
+
+        self.setLexer(lexer)
+        self.api = Qsci.QsciAPIs(lexer)
+
+        # TEST
+
+        for key in keyword.kwlist + dir(__builtins__):
+            self.api.add(key)
+
+        for importer, name, ispkg in pkgutil.iter_modules():
+            self.api.add(name)
+
+        self.api.prepare()
+
+    def prepareAutocompletition(self):
+        # Set the autocompletions to case INsensitive
+        self.setAutoCompletionCaseSensitivity(False)
+
+        # Set the autocompletion to not replace the word to the right of the cursor
+        # self.setAutoCompletionReplaceWord(False)
+
+        # Set the autocompletion dialog to appear as soon as 1 character is typed
+        self.setAutoCompletionThreshold(1)
+
+        # Set the autocompletion source to be the words in the API
+        self.setAutoCompletionSource(Qsci.QsciScintilla.AcsAPIs)
+
+    def prepareShortcuts(self):
         self.text_size = 1
         self.reduceTextSizeShortcut = QShortcut('Ctrl+-', self, self.reduceTextSize)
         self.increaseTextSizeShortcut = QShortcut('Ctrl+=', self, self.increaseTextSize)
-        # self.setBreakpointShortcut = QShortcut('Ctrl+Shift+b', self, )
 
-        # connect(textEdit, & QTextEdit::cursorPositionChanged, this, & MainWindow::showCurrendCursorPosition);
-
-        self.setMarginSensitivity(1, True)
-        self.marginClicked.connect(self.onMarginClicked)
-
-        # # -------- Multiselection --------
+    def prepareScintilaSignals(self):
         self.SendScintilla(self.SCI_SETMULTIPASTE, 1)
         self.SendScintilla(self.SCI_SETVSCROLLBAR, True)
         self.SendScintilla(self.SCI_SETHSCROLLBAR, 0)
         self.SendScintilla(self.SCI_SETMULTIPLESELECTION, True)
         self.SendScintilla(self.SCI_SETADDITIONALSELECTIONTYPING, True)
         self.SendScintilla(self.SCI_SETTABWIDTH, 4)
-
-        # Cursor
-        # self.cursor.connect
-
-        # -------- Extra settings --------
-        extra_style = read_json(System.get_object('AssetsManager').theme_folder / 'editor/style.json').get('extra')
-        self.setExtraSettings(extra_style)
-
-    def cursorPositionChanged(self, p_int, p_int_1):
-        print(self.getCursorPosition()[0], self.getCursorPosition()[1])
 
     def getLineSeparator(self):
         m = self.eolMode()
@@ -84,7 +157,8 @@ class Editor(SystemObject, Qsci.QsciScintilla):
 
         return eol
 
-    def setExtraSettings(self, settings):
+    def setExtraSettings(self):
+        settings = read_json(System.get_object('AssetsManager').theme_folder / 'editor/style.json').get('extra')
         self.setIndentationGuidesBackgroundColor(QColor(0, 0, 255, 0))
         self.setIndentationGuidesForegroundColor(QColor(0, 255, 0, 0))
 

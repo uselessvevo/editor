@@ -1,6 +1,18 @@
 {
   "formats": ["py", "pyw", "txt", "json"],
   "current_lexer": "python",
+  "eol_visibility": false,
+  "edge_color": "",
+  "use_tabs": false,
+  "tab_width": 4,
+  "tab_indents": true,
+  "auto_indent": true,
+  "backspace_unindents": true,
+  "indentation_guides": true,
+  "case_sensitivity": false,
+  "caret_fg_color": "#ffff0000",
+  "caret_bg_color": "#7f0000ff",
+  "caret_width": 4,
   "lexers": [
     "python"
   ]
