@@ -1,0 +1,11 @@
+pyqt5==5.15.4
+qtpy==1.11.2
+qscintilla==2.13.0
+ipython==7.22.0
+qtconsole==5.2.2
+pygments==2.9.0
+argh==0.26.2
+wcwidth==0.2.5
+poetry==1.1.12
+https://github.com/uselessvevo/editor-core/archive/refs/heads/main.zip
+https://github.com/uselessvevo/editor-ui/archive/refs/heads/main.zip

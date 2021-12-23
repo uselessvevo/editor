@@ -1,0 +1,11 @@
+{
+  "version": "0.1",
+  "apps": [
+      "toolkit.managers.assets.manager.AssetsManager",
+      "toolkit.managers.apps.manager.AppConfigManager",
+      "toolkit.managers.locales.manager.LocalesManager"
+  ],
+  "configs": ["app/*.json", "toolkit/*.json"],
+  "launch": "editor.app.ui.main",
+  "debug": false
+}

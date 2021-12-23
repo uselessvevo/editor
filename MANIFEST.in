@@ -1,0 +1,5 @@
+include branding/*.*
+include README.md
+include editor/assets/*
+include editor/locales/*
+include editor/docs/*

@@ -1,0 +1,28 @@
+{
+   "assets":{
+      "required": true,
+      "folder": "assets",
+      "file_formats": [
+         "jpg", "jpeg", "png", "svg"
+      ],
+      "protected": [
+         "shared"
+      ]
+   },
+   "configuration": {
+      "required": true,
+      "protected": [
+         "shared"
+      ]
+   },
+   "locales":{
+      "required": true,
+      "folder": "assets",
+      "file_formats": [
+         "jpg", "jpeg", "png", "svg"
+      ],
+      "protected": [
+         "shared"
+      ]
+   }
+}

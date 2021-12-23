@@ -1,0 +1,13 @@
+{
+  "plugins": [
+    {
+      "name": "testplugin",
+      "title": "Test plugin",
+      "version": "0.0.1",
+      "ui_version": "0.0.1",
+      "toolkit_version": "0.0.1",
+      "exec": "testplugin.testplugin.main.main",
+      "setup": false
+    }
+  ]
+}
